@@ -1,0 +1,55 @@
+{% ckan_extends %}
+
+{% block package_basic_fields_custom %}
+  {{ super() }}
+
+  {#
+  This file has been created upon CKAN's original
+  ckan/templates/snippets/custom_form_fields.html
+  #}
+
+  {% import "macros/ceonform.html" as form %}
+
+  {% set authors = h.ckanext_ceon_get_authors(data.id) %}
+
+  <div data-module="authors-fields">
+    {% for a in authors %}
+      {% set prefix = 'authors__%d__' % loop.index0 %}
+      {{ form.author(
+        names=(prefix ~ 'firstname', prefix ~ 'lastname', prefix ~ 'email',
+               prefix ~ 'affiliation', prefix ~ 'position', prefix ~ 'id',
+               prefix ~ 'deleted'),
+        id='field-authors-%d' % loop.index0,
+        label=_('Author'),
+        values=(a.firstname, a.lastname, a.email, a.affiliation,
+                '%d' % (loop.index0), a.id, a.deleted),
+        error=errors[prefix ~ 'firstname'] or errors[prefix ~ 'lastname'] or
+              errors[prefix ~ 'email'] or errors[prefix ~ 'affiliation'] or
+              errors[prefix ~ 'position'] or errors[prefix ~ 'id'])
+      }}
+    {% endfor %}
+
+    {# Add a max of 1 empty elements #}
+    {% set total_authors = authors|count %}
+    {% set empty_authors = 1 - total_authors %}
+    {% if empty_authors <= 0 %}{% set empty_authors = 1 %}{% endif %}
+    {% for a in range(total_authors, total_authors + empty_authors) %}
+      {% set index = loop.index0 + (authors|count) %}
+      {% set prefix = 'authors__%d__' % index %}
+      {{ form.author(
+        names=(prefix ~ 'firstname', prefix ~ 'lastname', prefix ~ 'email',
+               prefix ~ 'affiliation', prefix ~ 'position', prefix ~ 'id',
+               prefix ~ 'deleted'),
+        id='field-authors-%d' % index,
+        label=_('Author'),
+        values=(a.firstname, a.lastname, a.email, a.affiliation,
+                '%d' % (index), a.id, a.deleted),
+        error=errors[prefix ~ 'firstname'] or errors[prefix ~ 'lastname'] or
+              errors[prefix ~ 'email'] or errors[prefix ~ 'affiliation'] or
+              errors[prefix ~ 'position'] or errors[prefix ~ 'id'])
+      }}
+    {% endfor %}
+  </div>
+
+{% endblock %}
+

@@ -162,6 +162,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     # IPackageController
     def after_create(self, context, pkg_dict):
+        log.debug('AFTER_CREATE, context={}, pkg_dict={}'.format(context, pkg_dict))
         create_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
 
     def after_update(self, context, pkg_dict):
@@ -169,6 +170,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             package_id = pkg_dict['id']
             #orig_pkg_dict = get_action('package_show')(context, {'id': package_id})
             #pkg_dict['authors_created'] = orig_pkg_dict['metadata_created']
-            update_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
+            if 'authors' in pkg_dict:
+                update_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
         return pkg_dict
 

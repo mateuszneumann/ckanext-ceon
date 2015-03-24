@@ -57,6 +57,8 @@ def get_authors(session, package_id):
 
 def create_authors(session, package_id, authors):
     log.debug("Creating authors {}".format(authors))
+    for author in authors:
+        _author_create(session, package_id, author)
     
 def update_authors(session, package_id, authors):
     log.debug("Updating authors: {}".format(authors))

@@ -1,4 +1,4 @@
-/* Module for working with multiple custom field inputs. This will create
+/* Module for working with multiple author field inputs. This will create
  * a new field when the user enters text into the last field key. It also
  * gives a visual indicator when fields are removed by disabling them.
  *
@@ -7,11 +7,11 @@
 this.ckan.module('authors-fields', function (jQuery, _) {
   return {
     options: {
-      /* The selector used for each custom field wrapper */
+      /* The selector used for each author field wrapper */
       fieldSelector: '.control-custom'
     },
 
-    /* Initializes the module and attaches custom event listeners. This
+    /* Initializes the module and attaches author event listeners. This
      * is called internally by ckan.module.initialize().
      *
      * Returns nothing.
@@ -33,7 +33,7 @@ this.ckan.module('authors-fields', function (jQuery, _) {
      * cloning and erasing an existing input rather than using a template. In
      * future using a template might be more appropriate.
      *
-     * element - Another custom field element to wrap.
+     * element - Another author field element to wrap.
      *
      * Returns nothing.
      */
@@ -44,9 +44,9 @@ this.ckan.module('authors-fields', function (jQuery, _) {
     /* Clones the provided element, wipes it's content and increments it's
      * for, id and name fields (if possible).
      *
-     * current - A custom field to clone.
+     * current - An author field to clone.
      *
-     * Returns a newly created custom field element.
+     * Returns a newly created author field element.
      */
     cloneField: function (current) {
       return this.resetField(jQuery(current).clone());
@@ -55,7 +55,7 @@ this.ckan.module('authors-fields', function (jQuery, _) {
     /* Wipes the contents of the field provided and increments it's name, id
      * and for attributes.
      *
-     * field - A custom field to wipe.
+     * field - An author field to wipe.
      *
      * Returns the wiped element.
      */
@@ -64,11 +64,16 @@ this.ckan.module('authors-fields', function (jQuery, _) {
         return (string || '').replace(/\d+/, function (int) { return 1 + parseInt(int, 10); });
       }
 
+      var input_position = field.find('input[name$="_position"]');
+      var position = parseInt(input_position.val(), 10);
+
       var input = field.find(':input');
       input.val('').attr('id', increment).attr('name', increment);
 
       var label = field.find('label');
       label.text(increment).attr('for', increment);
+
+      input_position.val(1 + position);
 
       return field;
     },
@@ -85,7 +90,7 @@ this.ckan.module('authors-fields', function (jQuery, _) {
       field.toggleClass('disabled', disable !== false);
     },
 
-    /* Event handler that fires when the last key in the custom field block
+    /* Event handler that fires when the last key in the author field block
      * changes.
      */
     _onChange: function (event) {

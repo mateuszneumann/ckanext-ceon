@@ -9,8 +9,6 @@
 
   {% call form.input_block(label_id, label or name, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
     <div class="input-prepend" {{ form.attributes(attrs) }}>
-      <input id="{{ id }}-id" type="hidden" name="{{ names[5] }}" value="{{ values[5] }}" />
-      <input id="{{ id }}-position" type="hidden" name="{{ names[4] }}" value="{{ values[4] }}" />
       <label for="{{ id }}-firstname" class="add-on">{{ _('Firstname') }}</label><input id="{{ id }}-firstname" type="text" name="{{ names[0] }}" value="{{ values[0] | empty_and_escape }}" placeholder="{{ placeholders[0] }}" />
       <label for="{{ id }}-lastname" class="add-on">{{ _('Lastname') }}</label><input id="{{ id }}-lastname" type="text" name="{{ names[1] }}" value="{{ values[1] | empty_and_escape }}" placeholder="{{ placeholders[1] }}" />
       <br/>
@@ -21,6 +19,8 @@
           <input type="checkbox" id="{{ id }}-remove" name="{{ names[6] }}"{% if values[6] %} checked{% endif %} /> <span>{{ _('Remove') }}</span>
         </label>
       {% endif %}
+      <input id="{{ id }}-id" type="hidden" name="{{ names[5] }}" value="{{ values[5] }}" />
+      <input id="{{ id }}-position" type="hidden" name="{{ names[4] }}" value="{{ values[4] }}" />
     </div>
   {% endcall %}
 {% endmacro %}

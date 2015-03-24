@@ -26,7 +26,6 @@ ceon_author_table = Table('ceon_author', meta.metadata,
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
-
 class CeonAuthor(DomainObject):
     """
     CeON extended package author.
@@ -52,7 +51,9 @@ def create_table():
     log.info("Created ceon_author_table")
 
 def get_authors(session, package_id):
-    return session.query(CeonAuthor).filter(CeonAuthor.package_id == package_id).order_by(CeonAuthor.position).all()
+    if package_id:
+        return session.query(CeonAuthor).filter(CeonAuthor.package_id == package_id).order_by(CeonAuthor.position).order_by(CeonAuthor.created).all()
+    return []
 
 def create_authors(session, package_id, authors):
     log.debug("Creating authors {}".format(authors))
@@ -67,24 +68,28 @@ def update_authors(session, package_id, authors):
                 _author_update(session, package_id, author)
         elif not 'deleted' in author or author['deleted'] != 'on':
             _author_create(session, package_id, author)
+    session.commit()
     _author_reposition(session, package_id)
-    #session.commit()
 
 def _author_in_authors(session, package_id, author):
     orig_authors = get_authors(session, package_id)
     for a in orig_authors:
-        if a.id == author['id']:
-            return True
+        try:
+            if a.id == author['id']:
+                return True
+        except:
+            pass
     return False
 
 def _author_create(session, package_id, author):
-    if author['firstname'] or author['lastname'] or author['email'] or author['affiliation']: 
-        ceon_author = CeonAuthor(package_id=package_id,
-                firstname=author['firstname'], lastname=author['lastname'],
-                email=author['email'], affiliation=author['affiliation'],
-                position=author['position'])
-        session.add(ceon_author)
-        return ceon_author
+    if 'firstname' in author or 'lastname' in author or 'email' in author or 'affiliation' in author:
+        if author['firstname'] or author['lastname'] or author['email'] or author['affiliation']: 
+            ceon_author = CeonAuthor(package_id=package_id,
+                    firstname=author['firstname'], lastname=author['lastname'],
+                    email=author['email'], affiliation=author['affiliation'],
+                    position=author['position'])
+            session.add(ceon_author)
+            return ceon_author
     return None
 
 def _author_delete(session, package_id, author):
@@ -107,11 +112,10 @@ def _author_find(session, author_id):
 
 def _author_reposition(session, package_id):
     authors = get_authors(session, package_id)
-    i = 1
+    i = 0
     for a in authors:
         a.position = i
         i = i + 1
         session.merge(a)
-    session.commit()
-
+    #session.commit()
 

@@ -41,3 +41,38 @@
 
 {% endblock %}
 
+{% block package_description %}
+  {{ super() }}
+
+  {% if pkg.get('publisher') %}
+    <section id="dataset-publisher" class="resources module-content">
+        <p><strong>{{ _('Publisher') }}</strong>: {{ pkg.publisher }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('publication_year') %}
+    <section id="dataset-publication_year" class="resources module-content">
+        <p><strong>{{ _('Publication year') }}</strong>: {{ pkg.publication_year }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('rel_citation') %}
+    <section id="dataset-rel_citation" class="resources module-content">
+        <p><strong>{{ _('Rel. Citation') }}</strong>: {{ pkg.rel_citation }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('res_type') %}
+    <section id="dataset-res_type" class="resources module-content">
+        <p><strong>{{ _('General Resource Type') }}</strong>: {{ pkg.res_type[0] }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('sci_discipline') %}
+    <section id="dataset-sci_discipline" class="resources module-content">
+        <p><strong>{{ _('Scientific Discipline') }}</strong>: {{ pkg.sci_discipline[0] }}</p>
+    </section>
+  {% endif %}
+
+{% endblock %}
+

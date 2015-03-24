@@ -1,22 +1,16 @@
-.. You should enable this project on travis-ci.org and coveralls.io to make
-   these badges work. The necessary Travis and Coverage config files have been
-   generated for you.
-
 =============
 ckanext-ceon
 =============
 
-.. Put a description of your extension here:
-   What does it do? What features does it have?
-   Consider including some screenshots or embedding a video!
+Extension implementing various CeON changes to default CKAN installation
 
 
 ------------
 Requirements
 ------------
 
-For example, you might want to mention here which versions of CKAN this
-extension works with.
+The extension is being tested with latest development version (2.4a at the
+moment).  However it should probably work fine with ckan-2.3 as well.
 
 
 ------------
@@ -64,77 +58,9 @@ Development Installation
 To install ckanext-ceon for development, activate your CKAN virtualenv and
 do::
 
-    git clone https://github.com/M.Neumann@icm.edu.pl/ckanext-ceon.git
+    git clone https://github.com/mateuszneumann/ckanext-ceon.git
     cd ckanext-ceon
     python setup.py develop
     pip install -r dev-requirements.txt
 
 
------------------
-Running the Tests
------------------
-
-To run the tests, do::
-
-    nosetests --nologcapture --with-pylons=test.ini
-
-To run the tests and produce a coverage report, first make sure you have
-coverage installed in your virtualenv (``pip install coverage``) then run::
-
-    nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.ceon --cover-inclusive --cover-erase --cover-tests
-
-
----------------------------------
-Registering ckanext-ceon on PyPI
----------------------------------
-
-ckanext-ceon should be availabe on PyPI as
-https://pypi.python.org/pypi/ckanext-ceon. If that link doesn't work, then
-you can register the project on PyPI for the first time by following these
-steps:
-
-1. Create a source distribution of the project::
-
-     python setup.py sdist
-
-2. Register the project::
-
-     python setup.py register
-
-3. Upload the source distribution to PyPI::
-
-     python setup.py sdist upload
-
-4. Tag the first release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.1 then do::
-
-       git tag 0.0.1
-       git push --tags
-
-
-----------------------------------------
-Releasing a New Version of ckanext-ceon
-----------------------------------------
-
-ckanext-ceon is availabe on PyPI as https://pypi.python.org/pypi/ckanext-ceon.
-To publish a new version to PyPI follow these steps:
-
-1. Update the version number in the ``setup.py`` file.
-   See `PEP 440 <http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers>`_
-   for how to choose version numbers.
-
-2. Create a source distribution of the new version::
-
-     python setup.py sdist
-
-3. Upload the source distribution to PyPI::
-
-     python setup.py sdist upload
-
-4. Tag the new release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.2 then do::
-
-       git tag 0.0.2
-       git push --tags

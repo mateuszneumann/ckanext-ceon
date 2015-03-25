@@ -26,6 +26,16 @@ this.ckan.module('authors-fields', function (jQuery, _) {
 
         // Style the remove checkbox like a button.
         this.$('.checkbox').addClass("btn btn-danger icon-remove");
+
+        this.$( '#authors-sortable' ).sortable({
+          update: function( event, ui ) {
+            $( '#authors-sortable > li' ).each(function( index ) {
+              var input_position = $( this ).find( 'input[name$="_position"]');
+              input_position.val( index );
+            });
+          }
+        });
+        //this.$( "#authors-sortable" ).disableSelection();
       }
     },
 

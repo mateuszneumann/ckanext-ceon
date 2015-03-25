@@ -1,0 +1,22 @@
+#authors-sortable { list-style-type: none; margin: 0; padding: 0; }
+#authors-sortable li { cursor: pointer; }
+#authors-sortable li > span {
+    float: left;
+    position: relative;
+    margin: 3px;
+    width: 0;
+    color: #ebebeb;
+}
+#authors-sortable li > div {
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0);
+    padding: 3px;
+}
+#authors-sortable li > div:hover {
+    background-color: rgba(252,252,252,0.3);
+    border: 1px solid #ccc;
+}
+/*
+ * #authors-sortable li div { position: absolute; margin-left: -1.3em; }
+ */
+

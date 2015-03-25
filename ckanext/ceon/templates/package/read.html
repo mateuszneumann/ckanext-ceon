@@ -58,7 +58,7 @@
 
   {% if pkg.get('rel_citation') %}
     <section id="dataset-rel_citation" class="resources module-content">
-        <p><strong>{{ _('Rel. Citation') }}</strong>: {{ pkg.rel_citation }}</p>
+        <p><strong>{{ _('Rel. Citation') }}</strong>: <a href="{{ pkg.rel_citation }}">{{ pkg.rel_citation }}</a></p>
     </section>
   {% endif %}
 

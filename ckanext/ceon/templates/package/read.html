@@ -58,19 +58,19 @@
 
   {% if pkg.get('rel_citation') %}
     <section id="dataset-rel_citation" class="resources module-content">
-        <p><strong>{{ _('Rel. Citation') }}</strong>: <a href="{{ pkg.rel_citation }}">{{ pkg.rel_citation }}</a></p>
+        <p><strong>{{ _('Related publication') }}</strong>: <a href="{{ pkg.rel_citation }}">{{ pkg.rel_citation }}</a></p>
     </section>
   {% endif %}
 
   {% if pkg.get('res_type') %}
     <section id="dataset-res_type" class="resources module-content">
-        <p><strong>{{ _('General Resource Type') }}</strong>: {{ pkg.res_type[0] }}</p>
+        <p><strong>{{ _('Type of resource') }}</strong>: {{ pkg.res_type[0] }}</p>
     </section>
   {% endif %}
 
   {% if pkg.get('sci_discipline') %}
     <section id="dataset-sci_discipline" class="resources module-content">
-        <p><strong>{{ _('Scientific Discipline') }}</strong>: {{ pkg.sci_discipline[0] }}</p>
+        <p><strong>{{ _('Area of study') }}</strong>: {{ pkg.sci_discipline[0] }}</p>
     </section>
   {% endif %}
 

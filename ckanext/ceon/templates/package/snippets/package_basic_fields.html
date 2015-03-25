@@ -64,7 +64,7 @@
   {% import "macros/form.html" as form %}
   {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Publisher'), value=data.publisher, error=errors.publisher, classes=['control-medium']) }}
   {{ form.input('publication_year', label=_('Publication Year'), id='field-publication_year', placeholder=_('2012'), value=data.publication_year, error=errors.publication_year, classes=['control-medium']) }}
-  {{ form.input('rel_citation', label=_('Rel. Citation'), id='field-rel_citation', placeholder=_('http://example.com/article-123'), value=data.rel_citation, error=errors.rel_citation, classes=['control-medium']) }}
+  {{ form.input('rel_citation', label=_('Related publication'), id='field-rel_citation', placeholder=_('http://example.com/article-123'), value=data.rel_citation, error=errors.rel_citation, classes=['control-medium']) }}
 
 {% endblock %}
 

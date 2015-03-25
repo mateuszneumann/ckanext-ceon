@@ -4,7 +4,7 @@ import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from model import create_table, get_authors, create_authors, update_authors
+from model import create_tables, get_authors, create_authors, update_authors
 
 log = getLogger(__name__)
 
@@ -75,7 +75,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         Called at the end of CKAN setup.
         Create ceon author table
         """
-        create_table()
+        create_tables()
 
     # IConfigurer
     def update_config(self, config_):

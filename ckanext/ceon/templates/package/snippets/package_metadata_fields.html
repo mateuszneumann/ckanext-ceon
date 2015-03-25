@@ -3,7 +3,7 @@
 {% block package_metadata_fields %}
 
   <div class="control-group">
-    <label class="control-label" for="field-res_type">{{ _("General Resource Type") }}</label>
+    <label class="control-label" for="field-res_type">{{ _("Type of resource") }}</label>
     <div class="controls">
       <select id="field-res_type" name="res_type" data-module="autocomplete">
       {% for res_type in h.ckanext_ceon_res_types()  %}
@@ -14,7 +14,7 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label" for="field-sci_discipline">{{ _("Scientific Discipline") }}</label>
+    <label class="control-label" for="field-sci_discipline">{{ _("Area of study") }}</label>
     <div class="controls">
       <select id="field-sci_discipline" name="sci_discipline" data-module="autocomplete">
       {% for sci_discipline in h.ckanext_ceon_sci_disciplines()  %}

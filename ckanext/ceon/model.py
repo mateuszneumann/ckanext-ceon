@@ -15,7 +15,7 @@ from datetime import datetime
 log = getLogger(__name__)
 
 
-ceon_author_table = Table('ceon_author', meta.metadata,
+ceon_package_author_table = Table('ceon_package_author', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
         Column('package_id', types.UnicodeText, ForeignKey('package.id')),
         Column('firstname', types.UnicodeText),
@@ -26,33 +26,48 @@ ceon_author_table = Table('ceon_author', meta.metadata,
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
-class CeonAuthor(DomainObject):
+ceon_resource_license_table = Table('ceon_resource_license', meta.metadata,
+        Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
+        Column('resource_id', types.UnicodeText, ForeignKey('resource.id')),
+        Column('license_id', types.UnicodeText),
+        Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
+        )
+
+class CeonPackageAuthor(DomainObject):
     """
     CeON extended package author.
     """
     pass
 
+class CeonResourceLicense(DomainObject):
+    """
+    CeON extended resource license.
+    """
+    pass
 
-#    @classmethod
-#    def get(cls, user_id):
-#        return get_author(Session
 
-
-meta.mapper(CeonAuthor, ceon_author_table, properties={
+meta.mapper(CeonPackageAuthor, ceon_package_author_table, properties={
     'dataset': relation(model.Package,
-        backref=backref('ceon_author', cascade='all, delete-orphan'),
-        primaryjoin=ceon_author_table.c.package_id.__eq__(Package.id))
+        backref=backref('ceon_package_author', cascade='all, delete-orphan'),
+        primaryjoin=ceon_package_author_table.c.package_id.__eq__(Package.id))
+    })
+
+meta.mapper(CeonResourceLicense, ceon_resource_license_table, properties={
+    'dataset': relation(model.Resource,
+        backref=backref('ceon_resource_license', cascade='all, delete-orphan'),
+        primaryjoin=ceon_resource_license_table.c.resource_id.__eq__(Resource.id))
     })
 
 
-def create_table():
-    log.debug("Creating ceon_author_table")
-    ceon_author_table.create(checkfirst=True)
-    log.info("Created ceon_author_table")
+def create_tables():
+    log.debug("Creating CeON tables")
+    ceon_package_author_table.create(checkfirst=True)
+    ceon_resource_license_table.create(checkfirst=True)
+    log.info("CeON tables created")
 
 def get_authors(session, package_id):
     if package_id:
-        return session.query(CeonAuthor).filter(CeonAuthor.package_id == package_id).order_by(CeonAuthor.position).order_by(CeonAuthor.created).all()
+        return session.query(CeonPackageAuthor).filter(CeonPackageAuthor.package_id == package_id).order_by(CeonPackageAuthor.position).order_by(CeonPackageAuthor.created).all()
     return []
 
 def create_authors(session, package_id, authors):
@@ -86,7 +101,7 @@ def _author_in_authors(session, package_id, author):
 def _author_create(session, package_id, author):
     if 'firstname' in author or 'lastname' in author or 'email' in author or 'affiliation' in author:
         if author['firstname'] or author['lastname'] or author['email'] or author['affiliation']: 
-            ceon_author = CeonAuthor(package_id=package_id,
+            ceon_author = CeonPackageAuthor(package_id=package_id,
                     firstname=author['firstname'], lastname=author['lastname'],
                     email=author['email'], affiliation=author['affiliation'],
                     position=author['position'])
@@ -110,7 +125,7 @@ def _author_update(session, package_id, author):
     return author
 
 def _author_find(session, author_id):
-    return session.query(CeonAuthor).filter(CeonAuthor.id == author_id).first()
+    return session.query(CeonPackageAuthor).filter(CeonPackageAuthor.id == author_id).first()
 
 def _author_reposition(session, package_id):
     authors = get_authors(session, package_id)

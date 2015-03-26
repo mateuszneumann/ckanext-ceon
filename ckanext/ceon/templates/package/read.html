@@ -74,5 +74,23 @@
     </section>
   {% endif %}
 
+  {% if pkg.get('oa_funder') %}
+    <section id="dataset-oa_funder" class="resources module-content">
+        <p><strong>{{ _('Funder') }}</strong>: {{ pkg.oa_funder[0] }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('oa_funding_program') %}
+    <section id="dataset-oa_funding_program" class="resources module-content">
+        <p><strong>{{ _('Funding program') }}</strong>: {{ pkg.oa_funding_program[0] }}</p>
+    </section>
+  {% endif %}
+
+  {% if pkg.get('oa_grant_number') %}
+    <section id="dataset-oa_grant_number" class="resources module-content">
+        <p><strong>{{ _('Grant number') }}</strong>: {{ pkg.oa_grant_number }}</p>
+    </section>
+  {% endif %}
+
 {% endblock %}
 

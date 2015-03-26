@@ -42,6 +42,32 @@ def create_sci_disciplines():
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
+def create_oa_funders():
+    user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'oa_funders'}
+        toolkit.get_action('vocabulary_show')(context, data)
+    except toolkit.ObjectNotFound:
+        data = {'name': 'oa_funders'}
+        vocab = toolkit.get_action('vocabulary_create')(context, data)
+        for tag in (u'Funder 1', u'Funder 2'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
+            toolkit.get_action('tag_create')(context, data)
+
+def create_oa_funding_programs():
+    user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'oa_funding_programs'}
+        toolkit.get_action('vocabulary_show')(context, data)
+    except toolkit.ObjectNotFound:
+        data = {'name': 'oa_funding_programs'}
+        vocab = toolkit.get_action('vocabulary_create')(context, data)
+        for tag in (u'Funding Program 1', u'Funding Program 2', u'Funding Program 3'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
+            toolkit.get_action('tag_create')(context, data)
+
 def res_types():
     create_res_types()
     try:
@@ -57,6 +83,24 @@ def sci_disciplines():
         tag_list = toolkit.get_action('tag_list')
         sci_disciplines = tag_list(data_dict={'vocabulary_id': 'sci_disciplines'})
         return sci_disciplines
+    except toolkit.ObjectNotFound:
+        return None
+
+def oa_funders():
+    create_oa_funders()
+    try:
+        tag_list = toolkit.get_action('tag_list')
+        oa_funders = tag_list(data_dict={'vocabulary_id': 'oa_funders'})
+        return oa_funders
+    except toolkit.ObjectNotFound:
+        return None
+
+def oa_funding_programs():
+    create_oa_funding_programs()
+    try:
+        tag_list = toolkit.get_action('tag_list')
+        oa_funding_programs = tag_list(data_dict={'vocabulary_id': 'oa_funding_programs'})
+        return oa_funding_programs
     except toolkit.ObjectNotFound:
         return None
 
@@ -88,6 +132,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return {'ckanext_ceon_get_authors': authors,
                 'ckanext_ceon_res_types': res_types,
                 'ckanext_ceon_sci_disciplines': sci_disciplines,
+                'ckanext_ceon_oa_funders': oa_funders,
+                'ckanext_ceon_oa_funding_programs': oa_funding_programs,
                 }
 
     # IDatasetForm
@@ -116,12 +162,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 toolkit.get_validator('ignore_empty')],
             'rel_citation': [toolkit.get_converter('convert_from_extras'),
                 toolkit.get_validator('ignore_empty')],
+            'oa_grant_number': [toolkit.get_converter('convert_from_extras'),
+                toolkit.get_validator('ignore_empty')],
             })
         schema['tags']['__extras'].append(toolkit.get_converter('free_tags_only'))
         schema.update({
             'res_type': [toolkit.get_converter('convert_from_tags')('res_types'),
                 toolkit.get_validator('ignore_missing')],
             'sci_discipline': [toolkit.get_converter('convert_from_tags')('sci_disciplines'),
+                toolkit.get_validator('ignore_missing')],
+            'oa_funder': [toolkit.get_converter('convert_from_tags')('oa_funders'),
+                toolkit.get_validator('ignore_missing')],
+            'oa_funding_program': [toolkit.get_converter('convert_from_tags')('oa_funding_programs'),
                 toolkit.get_validator('ignore_missing')],
             })
         return schema
@@ -136,12 +188,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 toolkit.get_converter('convert_to_extras')],
             'rel_citation': [toolkit.get_validator('ignore_empty'),
                 toolkit.get_converter('convert_to_extras')],
+            'oa_grant_number': [toolkit.get_validator('ignore_empty'),
+                toolkit.get_converter('convert_to_extras')],
             })
         schema.update({
             'res_type': [toolkit.get_validator('ignore_missing'),
                 toolkit.get_converter('convert_to_tags')('res_types')],
             'sci_discipline': [toolkit.get_validator('ignore_missing'),
                 toolkit.get_converter('convert_to_tags')('sci_disciplines')],
+            'oa_funder': [toolkit.get_validator('ignore_missing'),
+                toolkit.get_converter('convert_to_tags')('oa_funders')],
+            'oa_funding_program': [toolkit.get_validator('ignore_missing'),
+                toolkit.get_converter('convert_to_tags')('oa_funding_programs')],
             })
         return schema
 
@@ -162,14 +220,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     # IPackageController
     def after_create(self, context, pkg_dict):
-        log.debug('AFTER_CREATE, context={}, pkg_dict={}'.format(context, pkg_dict))
         create_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
 
     def after_update(self, context, pkg_dict):
         if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
             package_id = pkg_dict['id']
-            #orig_pkg_dict = get_action('package_show')(context, {'id': package_id})
-            #pkg_dict['authors_created'] = orig_pkg_dict['metadata_created']
             if 'authors' in pkg_dict:
                 update_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
         return pkg_dict

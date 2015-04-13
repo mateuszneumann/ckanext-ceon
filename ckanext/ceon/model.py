@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# vim: set fileencoding=utf-8
+
 from logging import getLogger
 
 import sqlalchemy as sa
@@ -9,8 +12,8 @@ from ckan.model import meta, User, Package, Session, Resource, Group
 from ckan.model.types import make_uuid
 import ckan.lib.helpers as h
 from ckan.model.domain_object import DomainObject
+import ckan.plugins.toolkit as toolkit
 from datetime import datetime
-
 
 log = getLogger(__name__)
 
@@ -60,10 +63,10 @@ meta.mapper(CeonResourceLicense, ceon_resource_license_table, properties={
 
 
 def create_tables():
-    log.debug("Creating CeON tables")
+    log.debug(u'Creating CeON tables')
     ceon_package_author_table.create(checkfirst=True)
     ceon_resource_license_table.create(checkfirst=True)
-    log.info("CeON tables created")
+    log.info(u'CeON tables created')
 
 def get_authors(session, package_id):
     if package_id:
@@ -71,12 +74,14 @@ def get_authors(session, package_id):
     return []
 
 def create_authors(session, package_id, authors):
-    log.debug("Creating authors {}".format(authors))
+    log.debug(u'Creating authors for package {}'.format(package_id))
     for author in authors:
         _author_create(session, package_id, author)
     
-def update_authors(session, package_id, authors):
-    log.debug("Updating authors: {}".format(authors))
+def update_authors(context, pkg_dict, authors):
+    session = context['session']
+    package_id = pkg_dict['id']
+    log.debug(u'Updating authors for package {}: {}'.format(package_id, authors))
     for author in authors:
         if _author_in_authors(session, package_id, author):
             if 'deleted' in author and author['deleted'] == 'on':
@@ -85,8 +90,16 @@ def update_authors(session, package_id, authors):
                 _author_update(session, package_id, author)
         elif not 'deleted' in author or author['deleted'] != 'on':
             _author_create(session, package_id, author)
-    session.commit()
     _author_reposition(session, package_id)
+
+def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
+    if not isinstance(tag_value, basestring):
+        tag_value = tag_value[0]
+    log.debug(u'Updating {} tag in package {}: {}'.format(vocabulary_name,
+            pkg_dict['name'], tag_value))
+    tag = model.Tag.get(tag_value, vocabulary_name)
+    package = model.Package.get(pkg_dict['id'])
+    package.add_tag(tag)
 
 def _author_in_authors(session, package_id, author):
     orig_authors = get_authors(session, package_id)
@@ -134,5 +147,4 @@ def _author_reposition(session, package_id):
         a.position = i
         i = i + 1
         session.merge(a)
-    #session.commit()
 

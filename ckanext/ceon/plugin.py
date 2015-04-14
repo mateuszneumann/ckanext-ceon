@@ -7,7 +7,7 @@ import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag
+from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_license_id, get_licenses
 from converters import convert_to_oa_tags
 
 log = getLogger(__name__)
@@ -16,6 +16,27 @@ log = getLogger(__name__)
 def authors(package_id):
     authors = get_authors(_model.Session, package_id)
     return authors
+
+def license_id(resource_id):
+    license_id = get_license_id(_model.Session, resource_id)
+    if license_id:
+        return license_id
+    else:
+        return None
+
+def license(resource_id):
+    id = license_id(resource_id)
+    if id:
+        try:
+            license = _model.license.LicenseRegister()[id]
+        except KeyError:
+            license = None
+    else:
+        license = None
+    return license
+
+def licenses():
+    return get_licenses()
 
 def create_res_types():
     user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -129,11 +150,10 @@ def oa_funding_programs():
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IDatasetForm, inherit=False)
-    #plugins.implements(plugins.IDatasetForm, inherit=True)
-    plugins.implements(plugins.IPackageController, inherit=True)
-    plugins.implements(plugins.ITagController, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
+    plugins.implements(plugins.IDatasetForm, inherit=False)
+    plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.IResourceController, inherit=True)
 
 
     # IConfigurable
@@ -153,6 +173,9 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     # ITemplateHelpers
     def get_helpers(self):
         return {'ckanext_ceon_get_authors': authors,
+                'ckanext_ceon_get_license_id': license_id,
+                'ckanext_ceon_get_license': license,
+                'ckanext_ceon_licenses': licenses,
                 'ckanext_ceon_res_types': res_types,
                 'ckanext_ceon_sci_disciplines': sci_disciplines,
                 'ckanext_ceon_oa_funders': oa_funders,
@@ -238,7 +261,20 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return schema
 
     # IPackageController
-    def after_create(self, context, pkg_dict):
+    # IResourceController
+    def after_create(self, context, data):
+        if 'type' in data:
+            self._package_after_create(context, data)
+        elif 'package_id' in data:
+            self._resource_after_create(context, data)
+
+    def after_update(self, context, data):
+        if 'type' in data:
+            self._package_after_update(context, data)
+        elif 'package_id' in data:
+            self._resource_after_update(context, data)
+
+    def _package_after_create(self, context, pkg_dict):
         log.debug(u"Creating package {}".format(pkg_dict))
         create_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
         if 'oa_funder' in pkg_dict:
@@ -246,7 +282,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
 
-    def after_update(self, context, pkg_dict):
+    def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
         if 'authors' in pkg_dict:
             update_authors(context, pkg_dict, pkg_dict['authors'])
@@ -255,4 +291,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
         return pkg_dict
+
+    def _resource_after_create(self, context, res_dict):
+        log.debug(u"Creating resource {}".format(res_dict))
+        pass
+
+    def _resource_after_update(self, context, res_dict):
+        log.debug(u"Updating resource {}".format(res_dict['name']))
+        if 'license_id' in res_dict:
+            update_res_license(context, res_dict, res_dict['license_id']
+
 

@@ -74,7 +74,6 @@ def get_authors(session, package_id):
     return []
 
 def create_authors(session, package_id, authors):
-    log.debug(u'Creating authors for package {}'.format(package_id))
     for author in authors:
         _author_create(session, package_id, author)
     
@@ -90,7 +89,23 @@ def update_authors(context, pkg_dict, authors):
                 _author_update(session, package_id, author)
         elif not 'deleted' in author or author['deleted'] != 'on':
             _author_create(session, package_id, author)
-    _author_reposition(session, package_id)
+    #_author_reposition(session, package_id)
+
+def get_license_id(session, resource_id):
+    if resource_id:
+        license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource_id).first()
+        if license:
+            return license.license_id
+        else:
+            resource = session.query(Resource).filter(Resource.id == resource_id).first()
+            if resource:
+                package = resource.package
+                if package:
+                    return package.license_id
+        return None
+
+def get_licenses():
+    return [('', '')] + model.Package.get_license_options()
 
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):
@@ -128,6 +143,7 @@ def _author_delete(session, package_id, author):
         session.delete(orig_author)
 
 def _author_update(session, package_id, author):
+    log.debug(u'Updating author {} {} ({}) in package {}'.format(author['firstname'], author['lastname'], author['position'], package_id))
     orig_author = _author_find(session, author['id'])
     orig_author.firstname = author['firstname']
     orig_author.lastname = author['lastname']

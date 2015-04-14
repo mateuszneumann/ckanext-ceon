@@ -107,6 +107,12 @@ def get_license_id(session, resource_id):
 def get_licenses():
     return [('', '')] + model.Package.get_license_options()
 
+def update_res_license(context, res_dict, license_id):
+    session = context['session']
+    resource_id = res_dict['id']
+    log.debug(u'Updating license for resource {}: {}'.format(resource_id, license_id))
+    # TODO
+
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):
         tag_value = tag_value[0]

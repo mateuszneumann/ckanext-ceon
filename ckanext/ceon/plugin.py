@@ -7,7 +7,7 @@ import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_license_id, get_licenses
+from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_license_id, get_licenses, update_res_license
 from converters import convert_to_oa_tags
 
 log = getLogger(__name__)

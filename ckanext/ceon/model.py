@@ -116,11 +116,16 @@ def update_res_license(context, res_dict, license_id):
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):
         tag_value = tag_value[0]
+    if not tag_value:
+        return
     log.debug(u'Updating {} tag in package {}: {}'.format(vocabulary_name,
             pkg_dict['name'], tag_value))
     tag = model.Tag.get(tag_value, vocabulary_name)
-    package = model.Package.get(pkg_dict['id'])
-    package.add_tag(tag)
+    if tag:
+        package = model.Package.get(pkg_dict['id'])
+        package.add_tag(tag)
+    else:
+        raise Exception(u'Tag "{}" not found within vocabulary "{}"'.format(tag_value, vocabulary_name))
 
 def _author_in_authors(session, package_id, author):
     orig_authors = get_authors(session, package_id)

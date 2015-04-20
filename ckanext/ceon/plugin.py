@@ -63,14 +63,14 @@ def create_sci_disciplines():
     except toolkit.ObjectNotFound:
         data = {'name': 'sci_disciplines'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Humanities (Nauki humanistyczne)',
-                u'Social sciences (Nauki społeczne)',
-                u'Physical and mathematical sciences (Nauki ścisłe)',
-                u'Biological and earth sciences (Nauki przyrodnicze)',
-                u'Technological sciences (Nauki techniczne)',
-                u'Agricultural, forestry and veterinary sciences (Nauki rolne, leśne i weterynaryjne)',
-                u'Medical, health and sport sciences (Nauki medyczne, o zdrowiu i o kulturze fizycznej)',
-                u'Arts (Sztuka)',):
+        for tag in (u'Humanities - Nauki humanistyczne',
+                u'Social sciences - Nauki społeczne',
+                u'Physical and mathematical sciences - Nauki ścisłe',
+                u'Biological and earth sciences - Nauki przyrodnicze',
+                u'Technological sciences - Nauki techniczne',
+                u'Agricultural forestry and veterinary sciences - Nauki rolne leśne i weterynaryjne',
+                u'Medical health and sport sciences - Nauki medyczne o zdrowiu i o kulturze fizycznej',
+                u'Arts - Sztuka',):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -299,6 +299,5 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def _resource_after_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
-            update_res_license(context, res_dict, res_dict['license_id']
-
+            update_res_license(context, res_dict, res_dict['license_id'])
 

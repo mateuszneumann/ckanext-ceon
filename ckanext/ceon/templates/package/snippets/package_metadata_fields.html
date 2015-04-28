@@ -1,5 +1,8 @@
 {% ckan_extends %}
 
+{% set licenses = h.ckanext_ceon_licenses() %}
+{% set ancestral_license = data.get('ancestral_license', 'notspecified') %}
+
 {% block package_metadata_fields %}
 
   <div class="control-group">
@@ -27,13 +30,6 @@
   <div class="control-group control-funding">
     <label class="control-label" for="field-oa_funder">{{ _("Funder") }}</label>
     <div class="controls">
-      {#
-      <select id="field-oa_funder" name="oa_funder" data-module="funding-fields">
-      {% for oa_funder in h.ckanext_ceon_oa_funders()  %}
-        <option value="{{ oa_funder }}" {% if oa_funder in data.get('oa_funder', []) %}selected="selected"{% endif %}>{{ oa_funder }}</option>
-      {% endfor %}
-      </select>
-      #}
       <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ data.get('oa_funder', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funders()|join('|') }}" data-module="funding-fields"/>
     </div>
   </div>
@@ -41,13 +37,6 @@
   <div class="control-group control-funding">
     <label class="control-label" for="field-oa_funding_program">{{ _("Funding program") }}</label>
     <div class="controls">
-      {#
-      <select id="field-oa_funding_program" name="oa_funding_program" data-module="funding-fields">
-      {% for oa_funding_program in h.ckanext_ceon_oa_funding_programs()  %}
-        <option value="{{ oa_funding_program }}" {% if oa_funding_program in data.get('oa_funding_program', []) %}selected="selected"{% endif %}>{{ oa_funding_program }}</option>
-      {% endfor %}
-      </select>
-      #}
       <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ data.get('oa_funding_program', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funding_programs()|join('|') }}" data-module="funding-fields"/>
     </div>
   </div>
@@ -55,7 +44,22 @@
   {% import "macros/form.html" as form %}
   {{ form.input('oa_grant_number', label=_('Grant number'), id='field-oa_grant_number', placeholder=_('Grant number'), value=data.oa_grant_number, error=errors.oa_grant_number, classes=['control-medium']) }}
 
-  {{ super() }}
+  <div class="control-group">
+    <label class="control-label">{{ _("License for files") }}</label>
+    <div class="controls control-ancestral" data-module="ancestral-fields">
+      <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" checked="checked">{{ _("Hereby I grant this license for all resources ") }}<br>
+      <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete">
+      {% for license_desc, license_id in licenses|sort if license_desc  %}
+        <option value="{{ license_id }}" {% if ancestral_license|default('notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+      {% endfor %}
+      {% for license_desc, license_id in licenses|sort if license_desc  %}
+        <span><b>{{ license_id }}</b></span>
+        <span><i>{{ license_desc }}</i></span>
+      {% endfor %}
+      </select><br>
+      <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off">{{ _("I will grant different licenses for different resources ") }}<br>
+    </div>
+  </div>
 
 {% endblock %}
 

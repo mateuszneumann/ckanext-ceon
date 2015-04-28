@@ -91,5 +91,11 @@
     </section>
   {% endif %}
 
+  {% if pkg.get('ancestral_license') %}
+    <section id="dataset-ancestral_license" class="resources module-content">
+        <p><strong>{{ _('License for files') }}</strong>: {{ pkg.ancestral_license }}</p>
+    </section>
+  {% endif %}
+
 {% endblock %}
 

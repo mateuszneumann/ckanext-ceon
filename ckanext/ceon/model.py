@@ -18,6 +18,9 @@ from datetime import datetime
 log = getLogger(__name__)
 
 
+PKG_LICENSE_ID = 'CC0-1.0'
+
+
 ceon_package_author_table = Table('ceon_package_author', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
         Column('package_id', types.UnicodeText, ForeignKey('package.id')),
@@ -106,6 +109,19 @@ def get_license_id(session, resource_id):
 
 def get_licenses():
     return [('', '')] + model.Package.get_license_options()
+
+def update_ancestral_license(context, pkg_dict, license_id):
+    session = context['session']
+    package_id = pkg_dict['id']
+    log.debug(u'Updating ancestral license for package {}: {}'.format(package_id, license_id))
+    package = model.Package.get(pkg_dict['id'])
+    package.license_id = PKG_LICENSE_ID         # update package.license_id
+    session.merge(package)
+    for resource in package.resources:
+        if license_id:
+            res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
+            res_license.
+        log.debug(u'Updating ancestral license for resource {}: {}'.format(resource.id, res_license))
 
 def update_res_license(context, res_dict, license_id):
     session = context['session']

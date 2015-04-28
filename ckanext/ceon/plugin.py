@@ -286,6 +286,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
         if 'ancestral_license' in pkg_dict:
             update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
+        else:
+            update_ancestral_license(context, pkg_dict, None)
         return pkg_dict
 
     def _resource_after_create(self, context, res_dict):

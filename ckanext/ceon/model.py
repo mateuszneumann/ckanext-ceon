@@ -112,16 +112,24 @@ def get_licenses():
 
 def update_ancestral_license(context, pkg_dict, license_id):
     session = context['session']
-    package_id = pkg_dict['id']
-    log.debug(u'Updating ancestral license for package {}: {}'.format(package_id, license_id))
     package = model.Package.get(pkg_dict['id'])
-    package.license_id = PKG_LICENSE_ID         # update package.license_id
+    pkg_license = package.get_license_register()[PKG_LICENSE_ID]
+    package.set_license(pkg_license)
     session.merge(package)
+    log.debug(u'Updated license for package {}: {}'.format(pkg_dict['id'], pkg_license))
+    if not license_id:
+        return
+    log.debug(u'Updating ancestral license for package {}: {}'.format(pkg_dict['id'], license_id))
     for resource in package.resources:
-        if license_id:
-            res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
-            res_license.
-        log.debug(u'Updating ancestral license for resource {}: {}'.format(resource.id, res_license))
+        # first do remove all CeonResourceLicenses
+        res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
+        if res_license:
+            log.debug(u'Updating ancestral REMOVE res_license: {}'.format(res_license))
+            session.delete(res_license)
+        new_res_license = CeonResourceLicense(resource_id = resource.id,
+                license_id = license_id)
+        log.debug(u'Updating ancestral CREATE res_license: {}'.format(new_res_license))
+        session.add(new_res_license)
 
 def update_res_license(context, res_dict, license_id):
     session = context['session']

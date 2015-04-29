@@ -7,6 +7,7 @@
 {% set license = h.ckanext_ceon_get_license(data.id) %}
 
 <form id="resource-edit" class="dataset-form dataset-resource-form form-horizontal" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
+  <span>{{ c.pkg_dict.ancestral_license }}</span>
   {% block stages %}
     {# An empty stages variable will not show the stages #}
     {% if stage %}
@@ -45,7 +46,7 @@
     {% endblock %}
 
     {% block basic_fields_license %}
-      {% if not license.id %}
+      {% if not c.pkg_dict.ancestral_license %}
         <div class="control-group">
           {% set error = errors.license_id %}
           <label class="control-label" for="field-license">{{ _("License") }}</label>

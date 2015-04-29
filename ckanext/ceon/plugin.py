@@ -260,13 +260,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'type' in data:
             self._package_after_create(context, data)
         elif 'package_id' in data:
-            self._resource_after_create(context, data)
+            self._resource_create(context, data)
 
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
-        elif 'package_id' in data:
-            self._resource_after_update(context, data)
+        #elif 'package_id' in data:
+        #    self._resource_update(context, data)
+
+    def before_update(self, context, current, resource):
+        self._resource_update(context, resourceIResour)
 
     def _package_after_create(self, context, pkg_dict):
         log.debug(u"Creating package {}".format(pkg_dict))
@@ -290,11 +293,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_ancestral_license(context, pkg_dict, None)
         return pkg_dict
 
-    def _resource_after_create(self, context, res_dict):
+    def _resource_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
         pass
 
-    def _resource_after_update(self, context, res_dict):
+    def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])

@@ -1,7 +1,7 @@
 {% ckan_extends %}
 
 {% set licenses = h.ckanext_ceon_licenses() %}
-{% set ancestral_license = data.get('ancestral_license', 'notspecified') %}
+{% set ancestral_license = data.get('ancestral_license') %}
 
 {% block package_metadata_fields %}
 
@@ -47,8 +47,9 @@
   <div class="control-group">
     <label class="control-label">{{ _("License for files") }}</label>
     <div class="controls control-ancestral" data-module="ancestral-fields">
-      <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" checked="checked">{{ _("Hereby I grant this license for all resources ") }}<br>
-      <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete">
+        
+      <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" {% if ancestral_license %}checked="checked"{% endif %}>{{ _("Hereby I grant this license for all resources ") }}<br>
+      <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete" {% if not ancestral_license %}disabled="disabled"{% endif %}>
       {% for license_desc, license_id in licenses|sort if license_desc  %}
         <option value="{{ license_id }}" {% if ancestral_license|default('notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
       {% endfor %}
@@ -57,7 +58,7 @@
         <span><i>{{ license_desc }}</i></span>
       {% endfor %}
       </select><br>
-      <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off">{{ _("I will grant different licenses for different resources ") }}<br>
+      <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off" {% if not ancestral_license %}checked="checked"{% endif %}>{{ _("I will grant different licenses for different resources ") }}<br>
     </div>
   </div>
 

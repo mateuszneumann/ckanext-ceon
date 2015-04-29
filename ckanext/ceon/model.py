@@ -99,13 +99,7 @@ def get_license_id(session, resource_id):
         license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource_id).first()
         if license:
             return license.license_id
-        else:
-            resource = session.query(Resource).filter(Resource.id == resource_id).first()
-            if resource:
-                package = resource.package
-                if package:
-                    return package.license_id
-        return None
+    return None
 
 def get_licenses():
     return [('', '')] + model.Package.get_license_options()
@@ -113,29 +107,33 @@ def get_licenses():
 def update_ancestral_license(context, pkg_dict, license_id):
     session = context['session']
     package = model.Package.get(pkg_dict['id'])
+    log.debug(u'Updating license for package {}: {}'.format(pkg_dict['id'], PKG_LICENSE_ID))
     pkg_license = package.get_license_register()[PKG_LICENSE_ID]
     package.set_license(pkg_license)
     session.merge(package)
-    log.debug(u'Updated license for package {}: {}'.format(pkg_dict['id'], pkg_license))
     if not license_id:
         return
     log.debug(u'Updating ancestral license for package {}: {}'.format(pkg_dict['id'], license_id))
     for resource in package.resources:
-        # first do remove all CeonResourceLicenses
         res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
         if res_license:
-            log.debug(u'Updating ancestral REMOVE res_license: {}'.format(res_license))
             session.delete(res_license)
-        new_res_license = CeonResourceLicense(resource_id = resource.id,
-                license_id = license_id)
-        log.debug(u'Updating ancestral CREATE res_license: {}'.format(new_res_license))
+        new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
         session.add(new_res_license)
 
 def update_res_license(context, res_dict, license_id):
     session = context['session']
     resource_id = res_dict['id']
     log.debug(u'Updating license for resource {}: {}'.format(resource_id, license_id))
-    # TODO
+    resource = model.Resource.get(res_dict['id'])
+    res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
+    if res_license:
+        log.debug(u'Deleting license res_license: {}'.format(res_license))
+        session.delete(res_license)
+    new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
+    session.merge(new_res_license)
+    log.debug(u'Created license res_license: {}'.format(new_res_license))
+    return new_res_license
 
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):

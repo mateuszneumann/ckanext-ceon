@@ -7,7 +7,7 @@ import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_license_id, get_licenses, update_ancestral_license, update_res_license
+from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from converters import convert_to_oa_tags
 
 log = getLogger(__name__)
@@ -34,6 +34,10 @@ def license(resource_id):
     else:
         license = None
     return license
+
+def ancestral_license(package_id):
+    license_id = get_ancestral_license(_model.Session, package_id)
+    return license_id
 
 def licenses():
     return get_licenses()
@@ -165,6 +169,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return {'ckanext_ceon_get_authors': authors,
                 'ckanext_ceon_get_license_id': license_id,
                 'ckanext_ceon_get_license': license,
+                'ckanext_ceon_ancestral_license': ancestral_license,
                 'ckanext_ceon_licenses': licenses,
                 'ckanext_ceon_res_types': res_types,
                 'ckanext_ceon_sci_disciplines': sci_disciplines,
@@ -269,7 +274,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         #    self._resource_update(context, data)
 
     def before_update(self, context, current, resource):
-        self._resource_update(context, resourceIResour)
+        self._resource_update(context, resource)
 
     def _package_after_create(self, context, pkg_dict):
         log.debug(u"Creating package {}".format(pkg_dict))
@@ -278,6 +283,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
+        if 'ancestral_license' in pkg_dict:
+            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
+        else:
+            update_ancestral_license(context, pkg_dict, None)
 
     def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))

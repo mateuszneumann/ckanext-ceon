@@ -101,6 +101,15 @@ def get_license_id(session, resource_id):
             return license.license_id
     return None
 
+def get_ancestral_license(session, package_id):
+    license_id = None
+    if package_id:
+        package = model.Package.get(package_id)
+        extras = package.extras
+        if 'ancestral_license' in extras:
+            license_id = extras['ancestral_license']
+    return license_id
+
 def get_licenses():
     return [('', '')] + model.Package.get_license_options()
 

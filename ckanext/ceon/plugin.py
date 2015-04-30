@@ -304,7 +304,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def _resource_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
-        pass
+        if 'license_id' in res_dict:
+            update_res_license(context, res_dict, res_dict['license_id'])
 
     def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))

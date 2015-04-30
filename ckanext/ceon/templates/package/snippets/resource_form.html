@@ -7,11 +7,6 @@
 {% set license = h.ckanext_ceon_get_license(data.id) %}
 {% set ancestral_license = h.ckanext_ceon_ancestral_license(pkg_name) %}
 
-<div style="margin-bottom:2em">
-  <span>[{{ ancestral_license }}]</span>
-  <span>[{{ license }}]</span>
-</div>
-
 <form id="resource-edit" class="dataset-form dataset-resource-form form-horizontal" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
   {% block stages %}
     {# An empty stages variable will not show the stages #}

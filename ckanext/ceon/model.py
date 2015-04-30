@@ -146,7 +146,10 @@ def update_res_license(context, res_dict, license_id):
 
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):
-        tag_value = tag_value[0]
+        try:
+            tag_value = tag_value[0]
+        except:
+            pass
     if not tag_value:
         return
     log.debug(u'Updating {} tag in package {}: {}'.format(vocabulary_name,

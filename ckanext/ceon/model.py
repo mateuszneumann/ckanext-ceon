@@ -14,6 +14,10 @@ import ckan.lib.helpers as h
 from ckan.model.domain_object import DomainObject
 import ckan.plugins.toolkit as toolkit
 from datetime import datetime
+from sqlalchemy.sql.schema import PrimaryKeyConstraint
+from urlparse import urljoin
+from ckan.common import _, g
+from ckan.lib.mailer import mail_user
 
 log = getLogger(__name__)
 
@@ -39,6 +43,19 @@ ceon_resource_license_table = Table('ceon_resource_license', meta.metadata,
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
+ceon_package_moderation_table = Table('ceon_package_moderation', meta.metadata,
+        Column('package_id', types.UnicodeText, ForeignKey('package.id')),
+        Column('status', types.UnicodeText),
+        Column('notes', types.UnicodeText),
+        PrimaryKeyConstraint('package_id')
+        )
+
+ceon_user_role_table = Table('ceon_user_role', meta.metadata,
+        Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+        Column('role', types.UnicodeText),
+        PrimaryKeyConstraint('user_id')
+        )
+
 class CeonPackageAuthor(DomainObject):
     """
     CeON extended package author.
@@ -51,6 +68,17 @@ class CeonResourceLicense(DomainObject):
     """
     pass
 
+class CeonPackageModeration(DomainObject):
+    """
+    CeON package moderation.
+    """
+    pass
+
+class CeonUserRole(DomainObject):
+    """
+    CeON user role.
+    """
+    pass
 
 meta.mapper(CeonPackageAuthor, ceon_package_author_table, properties={
     'dataset': relation(model.Package,
@@ -64,11 +92,24 @@ meta.mapper(CeonResourceLicense, ceon_resource_license_table, properties={
         primaryjoin=ceon_resource_license_table.c.resource_id.__eq__(Resource.id))
     })
 
+meta.mapper(CeonPackageModeration, ceon_package_moderation_table, properties={
+    'dataset': relation(model.Package,
+        backref=backref('ceon_package_moderation', cascade='all, delete-orphan'),
+        primaryjoin=ceon_package_moderation_table.c.package_id.__eq__(Package.id))
+    })
+
+meta.mapper(CeonUserRole, ceon_user_role_table, properties={
+    'user': relation(model.User,
+        backref=backref('ceon_user_role', cascade='all, delete-orphan'),
+        primaryjoin=ceon_user_role_table.c.user_id.__eq__(User.id))
+    })
 
 def create_tables():
     log.debug(u'Creating CeON tables')
     ceon_package_author_table.create(checkfirst=True)
     ceon_resource_license_table.create(checkfirst=True)
+    ceon_package_moderation_table.create(checkfirst=True)
+    ceon_user_role_table.create(checkfirst=True)
     log.info(u'CeON tables created')
 
 def get_authors(session, package_id):
@@ -209,3 +250,128 @@ def _author_reposition(session, package_id):
         i = i + 1
         session.merge(a)
 
+def get_moderation_status(session, package_id):
+    if package_id:
+        packageModeration = session.query(CeonPackageModeration).filter(CeonPackageModeration.package_id == package_id).first()
+        if packageModeration:
+            return packageModeration.status
+    return 'private'
+
+def get_moderation_notes(session, package_id):
+    if package_id:
+        packageModeration = session.query(CeonPackageModeration).filter(CeonPackageModeration.package_id == package_id).first()
+        if packageModeration:
+            return packageModeration.notes
+    return ''
+
+def get_role(session, user_id):
+    if user_id:
+        userRole = session.query(CeonUserRole).filter(CeonUserRole.user_id == user_id).first()
+        if userRole:
+            return userRole.role
+    return None
+
+def create_moderation_status(session, package_id, status, notes):
+    ceon_package_moderation = CeonPackageModeration(package_id=package_id, status=status, notes=notes)
+    session.add(ceon_package_moderation)
+    session.commit()
+    if (status == 'waitingForApproval'):
+        adminRoles = session.query(CeonUserRole).filter(CeonUserRole.role == 'admin').all()
+        for adminRole in adminRoles:
+            user = session.query(User).filter(User.id == adminRole.user_id).first()
+            send_moderation_request(user, package_id)
+    return ceon_package_moderation
+    
+def update_moderation_status(session, package_id, status, notes):
+    orig_status = session.query(CeonPackageModeration).filter(CeonPackageModeration.package_id == package_id).first()    
+    if orig_status:
+        previousStatus = orig_status.status
+        orig_status.status = status
+        orig_status.notes = orig_status.notes + '\n' + notes
+        session.merge(orig_status)
+        package = session.query(Package).filter(Package.id == package_id).first()
+        if (status == 'public'):
+            package.private = False
+        else:
+            package.private = True
+        session.merge(package)
+        session.commit()
+        if (status == 'waitingForApproval' and previousStatus != 'waitingForApproval'):
+            adminRoles = session.query(CeonUserRole).filter(CeonUserRole.role == 'admin').all()
+            for adminRole in adminRoles:
+                user = session.query(User).filter(User.id == adminRole.user_id).first()
+                send_moderation_request(user, package_id)
+        if (status == 'public' and previousStatus == 'waitingForApproval'):
+            packageCreator = session.query(User).filter(User.id == package.creator_user_id).first()
+            send_accepted_info(packageCreator, package_id)
+        if (status == 'rejected' and previousStatus == 'waitingForApproval'):
+            packageCreator = session.query(User).filter(User.id == package.creator_user_id).first()
+            send_rejected_info(packageCreator, package_id, notes)
+    else:
+        create_moderation_status(session, package_id, status, notes)
+
+def send_moderation_request(user, package_id):
+    body = get_moderation_link_body(package_id)
+    subject = _('Moderation request from {site_title}').format(site_title=g.site_title)
+    mail_user(user, subject, body)
+    
+def send_accepted_info(user, package_id):
+    body = get_moderation_accepted_link_body(package_id)
+    subject = _('Package accepted info from {site_title}').format(site_title=g.site_title)
+    mail_user(user, subject, body)
+
+def send_rejected_info(user, package_id, notes):
+    body = get_moderation_rejected_link_body(package_id, notes)
+    subject = _('Package rejected info from {site_title}').format(site_title=g.site_title)
+    mail_user(user, subject, body)
+
+def get_moderation_link_body(package_id):
+    request_link_message = _(
+    "New package is waiting for moderation.\n"
+    "\n"
+    "Please click the following link to moderate this request:\n"
+    "\n"
+    "   {package_link}\n"
+    )
+
+    d = {
+        'package_link': get_package_link(package_id),
+        }
+    return request_link_message.format(**d)
+
+def get_moderation_accepted_link_body(package_id):
+    request_link_message = _(
+    "Package has been accepted by moderator.\n"
+    "\n"
+    "Please click the following link to view package:\n"
+    "\n"
+    "   {package_link}\n"
+    )
+
+    d = {
+        'package_link': get_package_link(package_id),
+        }
+    return request_link_message.format(**d)
+
+def get_moderation_rejected_link_body(package_id, notes):
+    request_link_message = _(
+    "Package has been rejected by moderator.\n"
+    "Reason:\n"
+    "{reason}"
+    "\n"
+    "Please click the following link to view package:\n"
+    "\n"
+    "   {package_link}\n"
+    )
+
+    d = {
+        'package_link': get_package_link(package_id),
+        'reason': notes
+        }
+    return request_link_message.format(**d)
+
+def get_package_link(package_id):
+    return urljoin(g.site_url,
+                   h.url_for(controller='package',
+                           action='read',
+                           id=package_id))

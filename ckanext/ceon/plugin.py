@@ -7,7 +7,7 @@ import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_license_id, get_licenses, update_res_license
+from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from converters import convert_to_oa_tags
 
 log = getLogger(__name__)
@@ -34,6 +34,10 @@ def license(resource_id):
     else:
         license = None
     return license
+
+def ancestral_license(package_id):
+    license_id = get_ancestral_license(_model.Session, package_id)
+    return license_id
 
 def licenses():
     return get_licenses()
@@ -100,16 +104,6 @@ def create_oa_funding_programs():
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
-#def update_oa_funding_programs(context, oa_funding_programs):
-#    data = {'id': 'oa_fundering_programs'}
-#    vocab = toolkit.get_action('vocabulary_show')(context, data)
-#    for tag in vocab['tags']:
-#        if tag['name'] == oa_funding_programs:
-#            return
-#    vocabulary_id = vocab['tags'][0]['vocabulary_id']
-#    data = {'name': oa_funder, 'vocabulary_id': vocabulary_id}
-#    toolkit.get_action('tag_create')(context, data)
-
 def res_types():
     create_res_types()
     try:
@@ -175,6 +169,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return {'ckanext_ceon_get_authors': authors,
                 'ckanext_ceon_get_license_id': license_id,
                 'ckanext_ceon_get_license': license,
+                'ckanext_ceon_ancestral_license': ancestral_license,
                 'ckanext_ceon_licenses': licenses,
                 'ckanext_ceon_res_types': res_types,
                 'ckanext_ceon_sci_disciplines': sci_disciplines,
@@ -218,6 +213,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 toolkit.get_validator('ignore_missing')],
             'oa_grant_number': [toolkit.get_converter('convert_from_extras'),
                 toolkit.get_validator('ignore_empty')],
+            'ancestral_license': [toolkit.get_converter('convert_from_extras'),
+                toolkit.get_validator('ignore_missing'),],
             })
         schema['tags']['__extras'].append(toolkit.get_converter('free_tags_only'))
         return schema
@@ -241,6 +238,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'oa_funding_program': [toolkit.get_validator('ignore_missing'),
                 convert_to_oa_tags('oa_funding_programs')],
             'oa_grant_number': [toolkit.get_validator('ignore_empty'),
+                toolkit.get_converter('convert_to_extras')],
+            'ancestral_license': [toolkit.get_validator('ignore_missing'),
                 toolkit.get_converter('convert_to_extras')],
             })
         return schema
@@ -266,13 +265,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'type' in data:
             self._package_after_create(context, data)
         elif 'package_id' in data:
-            self._resource_after_create(context, data)
+            self._resource_create(context, data)
 
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
-        elif 'package_id' in data:
-            self._resource_after_update(context, data)
+        #elif 'package_id' in data:
+        #    self._resource_update(context, data)
+
+    def before_update(self, context, current, resource):
+        self._resource_update(context, resource)
 
     def _package_after_create(self, context, pkg_dict):
         log.debug(u"Creating package {}".format(pkg_dict))
@@ -281,6 +283,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
+        if 'ancestral_license' in pkg_dict:
+            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
+        else:
+            update_ancestral_license(context, pkg_dict, None)
 
     def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
@@ -290,13 +296,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
+        if 'ancestral_license' in pkg_dict:
+            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
+        else:
+            update_ancestral_license(context, pkg_dict, None)
         return pkg_dict
 
-    def _resource_after_create(self, context, res_dict):
+    def _resource_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
-        pass
+        if 'license_id' in res_dict:
+            update_res_license(context, res_dict, res_dict['license_id'])
 
-    def _resource_after_update(self, context, res_dict):
+    def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])

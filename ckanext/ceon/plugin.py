@@ -8,6 +8,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
+from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
 
 log = getLogger(__name__)
@@ -140,6 +141,17 @@ def oa_funding_programs():
     except toolkit.ObjectNotFound:
         return None
 
+def moderationState(package_id):
+    moderationState = get_moderation_status(_model.Session, package_id)
+    return moderationState
+
+def moderationNotes(package_id):
+    moderationNotes = get_moderation_notes(_model.Session, package_id)
+    return moderationNotes
+
+def userRole(user_id):
+    userRole = get_role(_model.Session, user_id)
+    return userRole
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
@@ -175,6 +187,9 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_sci_disciplines': sci_disciplines,
                 'ckanext_ceon_oa_funders': oa_funders,
                 'ckanext_ceon_oa_funding_programs': oa_funding_programs,
+                'ckanext_ceon_get_moderation_state': moderationState,
+                'ckanext_ceon_get_moderation_notes': moderationNotes,
+                'ckanext_ceon_get_user_role': userRole
                 }
 
     # IDatasetForm
@@ -215,6 +230,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 toolkit.get_validator('ignore_empty')],
             'ancestral_license': [toolkit.get_converter('convert_from_extras'),
                 toolkit.get_validator('ignore_missing'),],
+            'moderationStatus': [toolkit.get_converter('convert_from_extras'), 
+                                 toolkit.get_validator('ignore_empty')],
+            'moderationNotes': [toolkit.get_converter('convert_from_extras'), 
+                                toolkit.get_validator('ignore_empty')]
+            
             })
         schema['tags']['__extras'].append(toolkit.get_converter('free_tags_only'))
         return schema
@@ -241,6 +261,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 toolkit.get_converter('convert_to_extras')],
             'ancestral_license': [toolkit.get_validator('ignore_missing'),
                 toolkit.get_converter('convert_to_extras')],
+            'moderationStatus': [toolkit.get_validator('ignore_empty'), 
+                                 toolkit.get_converter('convert_to_extras'), ],
+            'moderationNotes': [toolkit.get_validator('ignore_empty'), 
+                                toolkit.get_converter('convert_to_extras'), ]
             })
         return schema
 
@@ -287,6 +311,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
         else:
             update_ancestral_license(context, pkg_dict, None)
+        create_moderation_status(context['session'], 
+                                 pkg_dict['id'], 
+                                 pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
+                                 pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+            
 
     def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
@@ -300,6 +329,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
         else:
             update_ancestral_license(context, pkg_dict, None)
+        update_moderation_status(context['session'], 
+                                 pkg_dict['id'], 
+                                 pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
+                                 pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
         return pkg_dict
 
     def _resource_create(self, context, res_dict):

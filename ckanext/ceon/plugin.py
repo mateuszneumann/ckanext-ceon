@@ -6,10 +6,12 @@ from logging import getLogger
 import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import ckan.logic as logic
 
 from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
+from ckan.logic.action.create import user_create as ckan_user_create
 
 log = getLogger(__name__)
 
@@ -153,6 +155,26 @@ def userRole(user_id):
     userRole = get_role(_model.Session, user_id)
     return userRole
 
+@logic.auth_allow_anonymous_access
+def ceon_user_create(context, data_dict):
+    result = ckan_user_create(context, data_dict)
+    if result['name']:
+        context = {'user': result['name']}
+        data = {}
+        groups = toolkit.get_action('organization_list_for_user')(context, data)
+        has_folder = False
+        for group in groups:
+            if group.name == 'user_folder' and group.is_organization:
+                has_folder = True
+        if not has_folder:
+            context = {'user': result['name']}
+            data = {'name': 'user_folder_' + result['name'],
+                    'title': 'Folder of user ' + result['display_name'],
+                    'users': [{'name': result['name']}]}
+            toolkit.get_action('organization_create')(context, data)
+    return result
+
+
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -160,8 +182,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IDatasetForm, inherit=False)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
-
-
+    plugins.implements(plugins.IActions, inherit=True)
+    
+    def get_actions(self):
+        actions = {'user_create': ceon_user_create}
+        return actions
+    
     # IConfigurable
     def configure(self, config):
         """
@@ -344,4 +370,4 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
-
+            

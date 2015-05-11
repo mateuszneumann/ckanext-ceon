@@ -12,7 +12,7 @@ from model import create_tables, get_authors, create_authors, update_authors, up
 from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
 from ckan.logic.action.create import user_create as ckan_user_create
-from helpers import create_unique_identifier
+from lib.doi import create_unique_identifier
 
 log = getLogger(__name__)
 

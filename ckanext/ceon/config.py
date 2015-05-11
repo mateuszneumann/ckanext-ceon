@@ -11,10 +11,10 @@ DOI_TEST_PREFIX = '10.5072'
 DOI_ENDPOINT = 'https://mds.datacite.org'
 DOI_TEST_ENDPOINT = 'https://test.datacite.org/mds'
 
-def doi_get_prefix():
+def get_doi_prefix():
     return DOI_TEST_PREFIX if asbool(config.get("ckanext.doi.test_mode", True)) else config.get("ckanext.doi.prefix")
     
-def doi_get_endpoint():
+def get_doi_endpoint():
     return DOI_TEST_ENDPOINT if asbool(config.get("ckanext.doi.test_mode", True)) else DOI_ENDPOINT
 
 

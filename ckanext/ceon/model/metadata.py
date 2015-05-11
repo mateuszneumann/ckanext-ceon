@@ -34,6 +34,7 @@ ceon_resource_license_table = Table('ceon_resource_license', meta.metadata,
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
+
 class CeonPackageAuthor(DomainObject):
     """
     CeON extended package author.

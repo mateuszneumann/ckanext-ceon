@@ -9,7 +9,7 @@ from sqlalchemy.sql.schema import PrimaryKeyConstraint
 from ckan.model import meta, User, Package, Session, Resource, Group
 from ckan.model.domain_object import DomainObject
 
-from ckanext.ceon.helpers import send_accepted_info, send_moderation_request, send_rejected_info
+from ckanext.ceon.lib.moderation import send_accepted_info, send_moderation_request, send_rejected_info
 
 log = getLogger(__name__)
 

@@ -10,7 +10,7 @@ import ckan.plugins.toolkit as toolkit
 
 from ckan.common import _
 
-from helpers import tag_in_vocabulary
+from lib.metadata import tag_in_vocabulary
 
 
 log = getLogger(__name__)

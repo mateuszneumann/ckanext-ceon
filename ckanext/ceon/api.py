@@ -5,7 +5,7 @@ import os
 import abc
 import requests
 from xmltodict import unparse
-from config import doi_get_endpoint
+from config import get_doi_endpoint
 from pylons import config
 
 class DataCiteAPI(object):
@@ -16,7 +16,7 @@ class DataCiteAPI(object):
     def _call(self, **kwargs):
         account_name = config.get("ckanext.doi.account_name")
         account_password = config.get("ckanext.doi.account_password")
-        endpoint = os.path.join(doi_get_endpoint(), self.path)
+        endpoint = os.path.join(get_doi_endpoint(), self.path)
         try:
             path_extra = kwargs.pop('path_extra')
         except KeyError:

@@ -19,12 +19,16 @@ from helpers import send_accepted_info, send_moderation_request, send_rejected_i
 log = getLogger(__name__)
 
 
+from doi import *
+from metadata import *
+from moderation import *
+
 PKG_LICENSE_ID = 'CC0-1.0'
 
 
 ceon_package_author_table = Table('ceon_package_author', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-        Column('package_id', types.UnicodeText, ForeignKey('package.id')),
+        Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
         Column('firstname', types.UnicodeText),
         Column('lastname', types.UnicodeText),
         Column('email', types.UnicodeText),
@@ -35,23 +39,35 @@ ceon_package_author_table = Table('ceon_package_author', meta.metadata,
 
 ceon_resource_license_table = Table('ceon_resource_license', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-        Column('resource_id', types.UnicodeText, ForeignKey('resource.id')),
+        Column('resource_id', types.UnicodeText, ForeignKey('resource.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
         Column('license_id', types.UnicodeText),
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
 ceon_package_moderation_table = Table('ceon_package_moderation', meta.metadata,
-        Column('package_id', types.UnicodeText, ForeignKey('package.id')),
+        Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
         Column('status', types.UnicodeText),
         Column('notes', types.UnicodeText),
         PrimaryKeyConstraint('package_id')
         )
 
 ceon_user_role_table = Table('ceon_user_role', meta.metadata,
-        Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+        Column('user_id', types.UnicodeText, ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
         Column('role', types.UnicodeText),
         PrimaryKeyConstraint('user_id')
         )
+ceon_package_doi_table = Table('ceon_package_doi', meta.metadata,
+        Column('identifier', types.UnicodeText, primary_key=True),
+        Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
+        Column('published', types.DateTime, nullable=True),  # Date DOI was published to DataCite
+        )
+
+ceon_resource_doi_table = Table('ceon_resource_doi', meta.metadata,
+        Column('identifier', types.UnicodeText, primary_key=True),
+        Column('resource_id', types.UnicodeText, ForeignKey('resource.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
+        Column('published', types.DateTime, nullable=True),  # Date DOI was published to DataCite
+        )
+
 
 class CeonPackageAuthor(DomainObject):
     """
@@ -74,6 +90,18 @@ class CeonPackageModeration(DomainObject):
 class CeonUserRole(DomainObject):
     """
     CeON user role.
+    """
+    pass
+
+class CeonPackageDOI(DomainObject):
+    """
+    CeON DOI.
+    """
+    pass
+
+class CeonResourceDOI(DomainObject):
+    """
+    CeON DOI.
     """
     pass
 
@@ -101,12 +129,26 @@ meta.mapper(CeonUserRole, ceon_user_role_table, properties={
         primaryjoin=ceon_user_role_table.c.user_id.__eq__(User.id))
     })
 
+meta.mapper(CeonPackageDOI, ceon_package_doi_table, properties={
+    'dataset': relation(model.Package,
+        backref=backref('ceon_package_doi', cascade='all, delete-orphan'),
+        primaryjoin=ceon_package_doi_table.c.package_id.__eq__(Package.id))
+    })
+
+meta.mapper(CeonResourceDOI, ceon_resource_doi_table, properties={
+    'dataset': relation(model.Resource,
+        backref=backref('ceon_resource_doi', cascade='all, delete-orphan'),
+        primaryjoin=ceon_resource_doi_table.c.resource_id.__eq__(Resource.id))
+    })
+
 def create_tables():
     log.debug(u'Creating CeON tables')
     ceon_package_author_table.create(checkfirst=True)
     ceon_resource_license_table.create(checkfirst=True)
     ceon_package_moderation_table.create(checkfirst=True)
     ceon_user_role_table.create(checkfirst=True)
+    ceon_package_doi_table.create(checkfirst=True)
+    ceon_resource_doi_table.create(checkfirst=True)
     log.info(u'CeON tables created')
 
 def get_authors(session, package_id):

@@ -2,7 +2,8 @@
 ckanext-ceon
 =============
 
-Extension implementing various CeON changes to default CKAN installation
+Extension implementing various CeON changes to default CKAN installation.
+The part handling DOI is based upon https://github.com/NaturalHistoryMuseum/ckanext-doi
 
 
 ------------

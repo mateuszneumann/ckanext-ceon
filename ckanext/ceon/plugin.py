@@ -12,6 +12,7 @@ from model import create_tables, get_authors, create_authors, update_authors, up
 from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
 from ckan.logic.action.create import user_create as ckan_user_create
+from helpers import create_unique_identifier
 
 log = getLogger(__name__)
 
@@ -184,6 +185,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
     
+    # IActions
     def get_actions(self):
         actions = {'user_create': ceon_user_create}
         return actions
@@ -341,6 +343,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+        create_unique_identifier(pkg_dict['id'])
             
 
     def _package_after_update(self, context, pkg_dict):

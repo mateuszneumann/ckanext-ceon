@@ -184,6 +184,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
+    plugins.implements(plugins.IRoutes, inherit=True)
+    
+    def before_map(self, m):
+        m.connect('help',
+                  '/help',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='help')
+        return m
     
     # IActions
     def get_actions(self):

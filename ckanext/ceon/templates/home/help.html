@@ -1,0 +1,14 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Help') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('Help'), controller='home', action='help' %}</li>
+{% endblock %}
+
+{% block primary %}
+
+{% snippet 'home/snippets/help_text.html' %}
+{% endblock %}
+
+{% block secondary %}{% endblock %}

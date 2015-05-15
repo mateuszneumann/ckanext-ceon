@@ -217,22 +217,18 @@ class MetadataDataCiteAPI(DataCiteAPI):
             }
 
         # Optional metadata properties
-        subject = [t.name if isinstance(t, Tag) else t for t in package.get_tags()]
+        subject = [t.name.encode('unicode-escape') if isinstance(t, Tag) else t for t in package.get_tags()]
         subject.sort()
         description = package.notes.encode('unicode-escape')
         ceon_metadata = get_ceon_metadata(package)
-        oa_funder = ceon_metadata['oa_funders'] if 'oa_funders' in ceon_metadata else None
-        oa_funding_program = ceon_metadata['oa_funding_programs'] if 'oa_funding_programs' in ceon_metadata else None
-        res_type = ceon_metadata['res_types'] if 'res_types' in ceon_metadata else None
-        sci_discipline = ceon_metadata['sci_disciplines'] if 'sci_disciplines' in ceon_metadata else None
-        rel_citation = package.extras['rel_citation'] if 'rel_citation' in package.extras else None
+        oa_funder = ceon_metadata['oa_funders'].encode('unicode-escape') if 'oa_funders' in ceon_metadata else None
+        oa_funding_program = ceon_metadata['oa_funding_programs'].encode('unicode-escape') if 'oa_funding_programs' in ceon_metadata else None
+        res_type = ceon_metadata['res_types'].encode('unicode-escape') if 'res_types' in ceon_metadata else None
+        sci_discipline = ceon_metadata['sci_disciplines'].encode('unicode-escape') if 'sci_disciplines' in ceon_metadata else None
+        oa_grant_number = package.extras['oa_grant_number'].encode('unicode-escape') if 'oa_grant_number' in package.extras else None
+        rel_citation = package.extras['rel_citation'].encode('unicode-escape') if 'rel_citation' in package.extras else None
+        version = package.version.encode('unicode-escape') if package.version else None
 
-        #size = kwargs.get('size')
-        #format = kwargs.get('format')
-        #version = kwargs.get('version')
-        #rights = kwargs.get('rights')
-        #geo_point = kwargs.get('geo_point')
-        #geo_box = kwargs.get('geo_box')
         if sci_discipline:
             if subject:
                 subject.append(sci_discipline)
@@ -257,9 +253,87 @@ class MetadataDataCiteAPI(DataCiteAPI):
                         '#text': rel_citation
                     }
                 }
+        if oa_funder:
+            if oa_funding_program and oa_grant_number:
+                project_info = u'info:eu-repo/grantAgreement/{0}/{1}/{2}///'
+                project_info = project_info.format(oa_funder,
+                        oa_funding_program, oa_grant_number)
+                metadata['resource']['contributors'] = {
+                    'contributor': {
+                        '@contributorType': 'Funder',
+                        'contributorName': oa_funder,
+                        'nameIdentifier': {
+                                '@nameIdentifierScheme': 'info',
+                                '#text': project_info
+                            }
+                        }
+                    }
+            else:
+                metadata['resource']['contributors'] = {
+                    'contributor': {
+                        '@contributorType': 'Funder',
+                        'contributorName': oa_funder
+                        }
+                    }
+        if res_type:
+            metadata['resource']['resourceType'] = {
+                    '@resourceTypeGeneral': res_type,
+                    '#text': u'TODO'
+                }
+        if version:
+            metadata['resource']['version'] = version
+
+        # Add resource (file) identifiers relation
+        resource_identifiers = []
+        for resource in package.resources:
+            log.debug(u'Package to XML.  Resource {}'.format(resource))
+            resource_doi = CeonResourceDOI.get(resource.id)
+            if not resource_doi:
+                continue
+            log.debug(u'Package to XML.  Resource_DOI {}'.format(resource_doi))
+            resource_identifiers.append({
+                    '@relatedIdentifierType': 'DOI',
+                    '@relationType': 'HasPart',
+                    '#text': resource_doi.identifier
+                })
+        log.debug(u'Package to XML.  Resource identifiers {}'.format(resource_identifiers))
+        if len(resource_identifiers) > 0:
+            if 'relatedIdentifiers' in metadata['resource']:
+                for i in metadata['resource']['relatedIdentifiers'].values():
+                    resource_identifiers.append(i)
+            log.debug(u'Package to XML.  Resource identifiers {}'.format(resource_identifiers))
+            metadata['resource']['relatedIdentifiers'] = {
+                    'relatedIdentifier': resource_identifiers
+                }
+            log.debug(u'Package to XML.  Related identifiers {}'.format(metadata['resource']['relatedIdentifiers']))
 
         return unparse(metadata, pretty=True, full_document=False)
 
+    @staticmethod
+    def resource_to_xml(identifier, resource):
+        """
+        Pass in DOI identifier and `Resource` and return XML in the format
+        ready to send to DataCite API
+
+        @param identifier: a DOI identifier
+        @param resource: a CKAN Resource
+        @return: XML-formatted metadata
+        """
+        
+        title = resource.name.encode('unicode-escape')
+        metadata = {
+                'resource': {
+                    '@xmlns': 'http://datacite.org/schema/kernel-3',
+                    '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+                    '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
+                    'identifier': {'@identifierType': 'DOI', '#text': identifier},
+                    'titles': {
+                        'title': {'#text': title}
+                    },
+                }
+            }
+
+        return unparse(metadata, pretty=True, full_document=False)
 
     def upsert(self, identifier, title, creator, publisher, publisher_year, **kwargs):
         """
@@ -399,26 +473,29 @@ def create_package_doi(package_id):
     log.debug(u"Creating package DOI for package {}".format(package_id))
     datacite_api = DOIDataCiteAPI()
     log.debug(u"Creating package DOI datacite_api {}".format(datacite_api))
-    while True:
-        identifier = os.path.join(get_doi_prefix(), '{0:07}'.format(random.randint(1, 100000)))
-        # Check this identifier doesn't exist in the table
-        if not Session.query(CeonPackageDOI).filter(CeonPackageDOI.identifier == identifier).count():
-            # And check against the datacite service
-            try:
-                datacite_doi = datacite_api.get(identifier)
-            except HTTPError:
-                pass
-            # TODO remove the nest 2 lines (ConnectionError) ignoring
-            except ConnectionError:
-                pass
-            else:
-                if datacite_doi.text:
-                    continue
-        doi = CeonPackageDOI(package_id=package_id, identifier=identifier)
-        Session.add(doi)
-        Session.commit()
-        log.debug(u"Creating package DOI added DOI {}".format(doi))
-        return doi
+    identifier = _create_unique_identifier()
+    package_doi = CeonPackageDOI(package_id=package_id, identifier=identifier)
+    Session.add(package_doi)
+    Session.commit()
+    log.debug(u"Creating pacakge DOI added DOI {}".format(package_doi))
+    return package_doi
+
+def create_resource_doi(resource_id):
+    """
+    Create a unique identifier, using the prefix and a random number: 10.5072/0044634
+    Checks the random number doesn't exist in the table or the datacite repository
+    All unique identifiers are created with
+    @return:
+    """
+    log.debug(u"Creating resource DOI for resource {}".format(resource_id))
+    datacite_api = DOIDataCiteAPI()
+    log.debug(u"Creating resource DOI datacite_api {}".format(datacite_api))
+    identifier = _create_unique_identifier(True)
+    resource_doi = CeonResourceDOI(resource_id=resource_id, identifier=identifier)
+    Session.add(resource_doi)
+    Session.commit()
+    log.debug(u"Creating resource DOI added DOI {}".format(resource_doi))
+    return resource_doi
 
 def update_package_doi(package_id):
     package = Package.get(package_id)
@@ -431,6 +508,47 @@ def update_package_doi(package_id):
     metadata_xml = MetadataDataCiteAPI.package_to_xml(package_doi.identifier, package)
     log.debug(u'Updating DOI. XML:\n{}'.format(metadata_xml))
 
+def update_resource_doi(resource_id):
+    resource = Resource.get(resource_id)
+    if not resource:
+        raise Exception(u'Resource "{}" not found'.format(resource_id))
+    resource_doi = CeonResourceDOI.get(resource_id)
+    if not resource_doi:
+        resource_doi = create_resource_doi(resource_id)
+    log.debug(u'Updating DOI {} for resource {}'.format(resource_doi.identifier, resource.name))
+    metadata_xml = MetadataDataCiteAPI.resource_to_xml(resource_doi.identifier, resource)
+    log.debug(u'Updating DOI. XML:\n{}'.format(metadata_xml))
+
+
+def _create_unique_identifier(for_resource=False):
+    datacite_api = DOIDataCiteAPI()
+    while True:
+        identifier = os.path.join(get_doi_prefix(),
+                '{0:07}'.format(random.randint(1, 9999999)))
+        if for_resource:
+            identifier = os.path.join(identifier,
+                    '{0:03}'.format(random.randint(1, 999)))
+            query = Session.query(CeonResourceDOI)
+            query = query.filter(CeonResourceDOI.identifier == identifier)
+            exists = query.count()
+        else:
+            query = Session.query(CeonPackageDOI)
+            query = query.filter(CeonPackageDOI.identifier == identifier)
+            exists = query.count()
+        # Check this identifier doesn't exist in the table
+        if not exists:
+            # And check against the datacite service
+            try:
+                datacite_doi = datacite_api.get(identifier)
+            except HTTPError:
+                pass
+            # TODO remove the nest 2 lines (ConnectionError) ignoring
+            except ConnectionError:
+                pass
+            else:
+                if datacite_doi.text:
+                    continue
+        return identifier
 
 def _ensure_list(var):
     # Make sure a var is a list so we can easily loop through it

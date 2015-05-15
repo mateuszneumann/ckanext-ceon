@@ -12,7 +12,7 @@ from model import create_tables, get_authors, create_authors, update_authors, up
 from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
 from ckan.logic.action.create import user_create as ckan_user_create
-from lib.doi import create_package_doi, update_package_doi
+from lib.doi import create_package_doi, create_resource_doi, update_package_doi, update_resource_doi
 
 log = getLogger(__name__)
 
@@ -377,9 +377,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         log.debug(u"Creating resource {}".format(res_dict))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
+        create_resource_doi(res_dict['id'])
 
     def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
-            
+        update_resource_doi(res_dict['id'])
+

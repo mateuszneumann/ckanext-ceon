@@ -34,7 +34,7 @@ def get_ceon_metadata(package):
         return None
     metadata = {}
     for (k, v) in _ceon_vocabularies(package):
-        tag = u', '.join([tag.name if isinstance(tag, Tag) else tag for tag in v])
+        tag = ', '.join([tag.name if isinstance(tag, Tag) else tag for tag in v])
         metadata[k] = tag
     return metadata
 

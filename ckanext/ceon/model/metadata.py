@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8
 
+from datetime import datetime
 from logging import getLogger
-
 from sqlalchemy import types, Table, ForeignKey, Column, DateTime
 from sqlalchemy.orm import relation, backref
+
 from ckan.model import meta, User, Package, Session, Resource, Group, Tag
 from ckan.model.types import make_uuid
 from ckan.model.domain_object import DomainObject
-from datetime import datetime
 
 log = getLogger(__name__)
 
@@ -39,7 +39,28 @@ class CeonPackageAuthor(DomainObject):
     """
     CeON extended package author.
     """
-    pass
+
+    @staticmethod
+    def get(identifier):
+        """
+        Returns a `CeonPackageAuthor` object referenced by its identifier.
+        """
+        query = meta.Session.query(CeonPackageAuthor)
+        query = query.filter(CeonPackageAuthor.id==reference)
+        rec = query.first()
+        return rec
+
+    @staticmethod
+    def get_all(package_id):
+        """
+        Returns a `CeonPackageAuthor` objects referenced by package_id.
+        """
+        query = meta.Session.query(CeonPackageAuthor)
+        query = query.filter(CeonPackageAuthor.package_id==package_id)
+        query = query.order_by(CeonPackageAuthor.position)
+        query = query.order_by(CeonPackageAuthor.created)
+        return query.all()
+
 
 class CeonResourceLicense(DomainObject):
     """
@@ -106,13 +127,13 @@ def get_licenses():
 def update_ancestral_license(context, pkg_dict, license_id):
     session = context['session']
     package = Package.get(pkg_dict['id'])
-    log.debug(u'Updating license for package {}: {}'.format(pkg_dict['id'], PKG_LICENSE_ID))
+    log.debug(u'Updating license for package {}: {}'.format(pkg_dict['name'], PKG_LICENSE_ID))
     pkg_license = package.get_license_register()[PKG_LICENSE_ID]
     package.set_license(pkg_license)
     session.merge(package)
     if not license_id:
         return
-    log.debug(u'Updating ancestral license for package {}: {}'.format(pkg_dict['id'], license_id))
+    log.debug(u'Updating ancestral license for package {}: {}'.format(pkg_dict['name'], license_id))
     for resource in package.resources:
         res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
         if res_license:
@@ -162,14 +183,17 @@ def _author_in_authors(session, package_id, author):
     return False
 
 def _author_create(session, package_id, author):
-    if 'firstname' in author or 'lastname' in author or 'email' in author or 'affiliation' in author:
-        if author['firstname'] or author['lastname'] or author['email'] or author['affiliation']: 
-            ceon_author = CeonPackageAuthor(package_id=package_id,
-                    firstname=author['firstname'], lastname=author['lastname'],
-                    email=author['email'], affiliation=author['affiliation'],
-                    position=author['position'])
-            session.add(ceon_author)
-            return ceon_author
+    if 'firstname' in author or 'lastname' in author or 'email' in author or 'affiliation' in author: 
+        firstname = author['firstname'] if ('firstname' in author) else None
+        lastname = author['lastname'] if ('lastname' in author) else None
+        email = author['email'] if ('email' in author) else None
+        affiliation = author['affiliation'] if ('affiliation' in author) else None
+        position = author['position'] if ('position' in author) else None
+        ceon_author = CeonPackageAuthor(package_id=package_id,
+                firstname=firstname, lastname=lastname, email=email,
+                affiliation=affiliation, position=position)
+        session.add(ceon_author)
+        return ceon_author
     return None
 
 def _author_delete(session, package_id, author):
@@ -178,13 +202,14 @@ def _author_delete(session, package_id, author):
         session.delete(orig_author)
 
 def _author_update(session, package_id, author):
-    log.debug(u'Updating author {} {} ({}) in package {}'.format(author['firstname'], author['lastname'], author['position'], package_id))
+    log.debug(u'Updating author {} in package {}'.format(author, package_id))
     orig_author = _author_find(session, author['id'])
-    orig_author.firstname = author['firstname']
-    orig_author.lastname = author['lastname']
-    orig_author.email = author['email']
-    orig_author.affiliation = author['affiliation']
-    orig_author.position = author['position']
+    orig_author.firstname = author['firstname'] if ('firstname' in author) else None
+    orig_author.lastname = author['lastname'] if ('lastname' in author) else None
+    orig_author.email = author['email'] if ('email' in author) else None
+    orig_author.affiliation = author['affiliation'] if ('affiliation' in author) else None
+    if 'position' in author:
+        orig_author.position = author['position']
     author = session.merge(orig_author)
     return author
 

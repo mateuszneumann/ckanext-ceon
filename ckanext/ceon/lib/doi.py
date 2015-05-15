@@ -3,14 +3,18 @@
 
 from logging import getLogger
 
+import abc
 import os
 import random
-from requests.exceptions import HTTPError
+import requests
+from pylons import config
+from requests.exceptions import ConnectionError, HTTPError
+from xmltodict import unparse
 
-from ckan.model import Session
-
-from ckanext.ceon.model import CeonPackageDOI
-from ckanext.ceon.config import get_doi_prefix
+from ckan.model import Package, Resource, Session, Tag
+from ckanext.ceon.config import get_doi_endpoint, get_doi_prefix
+from ckanext.ceon.lib.metadata import get_ceon_metadata
+from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI
 
 log = getLogger(__name__)
 
@@ -155,7 +159,107 @@ class MetadataDataCiteAPI(DataCiteAPI):
                         'geoLocationBox': geo_box
                     }
                 }
+        return unparse(metadata, pretty=True, full_document=False, ident='  ')
+
+    @staticmethod
+    def package_to_xml(identifier, package):
+        """
+        Pass in DOI identifier and `Package` and return XML in the format
+        ready to send to DataCite API
+
+        @param identifier: a DOI identifier
+        @param package: a CKAN Package
+        @return: XML-formatted metadata
+        """
+        
+        def _name(firstname, lastname):
+            if lastname and firstname:
+                return "{}, {}".format(lastname.encode('unicode-escape'),
+                        firstname.encode('unicode-escape'))
+            elif lastname:
+                return lastname.encode('unicode-escape')
+            elif firstname:
+                return firstname.encode('unicode-escape')
+            return None
+
+        title = package.title.encode('unicode-escape')
+        publisher = package.publisher.encode('unicode-escape')
+        if 'publication_year' in package.extras:
+            publication_year = package.extras['publication_year']
+        elif isinstance(package.metadata_created, datetime):
+            publication_year = package.metadata_created.year
+        else:
+            publication_year = parser.parse(package.metadata_created).year
+        creators = []
+        for author in CeonPackageAuthor.get_all(package.id):
+            name = _name(author.firstname, author.lastname)
+            if author.affiliation:
+                creators.append({'creatorName': name,
+                        'affiliation': author.affiliation.encode('unicode-escape')
+                    })
+            else:
+                creators.append({'creatorName': name})
+        metadata = {
+                'resource': {
+                    '@xmlns': 'http://datacite.org/schema/kernel-3',
+                    '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+                    '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
+                    'identifier': {'@identifierType': 'DOI', '#text': identifier},
+                    'titles': {
+                        'title': {'#text': title}
+                    },
+                    'creators': {
+                        'creator': [c for c in creators],
+                    },
+                    'publisher': publisher,
+                    'publicationYear': publication_year,
+                }
+            }
+
+        # Optional metadata properties
+        subject = [t.name if isinstance(t, Tag) else t for t in package.get_tags()]
+        subject.sort()
+        description = package.notes.encode('unicode-escape')
+        ceon_metadata = get_ceon_metadata(package)
+        oa_funder = ceon_metadata['oa_funders'] if 'oa_funders' in ceon_metadata else None
+        oa_funding_program = ceon_metadata['oa_funding_programs'] if 'oa_funding_programs' in ceon_metadata else None
+        res_type = ceon_metadata['res_types'] if 'res_types' in ceon_metadata else None
+        sci_discipline = ceon_metadata['sci_disciplines'] if 'sci_disciplines' in ceon_metadata else None
+        rel_citation = package.extras['rel_citation'] if 'rel_citation' in package.extras else None
+
+        #size = kwargs.get('size')
+        #format = kwargs.get('format')
+        #version = kwargs.get('version')
+        #rights = kwargs.get('rights')
+        #geo_point = kwargs.get('geo_point')
+        #geo_box = kwargs.get('geo_box')
+        if sci_discipline:
+            if subject:
+                subject.append(sci_discipline)
+            else:
+                subject = [sci_discipline]
+        if subject:
+            metadata['resource']['subjects'] = {
+                    'subject': [c for c in _ensure_list(subject)]
+                }
+        if description:
+            metadata['resource']['descriptions'] = {
+                    'description': {
+                        '@descriptionType': 'Abstract',
+                        '#text': description
+                    }
+                }
+        if rel_citation:
+            metadata['resource']['relatedIdentifiers'] = {
+                    'relatedIdentifier': {
+                        '@relatedIdentifierType': 'URL',
+                        '@relationType': 'IsReferencedBy',
+                        '#text': rel_citation
+                    }
+                }
+
         return unparse(metadata, pretty=True, full_document=False)
+
 
     def upsert(self, identifier, title, creator, publisher, publisher_year, **kwargs):
         """
@@ -231,16 +335,70 @@ class MediaDataCiteAPI(DataCiteAPI):
     pass
 
 
-def create_unique_identifier(package_id):
+def publish_doi(package_id, **kwargs):
+    """
+    Publish a DOI to DataCite
+
+    Need to create metadata first
+    And then create DOI => URI association
+    See MetadataDataCiteAPI.metadata_to_xml for param information
+    @param package_id:
+    @param title:
+    @param creator:
+    @param publisher:
+    @param publisher_year:
+    @param kwargs:
+    @return: request response
+    """
+    identifier = kwargs.get('identifier')
+
+    metadata = MetadataDataCiteAPI()
+    metadata.upsert(**kwargs)
+
+    # The ID of a dataset never changes, so use that for the URL
+    url = os.path.join(get_site_url(), 'dataset', package_id)
+
+    doi = DOIDataCiteAPI()
+    r = doi.upsert(doi=identifier, url=url)
+    assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
+
+    # If we have created the DOI, save it to the database
+    if r.text == 'OK':
+        # Update status for this package and identifier
+        num_affected = Session.query(DOI).filter_by(package_id=package_id, identifier=identifier).update({"published": datetime.datetime.now()})
+        # Raise an error if update has failed - should never happen unless
+        # DataCite and local db get out of sync - in which case requires investigating
+        assert num_affected == 1, 'Updating local DOI failed'
+
+    log.debug('Created new DOI for package %s' % package_id)
+
+
+def update_doi(package_id, **kwargs):
+    doi = get_doi(package_id)
+    kwargs['identifier'] = doi.identifier
+    metadata = MetadataDataCiteAPI()
+    metadata.upsert(**kwargs)
+
+
+def get_doi(package_id):
+    doi = Session.query(DOI).filter(DOI.package_id==package_id).first()
+    return doi
+
+
+
+
+
+#############################################################
+def create_package_doi(package_id):
     """
     Create a unique identifier, using the prefix and a random number: 10.5072/0044634
     Checks the random number doesn't exist in the table or the datacite repository
     All unique identifiers are created with
     @return:
     """
-    log.debug(u"Creating unique identifier for package {}".format(package_id))
+    log.debug(u"Creating package DOI for package {}".format(package_id))
     datacite_api = DOIDataCiteAPI()
-    log.debug(u"Creating unique identifier datacite_api {}".format(datacite_api))
+    log.debug(u"Creating package DOI datacite_api {}".format(datacite_api))
     while True:
         identifier = os.path.join(get_doi_prefix(), '{0:07}'.format(random.randint(1, 100000)))
         # Check this identifier doesn't exist in the table
@@ -250,12 +408,32 @@ def create_unique_identifier(package_id):
                 datacite_doi = datacite_api.get(identifier)
             except HTTPError:
                 pass
+            # TODO remove the nest 2 lines (ConnectionError) ignoring
+            except ConnectionError:
+                pass
             else:
                 if datacite_doi.text:
                     continue
         doi = CeonPackageDOI(package_id=package_id, identifier=identifier)
         Session.add(doi)
         Session.commit()
-        log.debug(u"Creating unique identifier added DOI {}".format(doi))
+        log.debug(u"Creating package DOI added DOI {}".format(doi))
         return doi
+
+def update_package_doi(package_id):
+    package = Package.get(package_id)
+    if not package:
+        raise Exception(u'Package "{}" not found'.format(package_id))
+    package_doi = CeonPackageDOI.get(package_id)
+    if not package_doi:
+        package_doi = create_package_doi(package_id)
+    log.debug(u'Updating DOI {} for package {}'.format(package_doi.identifier, package.name))
+    metadata_xml = MetadataDataCiteAPI.package_to_xml(package_doi.identifier, package)
+    log.debug(u'Updating DOI. XML:\n{}'.format(metadata_xml))
+
+
+def _ensure_list(var):
+    # Make sure a var is a list so we can easily loop through it
+    # Useful for properties were multiple is optional
+    return var if isinstance(var, list) else [var]
 

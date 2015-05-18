@@ -1,0 +1,78 @@
+# Translations template for ckanext-ceon.
+# Copyright (C) 2015 ORGANIZATION
+# This file is distributed under the same license as the ckanext-ceon
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-ceon 0.0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2015-05-18 10:19+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ckanext/ceon/converters.py:35
+#, python-format
+msgid "Tag vocabulary \"%s\" does not exist"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:18
+msgid "Moderation request from {site_title}"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:23
+msgid "Package accepted info from {site_title}"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:28
+msgid "Package rejected info from {site_title}"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:32
+msgid ""
+"New package is waiting for moderation.\n"
+"\n"
+"Please click the following link to moderate this request:\n"
+"\n"
+"   {package_link}\n"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:46
+msgid ""
+"Package has been accepted by moderator.\n"
+"\n"
+"Please click the following link to view package:\n"
+"\n"
+"   {package_link}\n"
+msgstr ""
+
+#: ckanext/ceon/lib/moderation.py:60
+msgid ""
+"Package has been rejected by moderator.\n"
+"Reason:\n"
+"{reason}\n"
+"Please click the following link to view package:\n"
+"\n"
+"   {package_link}\n"
+msgstr ""
+
+#: ckanext/ceon/templates/snippets/license.html:24
+msgid "No License Provided"
+msgstr ""
+
+#: ckanext/ceon/templates/snippets/license.html:31
+msgid "License"
+msgstr ""
+
+#: ckanext/ceon/templates/snippets/license.html:39
+#: ckanext/ceon/templates/snippets/license.html:46
+msgid "This dataset satisfies the Open Definition."
+msgstr ""
+

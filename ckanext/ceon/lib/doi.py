@@ -12,6 +12,7 @@ from requests.exceptions import ConnectionError, HTTPError
 from xmltodict import unparse
 
 from ckan.model import Package, Resource, Session, Tag
+from ckan.model.license import LicenseRegister
 from ckanext.ceon.config import get_doi_endpoint, get_doi_prefix
 from ckanext.ceon.lib.metadata import get_ceon_metadata
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI
@@ -183,7 +184,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
             return None
 
         title = package.title.encode('unicode-escape')
-        publisher = package.publisher.encode('unicode-escape')
+        publisher = package.extras['publisher'].encode('unicode-escape')
         if 'publication_year' in package.extras:
             publication_year = package.extras['publication_year']
         elif isinstance(package.metadata_created, datetime):
@@ -332,6 +333,31 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     },
                 }
             }
+
+        extras = resource.extras
+        description = resource.description.encode('unicode-escape')
+        license_id = extras['license_id']
+        license = LicenseRegister()[license]
+        if license:
+            license_url = license.url
+        file_format = resource.format.encode('unicode-escape')
+        file_size = resource.size
+        date_available = resource.created
+        date_updated = resource.last_modified
+        package_doi = CeonPackageDOI.get(resource.package_id).identifier
+        if description:
+            metadata['resource']['descriptions'] = {
+                    'description': {
+                        '@descriptionType': 'Other',
+                        '#text': description
+                    }
+                }
+#        if license_id:
+#            metadata['resource'][''] = {
+#                    '': {
+#                        '@
+#                        'rightsURI=info:eu-repo/semantics/openAccess'
+
 
         return unparse(metadata, pretty=True, full_document=False)
 
@@ -488,9 +514,16 @@ def create_resource_doi(resource_id):
     @return:
     """
     log.debug(u"Creating resource DOI for resource {}".format(resource_id))
+    resource = Resource.get(resource_id)
+    if resource:
+        package_doi = CeonPackageDOI.get(resource.package_id)
+    else:
+        raise Exception(u'Resource "{}" not found'.format(resource_id))
+    if not package_doi:
+        create_package_doi(resource.package_id)
     datacite_api = DOIDataCiteAPI()
     log.debug(u"Creating resource DOI datacite_api {}".format(datacite_api))
-    identifier = _create_unique_identifier(True)
+    identifier = _create_unique_identifier(package_doi.identifier)
     resource_doi = CeonResourceDOI(resource_id=resource_id, identifier=identifier)
     Session.add(resource_doi)
     Session.commit()
@@ -520,18 +553,18 @@ def update_resource_doi(resource_id):
     log.debug(u'Updating DOI. XML:\n{}'.format(metadata_xml))
 
 
-def _create_unique_identifier(for_resource=False):
+def _create_unique_identifier(package_doi_identifier=None):
     datacite_api = DOIDataCiteAPI()
     while True:
-        identifier = os.path.join(get_doi_prefix(),
-                '{0:07}'.format(random.randint(1, 9999999)))
-        if for_resource:
-            identifier = os.path.join(identifier,
+        if package_doi_identifier:
+            identifier = os.path.join(package_doi_identifier,
                     '{0:03}'.format(random.randint(1, 999)))
             query = Session.query(CeonResourceDOI)
             query = query.filter(CeonResourceDOI.identifier == identifier)
             exists = query.count()
         else:
+            identifier = os.path.join(get_doi_prefix(),
+                    '{0:07}'.format(random.randint(1, 9999999)))
             query = Session.query(CeonPackageDOI)
             query = query.filter(CeonPackageDOI.identifier == identifier)
             exists = query.count()

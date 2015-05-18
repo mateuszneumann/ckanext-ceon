@@ -7,6 +7,7 @@ import abc
 import os
 import random
 import requests
+from datetime import datetime
 from pylons import config
 from requests.exceptions import ConnectionError, HTTPError
 from xmltodict import unparse
@@ -465,7 +466,7 @@ def publish_doi(package_id, **kwargs):
     # If we have created the DOI, save it to the database
     if r.text == 'OK':
         # Update status for this package and identifier
-        num_affected = Session.query(DOI).filter_by(package_id=package_id, identifier=identifier).update({"published": datetime.datetime.now()})
+        num_affected = Session.query(DOI).filter_by(package_id=package_id, identifier=identifier).update({"published": datetime.now()})
         # Raise an error if update has failed - should never happen unless
         # DataCite and local db get out of sync - in which case requires investigating
         assert num_affected == 1, 'Updating local DOI failed'

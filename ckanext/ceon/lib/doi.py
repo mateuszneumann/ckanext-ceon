@@ -337,7 +337,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
         extras = resource.extras
         description = resource.description.encode('unicode-escape')
         license_id = extras['license_id']
-        license = LicenseRegister()[license]
+        license = LicenseRegister()[license_id]
         if license:
             license_url = license.url
         file_format = resource.format.encode('unicode-escape')

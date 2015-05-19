@@ -8,11 +8,14 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.logic as logic
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
-from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
-from converters import convert_to_oa_tags
+from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
-from lib.doi import create_package_doi, create_resource_doi, update_package_doi, update_resource_doi
+from ckan.lib import helpers as h
+from ckanext.ceon.converters import convert_to_oa_tags
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
+from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
+from ckanext.ceon.model import create_tables
+from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
 log = getLogger(__name__)
 
@@ -249,9 +252,9 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema = super(CeonPlugin, self).show_package_schema()
         schema.update({
             'publisher': [toolkit.get_converter('convert_from_extras'),
-                toolkit.get_validator('ignore_empty')],
+                toolkit.get_validator('not_empty')],
             'publication_year': [toolkit.get_converter('convert_from_extras'),
-                toolkit.get_validator('ignore_empty')],
+                toolkit.get_validator('natural_number_validator')],
             'rel_citation': [toolkit.get_converter('convert_from_extras'),
                 toolkit.get_validator('ignore_empty')],
             'sci_discipline': [toolkit.get_converter('convert_from_tags')('sci_disciplines'),
@@ -279,9 +282,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema.update({
             '__authors': [toolkit.get_validator('ignore')],
             'authors': self._authors_schema(),
-            'publisher': [toolkit.get_validator('ignore_empty'),
+            'publisher': [toolkit.get_validator('not_empty'),
                 toolkit.get_converter('convert_to_extras')],
-            'publication_year': [toolkit.get_validator('ignore_empty'),
+            'publication_year':
+            [toolkit.get_validator('natural_number_validator'),
                 toolkit.get_converter('convert_to_extras')],
             'rel_citation': [toolkit.get_validator('ignore_empty'),
                 toolkit.get_converter('convert_to_extras')],
@@ -343,10 +347,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
-        if 'ancestral_license' in pkg_dict:
-            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
-        else:
-            update_ancestral_license(context, pkg_dict, None)
+        update_ancestral_license(context, pkg_dict, 
+                pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         create_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
@@ -362,14 +364,33 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
-        if 'ancestral_license' in pkg_dict:
-            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
-        else:
-            update_ancestral_license(context, pkg_dict, None)
+        update_ancestral_license(context, pkg_dict, 
+                pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         update_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+            package_id = pkg_dict['id']
+            orig_pkg_dict = toolkit.get_action('package_show')(context,
+                    {'id': package_id})
+            pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
+            package_doi = get_package_doi(package_id)
+            if not package_doi:
+                package_doi = create_package_doi(package_id)
+            # TODO verify if crucial metadata has been changed and only then
+            # send updates to DataCite.  But the truth is that in our case
+            # almost every change in metadata is crucial, so let's skip that
+            # check for a while.
+            if package_doi.published:
+                update_package_doi(package_id)
+                h.flash_success(_('DataCite DOI metadata updated'))
+            else:
+                publish_package_doi(package_id)
+                h.flash_success(_('DataCite DOI has been created'))
+
+
+            
         update_package_doi(pkg_dict['id'])
         return pkg_dict
 

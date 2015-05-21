@@ -43,10 +43,10 @@ class DataCiteAPI(object):
             method = 'get'
         # Add authorisation to request
         kwargs['auth'] = (account_name, account_password)
+        log.debug(u'_CALL.  kwargs = {}'.format(kwargs))
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)
         # Raise exception if we have an error
-        log.debug(u'_CALL.  r = {}'.format(r))
         r.raise_for_status()
         # Return the result
         return r

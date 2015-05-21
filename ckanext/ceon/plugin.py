@@ -353,7 +353,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
-        create_package_doi(pkg_dict['id'])
+        create_package_doi(pkg_dict)
             
 
     def _package_after_update(self, context, pkg_dict):
@@ -371,13 +371,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
         if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
-            package_id = pkg_dict['id']
             orig_pkg_dict = toolkit.get_action('package_show')(context,
-                    {'id': package_id})
+                    {'id': pkg_dict['id']})
             pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
-            package_doi = get_package_doi(package_id)
+            package_doi = get_package_doi(pkg_dict['id'])
             if not package_doi:
-                package_doi = create_package_doi(package_id)
+                package_doi = create_package_doi(pkg_dict)
             # TODO verify if crucial metadata has been changed and only then
             # send updates to DataCite.  But the truth is that in our case
             # almost every change in metadata is crucial, so let's skip that
@@ -388,7 +387,6 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             else:
                 publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
-        update_package_doi(pkg_dict['id'])
         return pkg_dict
 
     def _resource_create(self, context, res_dict):
@@ -404,14 +402,21 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
         if not res_dict.get('clear_upload', ''):
-            resource_id = res_dict['id']
-            orig_res_dict = toolkit.get_action('resource_show')(context,
-                    {'id': resource_id})
-            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             pkg_dict = toolkit.get_action('package_show')(context,
                 {'id': res_dict['package_id']})
             log.debug(u'PKG_DICT: {}'.format(pkg_dict))
+            orig_res_dict = toolkit.get_action('resource_show')(context,
+                    {'id': res_dict['id']})
+            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             res_dict['created'] = orig_res_dict['created']
             res_dict['last_modified'] = orig_res_dict['last_modified']
-            update_resource_doi(pkg_dict, res_dict)
-
+            resource_doi = get_resource_doi(res_dict['id'])
+            if not resource_doi:
+                resource_doi = create_resource_doi(pkg_dict, res_dict)
+            if resource_doi.published:
+                update_resource_doi(pkg_dict, res_dict)
+                h.flash_success(_('DataCite DOI metadata updated'))
+            else:
+                publish_resource_doi(pkg_dict, res_dict)
+                h.flash_success(_('DataCite DOI has been created'))
+        return res_dict

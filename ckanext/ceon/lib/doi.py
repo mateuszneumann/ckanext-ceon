@@ -435,7 +435,7 @@ def _validate_resource(res_dict):
 def get_package_doi(package_id):
     return CeonPackageDOI.get(package_id)
 
-def get_resource_doi(package_id):
+def get_resource_doi(resource_id):
     return CeonResourceDOI.get(resource_id)
 
 def create_package_doi(pkg_dict):
@@ -482,6 +482,7 @@ def update_package_doi(pkg_dict):
     log.debug(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def update_resource_doi(pkg_dict, res_dict):
+    _validate_package(pkg_dict)
     _validate_resource(res_dict)
     resource_doi = CeonResourceDOI.get(res_dict['id'])
     if not resource_doi:
@@ -506,26 +507,23 @@ def publish_package_doi(pkg_dict):
         assert num_affected == 1, 'Updating local DOI failed'
     log.debug(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
-# FIXME pkg_dict, res_dict
-def publish_resource_doi(resource_id):
-    resource = Resource.get(package_id)
-    if not resource:
-        raise Exception(u'Resource "{}" not found'.format(resource_id))
-    resource_doi = CeonResourceDOI.get(resource_id)
-    if not resource_doi:
-        raise Exception(u'CeonResourceDOI "{}" not found'.format(resource_id))
+def publish_resource_doi(pkg_dict, res_dict):
+    _validate_package(pkg_dict)
+    _validate_resource(res_dict)
+    resource_doi = CeonResourceDOI.get(res_dict['id'])
     metadata = MetadataDataCiteAPI()
-    metadata.upsert(resource_doi.identifier, resource)
-    url = os.path.join(get_site_url(), 'dataset', resource.package_id, 'resource', resource_id)
+    metadata.upsert(resource_doi.identifier, pkg_dict, res_dict)
+    url = os.path.join(get_site_url(), 'dataset', pkg_dict['id'],
+            'resource', res_dict['id'])
     doi = DOIDataCiteAPI()
     r = doi.upsert(doi=resource_doi.identifier, url=url)
     assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
     if r.text == 'OK':
         query = Session.query(CeonResourceDOI)
-        query = query.filter_by(resource_id=resource_id, identifier=resource_doi.identifier)
+        query = query.filter_by(resource_id=res_dict['id'], identifier=resource_doi.identifier)
         num_affected = query.update({"published": datetime.datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug(u"Published DOI {} for resource {}".format(package_doi.identifier, res_dict['id']))
+    log.debug(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
 def _create_unique_identifier(package_doi_identifier=None):
     datacite_api = DOIDataCiteAPI()

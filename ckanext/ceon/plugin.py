@@ -383,14 +383,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             # almost every change in metadata is crucial, so let's skip that
             # check for a while.
             if package_doi.published:
-                update_package_doi(package_id)
+                update_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
-                publish_package_doi(package_id)
+                publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
-
-
-            
         update_package_doi(pkg_dict['id'])
         return pkg_dict
 
@@ -398,11 +395,23 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         log.debug(u"Creating resource {}".format(res_dict))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
-        create_resource_doi(res_dict['id'])
+        pkg_dict = toolkit.get_action('package_show')(context,
+            {'id': res_dict['package_id']})
+        create_resource_doi(pkg_dict, res_dict)
 
     def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
-        update_resource_doi(res_dict['id'])
+        if not res_dict.get('clear_upload', ''):
+            resource_id = res_dict['id']
+            orig_res_dict = toolkit.get_action('resource_show')(context,
+                    {'id': resource_id})
+            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
+            pkg_dict = toolkit.get_action('package_show')(context,
+                {'id': res_dict['package_id']})
+            log.debug(u'PKG_DICT: {}'.format(pkg_dict))
+            res_dict['created'] = orig_res_dict['created']
+            res_dict['last_modified'] = orig_res_dict['last_modified']
+            update_resource_doi(pkg_dict, res_dict)
 

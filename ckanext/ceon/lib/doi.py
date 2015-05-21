@@ -8,6 +8,7 @@ import os
 import random
 import requests
 from datetime import datetime
+from dateutil import parser
 from pylons import config
 from requests.exceptions import ConnectionError, HTTPError
 from xmltodict import unparse
@@ -45,9 +46,9 @@ class DataCiteAPI(object):
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)
         # Raise exception if we have an error
+        log.debug(u'_CALL.  r = {}'.format(r))
         r.raise_for_status()
         # Return the result
-        log.debug(u'_CALL.  r = {}'.format(r))
         return r
 
 
@@ -66,7 +67,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
         return self._call(path_extra=doi)
 
     @staticmethod
-    def package_to_xml(identifier, package):
+    def package_to_xml(identifier, pkg_dict):
         """
         Pass in DOI identifier and `Package` and return XML in the format
         ready to send to DataCite API
@@ -75,35 +76,18 @@ class MetadataDataCiteAPI(DataCiteAPI):
         @param package: a CKAN Package
         @return: XML-formatted metadata
         """
-        
-        def _name(firstname, lastname):
-            if lastname and firstname:
-                return "{}, {}".format(lastname.encode('unicode-escape'),
-                        firstname.encode('unicode-escape'))
-            elif lastname:
-                return lastname.encode('unicode-escape')
-            elif firstname:
-                return firstname.encode('unicode-escape')
-            return None
-
-        title = package.title.encode('unicode-escape')
-        publisher = package.extras['publisher'].encode('unicode-escape')
-        if 'publication_year' in package.extras:
-            publication_year = package.extras['publication_year']
-        elif isinstance(package.metadata_created, datetime):
-            publication_year = package.metadata_created.year
+        _validate_package(pkg_dict)
+        title = pkg_dict['title'].encode('unicode-escape')
+        creators = _get_creators(pkg_dict['id'])
+        publisher = pkg_dict['publisher'].encode('unicode-escape')
+        if 'publication_year' in pkg_dict:
+            publication_year = pkg_dict['publication_year']
+        elif isinstance(pkg_dict['metadata_created'], datetime):
+            publication_year = pkg_dict['metadata_created'].year
         else:
-            publication_year = parser.parse(package.metadata_created).year
-        pkg_license = package.get_license_register()[PKG_LICENSE_ID]
-        creators = []
-        for author in CeonPackageAuthor.get_all(package.id):
-            name = _name(author.firstname, author.lastname)
-            if author.affiliation:
-                creators.append({'creatorName': name,
-                        'affiliation': author.affiliation.encode('unicode-escape')
-                    })
-            else:
-                creators.append({'creatorName': name})
+            publication_year = parser.parse(pkg_dict['metadata_created']).year
+        #license_title = pkg_dict['license_title'].encode('unicode-escape')
+        license_title = LicenseRegister()[PKG_LICENSE_ID].title.encode('unicode-escape')
         metadata = {
                 'resource': {
                     '@xmlns': 'http://datacite.org/schema/kernel-3',
@@ -119,24 +103,21 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     'publisher': publisher,
                     'publicationYear': publication_year,
                     'rightsList': {
-                        'rights': pkg_license.title
+                        'rights': license_title
                         }
                 }
             }
-
         # Optional metadata properties
-        subject = [t.name.encode('unicode-escape') if isinstance(t, Tag) else t for t in package.get_tags()]
+        subject = _ensure_list(pkg_dict.get('tag_string', '').split(','))
         subject.sort()
-        description = package.notes.encode('unicode-escape')
-        ceon_metadata = get_ceon_metadata(package)
-        oa_funder = ceon_metadata['oa_funders'].encode('unicode-escape') if 'oa_funders' in ceon_metadata else None
-        oa_funding_program = ceon_metadata['oa_funding_programs'].encode('unicode-escape') if 'oa_funding_programs' in ceon_metadata else None
-        res_type = ceon_metadata['res_types'].encode('unicode-escape') if 'res_types' in ceon_metadata else None
-        sci_discipline = ceon_metadata['sci_disciplines'].encode('unicode-escape') if 'sci_disciplines' in ceon_metadata else None
-        oa_grant_number = package.extras['oa_grant_number'].encode('unicode-escape') if 'oa_grant_number' in package.extras else None
-        rel_citation = package.extras['rel_citation'].encode('unicode-escape') if 'rel_citation' in package.extras else None
-        version = package.version.encode('unicode-escape') if package.version else None
-
+        description = pkg_dict.get('notes', '').encode('unicode-escape')
+        oa_funder = _ensure_list(pkg_dict.get('oa_funders', ['']))[0].encode('unicode-escape')
+        oa_funding_program = _ensure_list(pkg_dict.get('oa_funding_program', ['']))[0].encode('unicode-escape')
+        res_type = _ensure_list(pkg_dict.get('res_type', ['']))[0].encode('unicode-escape')
+        sci_discipline = _ensure_list(pkg_dict.get('sci_discipline', ['']))[0].encode('unicode-escape')
+        oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
+        rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
+        version = pkg_dict.get('version', '').encode('unicode-escape')
         if sci_discipline:
             if subject:
                 subject.append(sci_discipline)
@@ -185,20 +166,13 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     }
         if res_type:
             metadata['resource']['resourceType'] = {
-                    '@resourceTypeGeneral': res_type,
-#                    '#text': res_type
+                    '@resourceTypeGeneral': res_type
                 }
         if version:
             metadata['resource']['version'] = version
-
         # Add resource (file) identifiers relation
         resource_identifiers = []
-        for resource in package.resources:
-            log.debug(u'Package to XML.  Resource {}'.format(resource))
-            resource_doi = CeonResourceDOI.get(resource.id)
-            if not resource_doi:
-                continue
-            log.debug(u'Package to XML.  Resource_DOI {}'.format(resource_doi))
+        for resource_doi in CeonResourceDOI.get_all_in_package(pkg_dict['id']):
             resource_identifiers.append({
                     '@relatedIdentifierType': 'DOI',
                     '@relationType': 'HasPart',
@@ -211,12 +185,10 @@ class MetadataDataCiteAPI(DataCiteAPI):
             metadata['resource']['relatedIdentifiers'] = {
                     'relatedIdentifier': resource_identifiers
                 }
-            log.debug(u'Package to XML.  Related identifiers {}'.format(metadata['resource']['relatedIdentifiers']))
-
         return unparse(metadata, pretty=True, full_document=False)
 
     @staticmethod
-    def resource_to_xml(identifier, resource):
+    def resource_to_xml(identifier, pkg_dict, res_dict):
         """
         Pass in DOI identifier and `Resource` and return XML in the format
         ready to send to DataCite API
@@ -225,9 +197,15 @@ class MetadataDataCiteAPI(DataCiteAPI):
         @param resource: a CKAN Resource
         @return: XML-formatted metadata
         """
-        
-        title = resource.name.encode('unicode-escape')
-        package_doi = CeonPackageDOI.get(resource.package_id).identifier
+        _validate_resource(res_dict)
+        title = res_dict['name'].encode('unicode-escape')
+        creators = _get_creators(pkg_dict['id'])
+        package_doi = CeonPackageDOI.get(pkg_dict['id']).identifier
+        publisher = pkg_dict['publisher'].encode('unicode-escape')
+        if 'publication_year' in pkg_dict:
+            publication_year = pkg_dict['publication_year']
+        elif isinstance(pkg_dict['metadata_created'], datetime):
+            publication_year = pkg_dict['metadata_created'].year
         metadata = {
                 'resource': {
                     '@xmlns': 'http://datacite.org/schema/kernel-3',
@@ -237,6 +215,11 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     'titles': {
                         'title': {'#text': title}
                     },
+                    'creators': {
+                        'creator': [c for c in creators],
+                    },
+                    'publisher': publisher,
+                    'publicationYear': publication_year,
                     'relatedIdentifiers': {
                         'relatedIdentifier': {
                             '@relatedIdentifierType': 'DOI',
@@ -246,16 +229,18 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     }
                 }
             }
-
-        description = resource.description.encode('unicode-escape')
-        license_id = CeonResourceLicense.get(resource.id).license_id
+        description = res_dict.get('description', '').encode('unicode-escape')
+        license_id = CeonResourceLicense.get(res_dict['id']).license_id
         license = LicenseRegister()[license_id]
         if license:
             license_url = license.url
-        file_format = resource.format.encode('unicode-escape')
-        file_size = resource.size
-        date_available = resource.created.strftime('%Y-%m-%d') if resource.created else None
-        date_updated = resource.last_modified.strftime('%Y-%m-%d') if resource.last_modified else date_available
+        file_format = res_dict.get('format', '').encode('unicode-escape')
+        file_size = res_dict.get('size', '').encode('unicode-escape')
+        date_available = parser.parse(res_dict.get('created')).strftime('%Y-%m-%d') if 'created' in res_dict else None
+        if 'last_modified' in res_dict and res_dict['last_modified']:
+            date_updated = parser.parse(res_dict.get('last_modified')).strftime('%Y-%m-%d')
+        else:
+            date_updated = date_available
         if description:
             metadata['resource']['descriptions'] = {
                     'description': {
@@ -297,23 +282,19 @@ class MetadataDataCiteAPI(DataCiteAPI):
                     })
             if dates:
                 metadata['resource']['dates'] = {'date': dates}
-
         return unparse(metadata, pretty=True, full_document=False)
 
-    def upsert(self, identifier, obj):
+    def upsert(self, identifier, pkg_dict, res_dict=None):
         """
         URI: https://test.datacite.org/mds/metadata
         This request stores new version of metadata. The request body must contain valid XML.
         @param metadata_dict: dict to convert to xml
         @return: URL of the newly stored metadata
         """
-        if isinstance(obj, Package):
-            xml = self.package_to_xml(identifier, obj)
-        elif isinstance(obj, Resource):
-            xml = self.resource_to_xml(identifier, obj)
+        if res_dict:
+            xml = self.resource_to_xml(identifier, pkg_dict, res_dict)
         else:
-            # TODO return what self._call returns
-            return
+            xml = self.package_to_xml(identifier, pkg_dict)
         r = self._call(method='post', data=xml, headers={'Content-Type': 'application/xml'})
         assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
         return r
@@ -439,98 +420,112 @@ def get_doi(package_id):
 
 
 #############################################################
+def _validate_package(pkg_dict):
+    if not 'id' in pkg_dict:
+        raise Exception(u'Package "{}" has not got `id` defined. ' + 
+                u'Cowardly refusing to process any further'.format(pkg_dict))
+
+def _validate_resource(res_dict):
+    if not 'id' in res_dict:
+        raise Exception(u'Resource "{}" has not got `id` defined. Cowardly refusing to process any further'.format(res_dict))
+    if not 'package_id' in res_dict:
+        raise Exception(u'Resource "{}" has not got `package_id` defined. Cowardly refusing to process any further'.format(res_dict))
+
+
 def get_package_doi(package_id):
     return CeonPackageDOI.get(package_id)
 
 def get_resource_doi(package_id):
     return CeonResourceDOI.get(resource_id)
 
-def create_package_doi(package_id):
+def create_package_doi(pkg_dict):
     """
     Create a unique identifier, using the prefix and a random number: 10.5072/0044634
     Checks the random number doesn't exist in the table or the datacite repository
     All unique identifiers are created with
     @return:
     """
-    log.debug(u"Creating package DOI for package {}".format(package_id))
-    datacite_api = DOIDataCiteAPI()
-    log.debug(u"Creating package DOI datacite_api {}".format(datacite_api))
+    _validate_package(pkg_dict)
     identifier = _create_unique_identifier()
-    package_doi = CeonPackageDOI(package_id=package_id, identifier=identifier)
+    package_doi = CeonPackageDOI(package_id=pkg_dict['id'], identifier=identifier)
     Session.add(package_doi)
     Session.commit()
-    log.debug(u"Creating pacakge DOI added DOI {}".format(package_doi))
+    log.debug(u"Created DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
     return package_doi
 
-def create_resource_doi(resource_id):
+def create_resource_doi(pkg_dict, res_dict):
     """
     Create a unique identifier, using the prefix and a random number: 10.5072/0044634
     Checks the random number doesn't exist in the table or the datacite repository
     All unique identifiers are created with
     @return:
     """
-    log.debug(u"Creating resource DOI for resource {}".format(resource_id))
-    resource = Resource.get(resource_id)
-    if resource:
-        package_doi = CeonPackageDOI.get(resource.package_id)
-    else:
-        raise Exception(u'Resource "{}" not found'.format(resource_id))
+    _validate_resource(res_dict)
+    resource_id = res_dict['id']
+    package_doi = CeonPackageDOI.get(pkg_dict['id'])
     if not package_doi:
-        create_package_doi(resource.package_id)
-    datacite_api = DOIDataCiteAPI()
-    log.debug(u"Creating resource DOI datacite_api {}".format(datacite_api))
+        create_package_doi(pkg_dict)
     identifier = _create_unique_identifier(package_doi.identifier)
     resource_doi = CeonResourceDOI(resource_id=resource_id, identifier=identifier)
     Session.add(resource_doi)
     Session.commit()
-    log.debug(u"Creating resource DOI added DOI {}".format(resource_doi))
+    log.debug(u"Created DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
     return resource_doi
 
-def update_package_doi(package_id):
-    package = Package.get(package_id)
-    if not package:
-        raise Exception(u'Package "{}" not found'.format(package_id))
-    package_doi = CeonPackageDOI.get(package_id)
+def update_package_doi(pkg_dict):
+    _validate_package(pkg_dict)
+    package_doi = CeonPackageDOI.get(pkg_dict['id'])
     if not package_doi:
-        package_doi = create_package_doi(package_id)
+        package_doi = create_package_doi(pkg_dict)
     metadata = MetadataDataCiteAPI()
-    metadata.upsert(package_doi.identifier, package)
-    log.debug(u'Updated DOI for package {}'.format(package_id))
+    metadata.upsert(package_doi.identifer, pkg_dict)
+    log.debug(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
-def update_resource_doi(resource_id):
-    resource = Resource.get(resource_id)
-    if not resource:
-        raise Exception(u'Resource "{}" not found'.format(resource_id))
-    resource_doi = CeonResourceDOI.get(resource_id)
+def update_resource_doi(pkg_dict, res_dict):
+    _validate_resource(res_dict)
+    resource_doi = CeonResourceDOI.get(res_dict['id'])
     if not resource_doi:
-        resource_doi = create_resource_doi(resource_id)
+        resource_doi = create_resource_doi(pkg_dict, res_dict)
     metadata = MetadataDataCiteAPI()
-    metadata.upsert(resource_doi.identifier, resource)
-    metadata_xml = MetadataDataCiteAPI.resource_to_xml(resource_doi.identifier, resource)
-    log.debug(u'Updated DOI for resource {}'.format(resource_id))
+    metadata.upsert(resource_doi.identifier, pkg_dict, res_dict)
+    log.debug(u"Updated DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
-def publish_package_doi(package_id):
-    package = Package.get(package_id)
-    if not package:
-        raise Exception(u'Package "{}" not found'.format(package_id))
-    package_doi = CeonPackageDOI.get(package_id)
-    if not package_doi:
-        raise Exception(u'CeonPackageDOI "{}" not found'.format(package_id))
+def publish_package_doi(pkg_dict):
+    _validate_package(pkg_dict)
+    package_doi = CeonPackageDOI.get(pkg_dict['id'])
     metadata = MetadataDataCiteAPI()
-    metadata.upsert(package_doi.identifier, package)
-    url = os.path.join(get_site_url(), 'dataset', package_id)
+    metadata.upsert(package_doi.identifier, pkg_dict)
+    url = os.path.join(get_site_url(), 'dataset', pkg_dict['id'])
     doi = DOIDataCiteAPI()
     r = doi.upsert(doi=package_doi.identifier, url=url)
     assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
     if r.text == 'OK':
         query = Session.query(CeonPackageDOI)
-        query = query.filter_by(package_id=package_id, identifier=package_doi.identifier)
+        query = query.filter_by(package_id=pkg_dict['id'], identifier=package_doi.identifier)
         num_affected = query.update({"published": datetime.datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug('Published DOI for package %s' % package_id)
+    log.debug(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
+# FIXME pkg_dict, res_dict
 def publish_resource_doi(resource_id):
-    pass
+    resource = Resource.get(package_id)
+    if not resource:
+        raise Exception(u'Resource "{}" not found'.format(resource_id))
+    resource_doi = CeonResourceDOI.get(resource_id)
+    if not resource_doi:
+        raise Exception(u'CeonResourceDOI "{}" not found'.format(resource_id))
+    metadata = MetadataDataCiteAPI()
+    metadata.upsert(resource_doi.identifier, resource)
+    url = os.path.join(get_site_url(), 'dataset', resource.package_id, 'resource', resource_id)
+    doi = DOIDataCiteAPI()
+    r = doi.upsert(doi=resource_doi.identifier, url=url)
+    assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
+    if r.text == 'OK':
+        query = Session.query(CeonResourceDOI)
+        query = query.filter_by(resource_id=resource_id, identifier=resource_doi.identifier)
+        num_affected = query.update({"published": datetime.datetime.now()})
+        assert num_affected == 1, 'Updating local DOI failed'
+    log.debug(u"Published DOI {} for resource {}".format(package_doi.identifier, res_dict['id']))
 
 def _create_unique_identifier(package_doi_identifier=None):
     datacite_api = DOIDataCiteAPI()
@@ -566,4 +561,59 @@ def _ensure_list(var):
     # Make sure a var is a list so we can easily loop through it
     # Useful for properties were multiple is optional
     return var if isinstance(var, list) else [var]
+
+def _get_creators(package_id):
+    # Prepare list of authors for DataCite
+    def _name(firstname, lastname):
+        if lastname and firstname:
+            return "{}, {}".format(lastname.encode('unicode-escape'),
+                    firstname.encode('unicode-escape'))
+        elif lastname:
+            return lastname.encode('unicode-escape')
+        elif firstname:
+            return firstname.encode('unicode-escape')
+        return None
+    creators = []
+    for author in CeonPackageAuthor.get_all(package_id):
+        name = _name(author.firstname, author.lastname)
+        if author.affiliation:
+            creators.append({'creatorName': name,
+                    'affiliation': author.affiliation.encode('unicode-escape')
+                })
+        else:
+            creators.append({'creatorName': name})
+    return creators
+
+def _prepare_metadata(package_id):
+    package = Package.get(package_id)
+    title = package.title.encode('unicode-escape')
+    creators = _get_creators(package_id)
+    publisher = package.extras['publisher'].encode('unicode-escape')
+    if 'publication_year' in package.extras:
+        publication_year = package.extras['publication_year']
+    elif isinstance(package.metadata_created, datetime):
+        publication_year = package.metadata_created.year
+    else:
+        publication_year = parser.parse(package.metadata_created).year
+    pkg_license = package.get_license_register()[PKG_LICENSE_ID]
+    metadata = {
+            'resource': {
+                '@xmlns': 'http://datacite.org/schema/kernel-3',
+                '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+                '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
+                'identifier': {'@identifierType': 'DOI', '#text': identifier},
+                'titles': {
+                    'title': {'#text': title}
+                },
+                'creators': {
+                    'creator': [c for c in creators],
+                },
+                'publisher': publisher,
+                'publicationYear': publication_year,
+                'rightsList': {
+                    'rights': pkg_license.title
+                    }
+                }   
+        }
+
 

@@ -1,0 +1,13 @@
+{% ckan_extends %}
+
+{% set user = c.user_dict %}
+
+
+      {% block follow %}
+      <div class="follow_button">
+        {{ h.follow_button('group', group.id) }}
+      </div>
+      {% if h.ckanext_ceon_not_group_member(c.userobj.id, group.id) %}
+      <a href="{% url_for controller='ckanext.ceon.controllers:CeonController', action='add_me_as_member', id=c.group_dict.id %}" class="btn btn-danger pull-left">{{ _('Add me as member') }}</a>
+	  {% endif %}
+      {% endblock %}

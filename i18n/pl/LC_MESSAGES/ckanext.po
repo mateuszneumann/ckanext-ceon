@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-20 14:42+0100\n"
-"PO-Revision-Date: 2015-05-20 14:43+0100\n"
+"POT-Creation-Date: 2015-05-22 16:27+0100\n"
+"PO-Revision-Date: 2015-05-22 16:27+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: pl <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && "
@@ -24,11 +24,11 @@ msgstr ""
 msgid "Tag vocabulary \"%s\" does not exist"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:387
+#: ckanext/ceon/plugin.py:386 ckanext/ceon/plugin.py:418
 msgid "DataCite DOI metadata updated"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:390
+#: ckanext/ceon/plugin.py:389 ckanext/ceon/plugin.py:421
 msgid "DataCite DOI has been created"
 msgstr ""
 

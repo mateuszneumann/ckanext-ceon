@@ -62,6 +62,6 @@ do::
     git clone https://github.com/mateuszneumann/ckanext-ceon.git
     cd ckanext-ceon
     python setup.py develop
+    export C_INCLUDE_PATH="/usr/include/libxml2:/usr/include/libxslt"
     pip install -r dev-requirements.txt
-
 

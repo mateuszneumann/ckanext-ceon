@@ -9,15 +9,20 @@ import random
 import requests
 from datetime import datetime
 from dateutil import parser
+from lxml import etree
 from pylons import config
 from requests.exceptions import ConnectionError, HTTPError
-from xmltodict import unparse
 
 from ckan.model import Package, Resource, Session, Tag
 from ckan.model.license import LicenseRegister
 from ckanext.ceon.config import get_doi_endpoint, get_doi_prefix
 from ckanext.ceon.lib.metadata import get_ceon_metadata, PKG_LICENSE_ID
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
+
+
+METADATA_NAMESPACE = 'http://datacite.org/schema/kernel-3'
+XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
+XSI_SCHEMALOCATION = 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd'
 
 log = getLogger(__name__)
 
@@ -79,6 +84,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
         _validate_package(pkg_dict)
         title = pkg_dict['title'].encode('unicode-escape')
         creators = _get_creators(pkg_dict['id'])
+        resource_identifiers = _get_resource_dois(pkg_dict['id'])
         publisher = pkg_dict['publisher'].encode('unicode-escape')
         if 'publication_year' in pkg_dict:
             publication_year = pkg_dict['publication_year']
@@ -86,32 +92,11 @@ class MetadataDataCiteAPI(DataCiteAPI):
             publication_year = pkg_dict['metadata_created'].year
         else:
             publication_year = parser.parse(pkg_dict['metadata_created']).year
-        #license_title = pkg_dict['license_title'].encode('unicode-escape')
         license_title = LicenseRegister()[PKG_LICENSE_ID].title.encode('unicode-escape')
-        metadata = {
-                'resource': {
-                    '@xmlns': 'http://datacite.org/schema/kernel-3',
-                    '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                    '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
-                    'identifier': {'@identifierType': 'DOI', '#text': identifier},
-                    'titles': {
-                        'title': {'#text': title}
-                    },
-                    'creators': {
-                        'creator': [c for c in creators],
-                    },
-                    'publisher': publisher,
-                    'publicationYear': publication_year,
-                    'rightsList': {
-                        'rights': license_title
-                        }
-                }
-            }
-        # Optional metadata properties
         subject = _ensure_list(pkg_dict.get('tag_string', '').split(','))
         subject.sort()
         description = pkg_dict.get('notes', '').encode('unicode-escape')
-        oa_funder = _ensure_list(pkg_dict.get('oa_funders', ['']))[0].encode('unicode-escape')
+        oa_funder = _ensure_list(pkg_dict.get('oa_funder', ['']))[0].encode('unicode-escape')
         oa_funding_program = _ensure_list(pkg_dict.get('oa_funding_program', ['']))[0].encode('unicode-escape')
         res_type = _ensure_list(pkg_dict.get('res_type', ['']))[0].encode('unicode-escape')
         sci_discipline = _ensure_list(pkg_dict.get('sci_discipline', ['']))[0].encode('unicode-escape')
@@ -123,69 +108,72 @@ class MetadataDataCiteAPI(DataCiteAPI):
                 subject.append(sci_discipline)
             else:
                 subject = [sci_discipline]
+        # Prepare metadata
+        metadata = etree.Element('{%s}resource' % (METADATA_NAMESPACE),
+                nsmap={None: METADATA_NAMESPACE, 'xsi': XSI_NAMESPACE})
+        metadata.set('{%s}schemaLocation' % (XSI_NAMESPACE),
+                XSI_SCHEMALOCATION)
+        e_identifier = etree.Element('identifier', identifierType='DOI')
+        e_identifier.text = identifier
+        metadata.append(e_identifier)
+        e_titles = etree.SubElement(metadata, 'titles')
+        etree.SubElement(e_titles, 'title').text = title
+        e_creators = etree.SubElement(metadata, 'creators')
+        for c in creators:
+            e_creators.append(c)
+        etree.SubElement(metadata, 'publisher').text = publisher
+        etree.SubElement(metadata, 'publicationYear').text = \
+                '{}'.format(publication_year)
+        e_rights_list = etree.SubElement(metadata, 'rightsList')
+        etree.SubElement(e_rights_list, 'rights').text = license_title
         if subject:
-            metadata['resource']['subjects'] = {
-                    'subject': [c for c in _ensure_list(subject)]
-                }
+            e_subjects = etree.SubElement(metadata, 'subjects')
+            for s in _ensure_list(subject):
+                etree.SubElement(e_subjects, 'subject').text = s
         if description:
-            metadata['resource']['descriptions'] = {
-                    'description': {
-                        '@descriptionType': 'Abstract',
-                        '#text': description
-                    }
-                }
-        if rel_citation:
-            metadata['resource']['relatedIdentifiers'] = {
-                    'relatedIdentifier': {
-                        '@relatedIdentifierType': 'URL',
-                        '@relationType': 'IsReferencedBy',
-                        '#text': rel_citation
-                    }
-                }
+            e_descriptions = etree.SubElement(metadata, 'descriptions')
+            e_description = etree.Element('description',
+                    descriptionType='Abstract')
+            e_description.text = description
+            e_descriptions.append(e_description)
+        if rel_citation or len(resource_identifiers) > 0:
+            e_rel_identifiers = etree.SubElement(metadata,
+                    'relatedIdentifiers')
+            if rel_citation:
+                e_rel_identifier = etree.Element('relatedIdentifier', 
+                        relatedIdentifierType='URL',
+                        relationType='IsReferencedBy')
+                e_rel_identifier.text = rel_citation
+                e_rel_identifiers.append(e_rel_identifier)
+            for e_related_identifier in resource_identifiers:
+                e_rel_identifiers.append(e_related_identifier)
         if oa_funder:
+            e_contributors = etree.SubElement(metadata, 'contributors')
             if oa_funding_program and oa_grant_number:
-                project_info = u'info:eu-repo/grantAgreement/{0}/{1}/{2}///'
+                project_info = 'info:eu-repo/grantAgreement/{0}/{1}/{2}///'
                 project_info = project_info.format(oa_funder,
                         oa_funding_program, oa_grant_number)
-                metadata['resource']['contributors'] = {
-                    'contributor': {
-                        '@contributorType': 'Funder',
-                        'contributorName': oa_funder,
-                        'nameIdentifier': {
-                                '@nameIdentifierScheme': 'info',
-                                '#text': project_info
-                            }
-                        }
-                    }
+                e_contributor = etree.Element('contributor',
+                        contributorType='Funder')
+                etree.SubElement(e_contributor,
+                        'contributorName').text = oa_funder
+                e_name_identifier = etree.Element('nameIdentifier',
+                        nameIdentifierScheme='info')
+                e_name_identifier.text = project_info
+                e_contributor.append(e_name_identifier)
             else:
-                metadata['resource']['contributors'] = {
-                    'contributor': {
-                        '@contributorType': 'Funder',
-                        'contributorName': oa_funder
-                        }
-                    }
+                e_contributor = etree.Element('contributor',
+                        contributorType='Funder')
+                etree.SubElement(e_contributor,
+                        'contributorName').text = oa_funder
+            e_contributors.append(e_contributor)
         if res_type:
-            metadata['resource']['resourceType'] = {
-                    '@resourceTypeGeneral': res_type
-                }
+            e_resource_type = etree.Element('resourceType',
+                    resourceTypeGeneral=res_type)
+            metadata.append(e_resource_type)
         if version:
-            metadata['resource']['version'] = version
-        # Add resource (file) identifiers relation
-        resource_identifiers = []
-        for resource_doi in CeonResourceDOI.get_all_in_package(pkg_dict['id']):
-            resource_identifiers.append({
-                    '@relatedIdentifierType': 'DOI',
-                    '@relationType': 'HasPart',
-                    '#text': resource_doi.identifier
-                })
-        if len(resource_identifiers) > 0:
-            if 'relatedIdentifiers' in metadata['resource']:
-                for i in metadata['resource']['relatedIdentifiers'].values():
-                    resource_identifiers.append(i)
-            metadata['resource']['relatedIdentifiers'] = {
-                    'relatedIdentifier': resource_identifiers
-                }
-        return unparse(metadata, pretty=True, full_document=False)
+            etree.SubElement(metadata, 'version').text = version
+        return etree.tostring(metadata, pretty_print=True)
 
     @staticmethod
     def resource_to_xml(identifier, pkg_dict, res_dict):
@@ -197,43 +185,25 @@ class MetadataDataCiteAPI(DataCiteAPI):
         @param resource: a CKAN Resource
         @return: XML-formatted metadata
         """
+        _validate_package(pkg_dict)
         _validate_resource(res_dict)
+        package_doi = CeonPackageDOI.get(pkg_dict['id'])
         title = res_dict['name'].encode('unicode-escape')
         creators = _get_creators(pkg_dict['id'])
-        package_doi = CeonPackageDOI.get(pkg_dict['id']).identifier
+        resource_identifiers = _get_resource_dois(pkg_dict['id'])
         publisher = pkg_dict['publisher'].encode('unicode-escape')
         if 'publication_year' in pkg_dict:
             publication_year = pkg_dict['publication_year']
         elif isinstance(pkg_dict['metadata_created'], datetime):
             publication_year = pkg_dict['metadata_created'].year
-        metadata = {
-                'resource': {
-                    '@xmlns': 'http://datacite.org/schema/kernel-3',
-                    '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                    '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
-                    'identifier': {'@identifierType': 'DOI', '#text': identifier},
-                    'titles': {
-                        'title': {'#text': title}
-                    },
-                    'creators': {
-                        'creator': [c for c in creators],
-                    },
-                    'publisher': publisher,
-                    'publicationYear': publication_year,
-                    'relatedIdentifiers': {
-                        'relatedIdentifier': {
-                            '@relatedIdentifierType': 'DOI',
-                            '@relationType': 'IsPartOf',
-                            '#text': package_doi
-                        }
-                    }
-                }
-            }
+        else:
+            publication_year = parser.parse(pkg_dict['metadata_created']).year
         description = res_dict.get('description', '').encode('unicode-escape')
         license_id = CeonResourceLicense.get(res_dict['id']).license_id
         license = LicenseRegister()[license_id]
         if license:
             license_url = license.url
+            license_title = license.title.encode('unicode-escape')
         file_format = res_dict.get('format', '').encode('unicode-escape')
         file_size = res_dict.get('size', '').encode('unicode-escape')
         date_available = parser.parse(res_dict.get('created')).strftime('%Y-%m-%d') if 'created' in res_dict else None
@@ -241,48 +211,65 @@ class MetadataDataCiteAPI(DataCiteAPI):
             date_updated = parser.parse(res_dict.get('last_modified')).strftime('%Y-%m-%d')
         else:
             date_updated = date_available
+        # Prepare metadata
+        metadata = etree.Element('{%s}resource' % (METADATA_NAMESPACE),
+                nsmap={None: METADATA_NAMESPACE, 'xsi': XSI_NAMESPACE})
+        metadata.set('{%s}schemaLocation' % (XSI_NAMESPACE),
+                XSI_SCHEMALOCATION)
+        e_identifier = etree.Element('identifier', identifierType='DOI')
+        e_identifier.text = identifier
+        metadata.append(e_identifier)
+        e_titles = etree.SubElement(metadata, 'titles')
+        etree.SubElement(e_titles, 'title').text = title
+        e_creators = etree.SubElement(metadata, 'creators')
+        for c in creators:
+            e_creators.append(c)
+        etree.SubElement(metadata, 'publisher').text = publisher
+        etree.SubElement(metadata, 'publicationYear').text = \
+                '{}'.format(publication_year)
+        e_related_identifiers = etree.SubElement(metadata,
+                'relatedIdentifiers')
+        e_related_identifier = etree.Element('relatedIdentifier',
+                relatedIdentifierType='DOI',
+                relationType='IsPartOf')
+        e_related_identifier.text = package_doi.identifier
+        e_related_identifiers.append(e_related_identifier)
         if description:
-            metadata['resource']['descriptions'] = {
-                    'description': {
-                        '@descriptionType': 'Other',
-                        '#text': description
-                    }
-                }
+            e_descriptions = etree.SubElement(metadata, 'descriptions')
+            e_description = etree.Element('description',
+                    descriptionType='Other')
+            e_description.text = description
+            e_descriptions.append(e_description)
+        e_rights_list = etree.SubElement(metadata, 'rightsList')
+        e_rights = etree.Element('rights',
+                rights_URI='info:eu-repo/semantics/openAccess')
+        e_rights_list.append(e_rights)
         if license_id:
             if license_url:
-                rights = {'@rightsURI': license_url, '#text': license_id}
+                e_rights = etree.Element('rights', rightsURI=license_url)
             else:
-                rights = {'#text': license_id}
-            metadata['resource']['rightsList'] = {
-                    'rights': [
-                            rights,
-                            {'@rightsURI':
-                                'info:eu-repo/semantics/openAccess'}
-                        ]
-                }
+                e_rights = etree.Element('rights')
+            e_rights.text = license_title if license_title else license_id
+            e_rights_list.append(e_rights)
         if file_format:
-            metadata['resource']['formats'] = {
-                    'format': {'#text': file_format}
-                }
+            e_formats = etree.SubElement(metadata, 'formats')
+            etree.SubElement(e_formats, 'format').text = file_format
         if file_size:
-            metadata['resource']['sizes'] = {
-                    'size': {'#text': file_size}
-                }
-        if date_available or date_updated:
-            dates = []
-            if date_available:
-                dates.append({
-                        '@dateType': 'available',
-                        '#text': date_available
-                    })
-            if date_updated:
-                dates.append({
-                        '@dateType': 'modified',
-                        '#text': date_updated
-                    })
-            if dates:
-                metadata['resource']['dates'] = {'date': dates}
-        return unparse(metadata, pretty=True, full_document=False)
+            e_sizes = etree.SubElement(metadata, 'sizes')
+            etree.SubElement(e_sizes, 'size').text = \
+                    '{}'.format(file_size)
+        if date_available:
+            e_dates = etree.SubElement(metadata, 'dates')
+            e_date = etree.Element('date', dateType='Available')
+            e_date.text = date_available
+            e_dates.append(e_date)
+        if date_updated:
+            if not e_dates:
+                e_dates = etree.SubElement(metadata, 'dates')
+            e_date = etree.Element('date', dateType='Updated')
+            e_date.text = date_updated
+            e_dates.append(e_date)
+        return etree.tostring(metadata, pretty_print=True)
 
     def upsert(self, identifier, pkg_dict, res_dict=None):
         """
@@ -574,44 +561,22 @@ def _get_creators(package_id):
     creators = []
     for author in CeonPackageAuthor.get_all(package_id):
         name = _name(author.firstname, author.lastname)
+        e_creator = etree.Element('creator')
+        e_creator_name = etree.SubElement(e_creator, 'creatorName')
+        e_creator_name.text = name
         if author.affiliation:
-            creators.append({'creatorName': name,
-                    'affiliation': author.affiliation.encode('unicode-escape')
-                })
-        else:
-            creators.append({'creatorName': name})
+            e_affiliation = etree.SubElement(e_creator, 'affiliation')
+            e_affiliation.text = author.affiliation.encode('unicode-escape')
+        creators.append(e_creator)
     return creators
 
-def _prepare_metadata(package_id):
-    package = Package.get(package_id)
-    title = package.title.encode('unicode-escape')
-    creators = _get_creators(package_id)
-    publisher = package.extras['publisher'].encode('unicode-escape')
-    if 'publication_year' in package.extras:
-        publication_year = package.extras['publication_year']
-    elif isinstance(package.metadata_created, datetime):
-        publication_year = package.metadata_created.year
-    else:
-        publication_year = parser.parse(package.metadata_created).year
-    pkg_license = package.get_license_register()[PKG_LICENSE_ID]
-    metadata = {
-            'resource': {
-                '@xmlns': 'http://datacite.org/schema/kernel-3',
-                '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                '@xsi:schemaLocation': 'http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd',
-                'identifier': {'@identifierType': 'DOI', '#text': identifier},
-                'titles': {
-                    'title': {'#text': title}
-                },
-                'creators': {
-                    'creator': [c for c in creators],
-                },
-                'publisher': publisher,
-                'publicationYear': publication_year,
-                'rightsList': {
-                    'rights': pkg_license.title
-                    }
-                }   
-        }
-
+def _get_resource_dois(package_id):
+    related_identifiers = []
+    for resource_doi in CeonResourceDOI.get_all_in_package(package_id):
+        e_related_identifier = etree.Element('relatedIdentifier',
+                relatedIdentifierType='DOI',
+                relationType='HasPart')
+        e_related_identifier.text = resource_doi.identifier
+        related_identifiers.append(e_related_identifier)
+    return related_identifiers
 

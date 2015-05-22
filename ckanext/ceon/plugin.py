@@ -155,6 +155,16 @@ def userRole(user_id):
     userRole = get_role(_model.Session, user_id)
     return userRole
 
+def not_group_member(user_id, group_id):
+    user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    data = {'id': group_id, 'object_type': 'user'}
+    members = toolkit.get_action('member_list')(context, data)
+    for member in members:
+        if member[0] == user_id:
+            return False
+    return True
+
 @logic.auth_allow_anonymous_access
 def ceon_user_create(context, data_dict):
     result = ckan_user_create(context, data_dict)
@@ -190,6 +200,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   '/help',
                     controller='ckanext.ceon.controllers:CeonController',
                     action='help')
+        m.connect('add_me_as_member',
+                  '/group/add_me_as_member/{id}',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='add_me_as_member')
         return m
     
     def get_actions(self):
@@ -223,7 +237,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_oa_funding_programs': oa_funding_programs,
                 'ckanext_ceon_get_moderation_state': moderationState,
                 'ckanext_ceon_get_moderation_notes': moderationNotes,
-                'ckanext_ceon_get_user_role': userRole
+                'ckanext_ceon_get_user_role': userRole,
+                'ckanext_ceon_not_group_member': not_group_member
                 }
 
     # IDatasetForm

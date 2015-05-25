@@ -242,7 +242,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
             e_descriptions.append(e_description)
         e_rights_list = etree.SubElement(metadata, 'rightsList')
         e_rights = etree.Element('rights',
-                rights_URI='info:eu-repo/semantics/openAccess')
+                rightsURI='info:eu-repo/semantics/openAccess')
         e_rights_list.append(e_rights)
         if license_id:
             if license_url:

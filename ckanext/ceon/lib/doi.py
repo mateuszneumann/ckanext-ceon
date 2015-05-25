@@ -15,7 +15,7 @@ from requests.exceptions import ConnectionError, HTTPError
 
 from ckan.model import Package, Resource, Session, Tag
 from ckan.model.license import LicenseRegister
-from ckanext.ceon.config import get_doi_endpoint, get_doi_prefix
+from ckanext.ceon.config import get_doi_endpoint, get_doi_prefix, get_site_url
 from ckanext.ceon.lib.metadata import get_ceon_metadata, PKG_LICENSE_ID
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
 

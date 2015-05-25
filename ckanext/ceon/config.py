@@ -17,4 +17,16 @@ def get_doi_prefix():
 def get_doi_endpoint():
     return DOI_TEST_ENDPOINT if asbool(config.get("ckanext.ceon.doi_test_mode", True)) else DOI_ENDPOINT
 
+def get_site_url():
+    """
+    Get the site URL
+    Try and use ckanext.doi.site_url but if that's not set use
+    ckan.site_url
+    @return:
+    """
+    site_url = config.get("ckanext.ceon.doi_site_url")
+    if not site_url:
+        site_url = config.get('ckan.site_url')
+    return site_url.rstrip('/')
+
 

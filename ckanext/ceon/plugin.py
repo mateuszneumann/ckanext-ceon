@@ -12,6 +12,7 @@ from model import create_tables, get_authors, create_authors, update_authors, up
 from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from converters import convert_to_oa_tags
 from ckan.logic.action.create import user_create as ckan_user_create
+from ckan.logic.action.get import package_show as ckan_package_show
 
 log = getLogger(__name__)
 
@@ -184,6 +185,11 @@ def ceon_user_create(context, data_dict):
             toolkit.get_action('organization_create')(context, data)
     return result
 
+@logic.auth_allow_anonymous_access
+def ceon_package_show(context, data_dict):
+    context['ignore_auth'] = True
+    result = ckan_package_show(context, data_dict)
+    return result
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
@@ -207,7 +213,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return m
     
     def get_actions(self):
-        actions = {'user_create': ceon_user_create}
+        actions = {'user_create': ceon_user_create, 'package_show': ceon_package_show}
         return actions
     
     # IConfigurable

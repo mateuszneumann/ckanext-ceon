@@ -1,5 +1,38 @@
 {% ckan_extends %}
 
+{% block primary_content_inner %}
+  {% if c.pkg_dict.state == 'deleted' %}
+  <div class="module info alert alert-info">
+  	<p class="module-content">
+  	This dataset has been deleted.
+  	</p>
+  </div>
+  {% else %}
+  	{{ super() }}
+  {% endif %}
+{% endblock %}
+
+
+{% block secondary_content %}
+  {% if c.pkg_dict.state != 'deleted' %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+{% block content_primary_nav %}
+  {% if c.pkg_dict.state != 'deleted' %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+  
+{% block content_action %}
+  {% if c.pkg_dict.state != 'deleted' %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+
+
 {% block package_additional_info %}
   {% set authors = h.ckanext_ceon_get_authors(pkg.id) %}
 

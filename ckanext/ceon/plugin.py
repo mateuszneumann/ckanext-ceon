@@ -191,6 +191,12 @@ def ceon_package_show(context, data_dict):
     result = ckan_package_show(context, data_dict)
     return result
 
+def ceon_package_delete_function(context, data_dict):
+    user = context['auth_user_obj']
+    if user and user.sysadmin:
+        return {'success': True}
+    return {'success': False}
+
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -200,6 +206,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IAuthFunctions, inherit=True)
+    
+    def get_auth_functions(self):
+        functions = {'package_delete': ceon_package_delete_function}
+        return functions
     
     def before_map(self, m):
         m.connect('help',

@@ -16,6 +16,7 @@ from ckanext.ceon.lib.metadata import create_authors, get_authors, update_author
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
+from ckan.logic.action.get import package_show as ckan_package_show
 
 log = getLogger(__name__)
 
@@ -188,6 +189,17 @@ def ceon_user_create(context, data_dict):
             toolkit.get_action('organization_create')(context, data)
     return result
 
+@logic.auth_allow_anonymous_access
+def ceon_package_show(context, data_dict):
+    context['ignore_auth'] = True
+    result = ckan_package_show(context, data_dict)
+    return result
+
+def ceon_package_delete_function(context, data_dict):
+    user = context['auth_user_obj']
+    if user and user.sysadmin:
+        return {'success': True}
+    return {'success': False}
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
@@ -198,6 +210,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IAuthFunctions, inherit=True)
+    
+    def get_auth_functions(self):
+        functions = {'package_delete': ceon_package_delete_function}
+        return functions
     
     def before_map(self, m):
         m.connect('help',
@@ -212,7 +229,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     
     # IActions
     def get_actions(self):
-        actions = {'user_create': ceon_user_create}
+        actions = {'user_create': ceon_user_create, 'package_show': ceon_package_show}
         return actions
     
     # IConfigurable

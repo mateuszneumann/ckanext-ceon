@@ -48,7 +48,7 @@ class DataCiteAPI(object):
             method = 'get'
         # Add authorisation to request
         kwargs['auth'] = (account_name, account_password)
-        log.debug(u'_CALL.  kwargs = {}'.format(kwargs))
+        log.info("Calling %s:%s - %s", endpoint, method, kwargs)
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)
         # Raise exception if we have an error
@@ -349,63 +349,6 @@ class MediaDataCiteAPI(DataCiteAPI):
 
 
 
-
-
-# ---------------
-
-def publish_doi(package_id, **kwargs):
-    """
-    Publish a DOI to DataCite
-
-    Need to create metadata first
-    And then create DOI => URI association
-    See MetadataDataCiteAPI.*_to_xml for param information
-    @param package_id:
-    @param title:
-    @param creator:
-    @param publisher:
-    @param publisher_year:
-    @param kwargs:
-    @return: request response
-    """
-    identifier = kwargs.get('identifier')
-
-    metadata = MetadataDataCiteAPI()
-    metadata.upsert(**kwargs)
-
-    # The ID of a dataset never changes, so use that for the URL
-    url = os.path.join(get_site_url(), 'dataset', package_id)
-
-    doi = DOIDataCiteAPI()
-    r = doi.upsert(doi=identifier, url=url)
-    assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
-
-    # If we have created the DOI, save it to the database
-    if r.text == 'OK':
-        # Update status for this package and identifier
-        num_affected = Session.query(DOI).filter_by(package_id=package_id, identifier=identifier).update({"published": datetime.now()})
-        # Raise an error if update has failed - should never happen unless
-        # DataCite and local db get out of sync - in which case requires investigating
-        assert num_affected == 1, 'Updating local DOI failed'
-
-    log.debug('Created new DOI for package %s' % package_id)
-
-
-def update_doi(package_id, **kwargs):
-    doi = get_doi(package_id)
-    kwargs['identifier'] = doi.identifier
-    metadata = MetadataDataCiteAPI()
-    metadata.upsert(**kwargs)
-
-
-def get_doi(package_id):
-    doi = Session.query(DOI).filter(DOI.package_id==package_id).first()
-    return doi
-
-
-
-
-
 #############################################################
 def _validate_package(pkg_dict):
     if not 'id' in pkg_dict:
@@ -511,6 +454,9 @@ def publish_resource_doi(pkg_dict, res_dict):
         num_affected = query.update({"published": datetime.datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
     log.debug(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+
+
+# "Private" functions
 
 def _create_unique_identifier(package_doi_identifier=None):
     datacite_api = DOIDataCiteAPI()

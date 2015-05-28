@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-22 16:27+0100\n"
+"POT-Creation-Date: 2015-05-28 13:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
+#: ckanext/ceon/controllers.py:35
+#, python-format
+msgid "Unauthorized to add member to group %s"
+msgstr ""
+
+#: ckanext/ceon/controllers.py:37
+msgid "Group not found"
+msgstr ""
+
 #: ckanext/ceon/converters.py:35
 #, python-format
 msgid "Tag vocabulary \"%s\" does not exist"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:386 ckanext/ceon/plugin.py:418
+#: ckanext/ceon/plugin.py:418 ckanext/ceon/plugin.py:450
 msgid "DataCite DOI metadata updated"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:389 ckanext/ceon/plugin.py:421
+#: ckanext/ceon/plugin.py:421 ckanext/ceon/plugin.py:453
 msgid "DataCite DOI has been created"
 msgstr ""
 
@@ -92,6 +101,10 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
+#: ckanext/ceon/templates/group/snippets/info.html:11
+msgid "Add me as member"
+msgstr ""
+
 #: ckanext/ceon/templates/macros/ceonform.html:12
 msgid "Firstname"
 msgstr ""
@@ -105,7 +118,7 @@ msgid "Email"
 msgstr ""
 
 #: ckanext/ceon/templates/macros/ceonform.html:16
-#: ckanext/ceon/templates/package/read.html:14
+#: ckanext/ceon/templates/package/read.html:47
 msgid "Affiliation"
 msgstr ""
 
@@ -113,52 +126,52 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:13
+#: ckanext/ceon/templates/package/read.html:46
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:39
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:63
 msgid "Author"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:48
+#: ckanext/ceon/templates/package/read.html:81
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:54
+#: ckanext/ceon/templates/package/read.html:87
 msgid "Publication year"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:60
+#: ckanext/ceon/templates/package/read.html:93
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid "Related publication"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:66
+#: ckanext/ceon/templates/package/read.html:99
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
 msgid "Type of resource"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:72
+#: ckanext/ceon/templates/package/read.html:105
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:20
 msgid "Area of study"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:78
+#: ckanext/ceon/templates/package/read.html:111
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:31
 msgid "Funder"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:84
+#: ckanext/ceon/templates/package/read.html:117
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
 msgid "Funding program"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:90
+#: ckanext/ceon/templates/package/read.html:123
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:45
 msgid "Grant number"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:96
+#: ckanext/ceon/templates/package/read.html:129
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:48
 msgid "License for files"
 msgstr ""
@@ -347,14 +360,18 @@ msgid "Previous"
 msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:110
-msgid "Save & add another"
+msgid "Save as draft"
 msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:113
+msgid "Save & add another"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_form.html:116
 msgid "Finish"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/resource_form.html:117
+#: ckanext/ceon/templates/package/snippets/resource_form.html:120
 msgid "Add"
 msgstr ""
 

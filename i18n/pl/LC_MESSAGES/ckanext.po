@@ -22,11 +22,11 @@ msgstr ""
 #: ckanext/ceon/controllers.py:35
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr ""
+msgstr "Brak upoważnienia, by dosać członka do grupy %s"
 
 #: ckanext/ceon/controllers.py:37
 msgid "Group not found"
-msgstr ""
+msgstr "Nie znaleziono grupy"
 
 #: ckanext/ceon/converters.py:35
 #, python-format
@@ -75,6 +75,11 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
+"Pakit został odrzucony przez moderatora.\n"
+"\n"
+"Proszę klinąć poniższy link, by zobaczyć pakiet:\n"
+"\n"
+"   {package_link}\n"
 
 #: ckanext/ceon/lib/moderation.py:60
 msgid ""
@@ -115,7 +120,7 @@ msgstr "Pomoc"
 
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
-msgstr ""
+msgstr "Dodaj mnie jako członka"
 
 #: ckanext/ceon/templates/macros/ceonform.html:12
 msgid "Firstname"
@@ -283,9 +288,12 @@ msgstr "Niniejszym udzielam licencji dla wszystkich zasobów"
 #: ckanext/ceon/templates/package/snippets/resource_form.html:69
 msgid ""
 "\n"
-"                Informacje prawne</a>\n"
+"                Legal notice</a>\n"
 "              "
 msgstr ""
+"\n"
+"                Informacje prawne</a>\n"
+"              "
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
 msgid "I will grant different licenses for different resources "
@@ -309,7 +317,7 @@ msgstr "np. styczeń 2011 Ceny złota"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Some useful notes about the data"
@@ -348,8 +356,8 @@ msgid "eg. 2012-06-05"
 msgstr "np. 2012-06-05"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
-msgid "Rozmiar pliku"
-msgstr ""
+msgid "File size"
+msgstr "Rozmiar pliku"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
 msgid "eg. 1024"
@@ -367,7 +375,7 @@ msgstr "np. aplikacja/json"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:100
 msgid "Are you sure you want to remove this resource?"
-msgstr "Czy na pewno chcesz usunąć ten zasób"
+msgstr "Czy na pewno chcesz usunąć ten zasób?"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:101
 msgid "Delete"
@@ -379,7 +387,7 @@ msgstr "Wstecz"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:110
 msgid "Save as draft"
-msgstr ""
+msgstr "Zapisz jako szkic"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:113
 msgid "Save & add another"

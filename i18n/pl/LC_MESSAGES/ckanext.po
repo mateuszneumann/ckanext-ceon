@@ -22,36 +22,36 @@ msgstr ""
 #: ckanext/ceon/controllers.py:35
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr ""
+msgstr "Brak upoważnienia, by dosać członka do grupy %s"
 
 #: ckanext/ceon/controllers.py:37
 msgid "Group not found"
-msgstr ""
+msgstr "Nie znaleziono grupy"
 
 #: ckanext/ceon/converters.py:35
 #, python-format
 msgid "Tag vocabulary \"%s\" does not exist"
-msgstr ""
+msgstr "Tag słownik \"%s\" nie istnieje"
 
 #: ckanext/ceon/plugin.py:418 ckanext/ceon/plugin.py:450
 msgid "DataCite DOI metadata updated"
-msgstr ""
+msgstr "Zaktualizowano metadane DataCite DOI"
 
 #: ckanext/ceon/plugin.py:421 ckanext/ceon/plugin.py:453
 msgid "DataCite DOI has been created"
-msgstr ""
+msgstr "Utworzono metadane DataCite DOI"
 
 #: ckanext/ceon/lib/moderation.py:18
 msgid "Moderation request from {site_title}"
-msgstr ""
+msgstr "Zapytanie od moderację od {site_title}"
 
 #: ckanext/ceon/lib/moderation.py:23
 msgid "Package accepted info from {site_title}"
-msgstr ""
+msgstr "Przyjęto pakiet z {site_title}"
 
 #: ckanext/ceon/lib/moderation.py:28
 msgid "Package rejected info from {site_title}"
-msgstr ""
+msgstr "Odrzucono pakiet z {site_title}"
 
 #: ckanext/ceon/lib/moderation.py:32
 msgid ""
@@ -61,6 +61,11 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
+"Nowy pakiet oczekuje na moderację.\n"
+"\n"
+"Proszę klinknąć poniższy link, by zmoderować zapytanie:\n"
+"\n"
+"   {package_link}\n"
 
 #: ckanext/ceon/lib/moderation.py:46
 msgid ""
@@ -70,6 +75,11 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
+"Pakit został odrzucony przez moderatora.\n"
+"\n"
+"Proszę klinąć poniższy link, by zobaczyć pakiet:\n"
+"\n"
+"   {package_link}\n"
 
 #: ckanext/ceon/lib/moderation.py:60
 msgid ""
@@ -80,193 +90,199 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
+"Pakiet odrzucony przez moderatora.\n"
+"Powód:\n"
+"{reason}\n"
+"Proszę klinknąć poniższy link, by obejrzeć pakiet:\n"
+"\n"
+"   {package_link}\n"
 
 #: ckanext/ceon/templates/header.html:5
 msgid "Datasets"
-msgstr ""
+msgstr "Zestawy danych"
 
 #: ckanext/ceon/templates/header.html:6
 msgid "Organizations"
-msgstr ""
+msgstr "Organizacje"
 
 #: ckanext/ceon/templates/header.html:7
 msgid "Groups"
-msgstr ""
+msgstr "Grupy"
 
 #: ckanext/ceon/templates/header.html:8
 msgid "About"
-msgstr ""
+msgstr "O serwisie"
 
 #: ckanext/ceon/templates/header.html:9 ckanext/ceon/templates/home/help.html:3
 #: ckanext/ceon/templates/home/help.html:6
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
-msgstr ""
+msgstr "Dodaj mnie jako członka"
 
 #: ckanext/ceon/templates/macros/ceonform.html:12
 msgid "Firstname"
-msgstr ""
+msgstr "Imię"
 
 #: ckanext/ceon/templates/macros/ceonform.html:13
 msgid "Lastname"
-msgstr ""
+msgstr "Nazwisko"
 
 #: ckanext/ceon/templates/macros/ceonform.html:15
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: ckanext/ceon/templates/macros/ceonform.html:16
 #: ckanext/ceon/templates/package/read.html:47
 msgid "Affiliation"
-msgstr ""
+msgstr "Aifliacja"
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 #: ckanext/ceon/templates/package/read.html:46
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:39
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:63
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: ckanext/ceon/templates/package/read.html:81
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
-msgstr ""
+msgstr "Wydawca"
 
 #: ckanext/ceon/templates/package/read.html:87
 msgid "Publication year"
-msgstr ""
+msgstr "Rok wydania"
 
 #: ckanext/ceon/templates/package/read.html:93
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid "Related publication"
-msgstr ""
+msgstr "Powiązane publikacje"
 
 #: ckanext/ceon/templates/package/read.html:99
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
 msgid "Type of resource"
-msgstr ""
+msgstr "Typ zasobu"
 
 #: ckanext/ceon/templates/package/read.html:105
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:20
 msgid "Area of study"
-msgstr ""
+msgstr "Obszra badań"
 
 #: ckanext/ceon/templates/package/read.html:111
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:31
 msgid "Funder"
-msgstr ""
+msgstr "Grantodawca"
 
 #: ckanext/ceon/templates/package/read.html:117
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
 msgid "Funding program"
-msgstr ""
+msgstr "Program finansowania"
 
 #: ckanext/ceon/templates/package/read.html:123
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:45
 msgid "Grant number"
-msgstr ""
+msgstr "Numer grantu"
 
 #: ckanext/ceon/templates/package/read.html:129
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:48
 msgid "License for files"
-msgstr ""
+msgstr "Licencja na pliki"
 
 #: ckanext/ceon/templates/package/resource_read.html:9
 msgid "Additional Information"
-msgstr ""
+msgstr "Dodatkowe informacje"
 
 #: ckanext/ceon/templates/package/resource_read.html:13
 msgid "Field"
-msgstr ""
+msgstr "Pole"
 
 #: ckanext/ceon/templates/package/resource_read.html:14
 msgid "Value"
-msgstr ""
+msgstr "Wartość"
 
 #: ckanext/ceon/templates/package/resource_read.html:19
 msgid "Last updated"
-msgstr ""
+msgstr "Ostatnio aktualizowano"
 
 #: ckanext/ceon/templates/package/resource_read.html:20
 #: ckanext/ceon/templates/package/resource_read.html:24
 #: ckanext/ceon/templates/package/resource_read.html:28
 msgid "unknown"
-msgstr ""
+msgstr "nieznany"
 
 #: ckanext/ceon/templates/package/resource_read.html:23
 msgid "Created"
-msgstr ""
+msgstr "Utworzono"
 
 #: ckanext/ceon/templates/package/resource_read.html:27
 #: ckanext/ceon/templates/package/snippets/resource_form.html:40
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #: ckanext/ceon/templates/package/resource_read.html:31
 #: ckanext/ceon/templates/package/snippets/resource_form.html:52
 #: ckanext/ceon/templates/snippets/license.html:31
 msgid "License"
-msgstr ""
+msgstr "Licencja"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:9
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:9
 msgid "eg. A descriptive title"
-msgstr ""
+msgstr "np. Opisowy tytuł"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:77
-msgid "Publication Year"
-msgstr ""
+msgid "Publication year"
+msgstr "Rok wydania"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:77
 msgid "2012"
-msgstr ""
+msgstr "2012"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid "http://example.com/article-123"
-msgstr ""
+msgstr "http://example.com/article-123"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:90
 msgid "Visibility"
-msgstr ""
+msgstr "Widoczność"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
 msgid "Private"
-msgstr ""
+msgstr "Prywatne"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
 msgid "Waiting for approval"
-msgstr ""
+msgstr "Oczekuje na akceptację"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
 msgid "Rejected"
-msgstr ""
+msgstr "Odrzucone"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
 msgid "Public"
-msgstr ""
+msgstr "Publiczne"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:110
 msgid "Moderation notes"
-msgstr ""
+msgstr "Uwagi moderatora"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:110
 msgid "eg. Some useful notes about moderation"
-msgstr ""
+msgstr "np. Przydatne uwagi o moderowaniu"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:51
 msgid "Hereby I grant this license for all resources "
-msgstr ""
+msgstr "Niniejszym udzielam licencji dla wszystkich zasobów"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:64
 #: ckanext/ceon/templates/package/snippets/resource_form.html:69
@@ -275,42 +291,45 @@ msgid ""
 "                Legal notice</a>\n"
 "              "
 msgstr ""
+"\n"
+"                Informacje prawne</a>\n"
+"              "
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
 msgid "I will grant different licenses for different resources "
-msgstr ""
+msgstr "Udzielam różnych licencji dla różnych zasobów"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:27
 msgid "File"
-msgstr ""
+msgstr "Plik"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:27
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:31
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:31
 msgid "eg. January 2011 Gold Prices"
-msgstr ""
+msgstr "np. styczeń 2011 Ceny złota"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Some useful notes about the data"
-msgstr ""
+msgstr "Przydatne uwagi na temat danych"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:40
 msgid "eg. CSV, XML or JSON"
-msgstr ""
+msgstr "np. CSV, XML or JSON"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:43
 msgid "This will be guessed automatically. Leave blank if you wish"
-msgstr ""
+msgstr "Zostaną uzupełnione automatycznie. Możesz pozostawić pole puste"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:62
 msgid ""
@@ -321,71 +340,77 @@ msgid ""
 "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>\n"
 "              "
 msgstr ""
+"\n"
+"                Definicje licencji i dodatkowe informacje można "
+"znaleźć\n"
+"                na <a "
+"href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>\n"
+"              "
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:86
-msgid "Last Modified"
-msgstr ""
+msgid "Last modified"
+msgstr "Ostatnio zmodyfikowano"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:86
 msgid "eg. 2012-06-05"
-msgstr ""
+msgstr "np. 2012-06-05"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
-msgid "File Size"
-msgstr ""
+msgid "File size"
+msgstr "Rozmiar pliku"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
 msgid "eg. 1024"
-msgstr ""
+msgstr "np. 1024"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:90
 #: ckanext/ceon/templates/package/snippets/resource_form.html:92
 msgid "MIME Type"
-msgstr ""
+msgstr "MIME Type"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:90
 #: ckanext/ceon/templates/package/snippets/resource_form.html:92
 msgid "eg. application/json"
-msgstr ""
+msgstr "np. aplikacja/json"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:100
-msgid "Are you sure you want to delete this resource?"
-msgstr ""
+msgid "Are you sure you want to remove this resource?"
+msgstr "Czy na pewno chcesz usunąć ten zasób?"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:101
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:107
 msgid "Previous"
-msgstr ""
+msgstr "Wstecz"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:110
 msgid "Save as draft"
-msgstr ""
+msgstr "Zapisz jako szkic"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:113
 msgid "Save & add another"
-msgstr ""
+msgstr "Zapisz i dodaj kolejny"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:116
 msgid "Finish"
-msgstr ""
+msgstr "Zakończ"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:120
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #: ckanext/ceon/templates/snippets/license.html:24
-msgid "No License Provided"
-msgstr ""
+msgid "No license provided"
+msgstr "Nie podano licencji"
 
 #: ckanext/ceon/templates/snippets/license.html:39
 #: ckanext/ceon/templates/snippets/license.html:46
 msgid "This dataset satisfies the Open Definition."
-msgstr ""
+msgstr "Ten zbiór danych jest zgodny z definicją otwartości (Open Definition)"
 
 #: ckanext/ceon/templates/snippets/tag_list.html:7
 msgid "Keywords"
-msgstr ""
+msgstr "Słowa kluczowe"
 

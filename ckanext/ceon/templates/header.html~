@@ -36,7 +36,7 @@
         			<nav class="section navigation">
           				<ul class="nav nav-pills">
           					{% block header_site_navigation_tabs %}
-								<li><a href="/dataset/new"><img src="/icon_share_white.png"/>{{_('Create Dataset') }}</a></li>
+								<li><a href="/organization"><img src="/icon_share_white.png"/>{{_('Organizations')}}</a></li>
 								<li><a href="/dataset"><img src="/icon_share2_white.png"/>{{_('Datasets')}}</a></li>
 								<li><a href="/group" ><img src="/icon_group_white.png"/>{{_('Groups')}}</a></li>
             					{% endblock %}

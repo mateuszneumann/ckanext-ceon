@@ -1,0 +1,189 @@
+.account-masthead, .masthead, .logo-ceon, .round-menu {
+	background: #294488;
+}
+
+.stages li.active .highlight {
+  background: #FFE867;
+	color: black;
+}
+
+.stages li.active:before {
+	color:#black;
+}
+
+.account-masthead .account ul li {
+	border-left: 0;
+}
+
+.account-masthead .account ul li a {
+	color: white;
+	font-weight: normal;
+}
+
+.account-masthead .account .notifications a span {
+	color: white;
+}
+
+.main-wrapper {
+	min-height: 100%;
+	position: relative;
+}
+
+.account-masthead .account .notifications a span.text {
+	padding-right: 1px;
+}
+
+.account-masthead .account .notifications a span.badge {
+	padding-left: 1px;
+}
+
+.masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
+	color: white;
+	padding: 6px 15px 10px
+}
+
+.masthead .nav > li > a > img {
+  	width: 20px;
+  	padding-right: 5px;
+}
+
+.masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
+	background-color: transparent;
+}
+
+body, .hero, [role=main], .main {
+	background: white;
+}
+
+body {
+	height: 100vh;
+}
+
+.main-wrapper [role=main] {
+	position: relative;
+	padding-bottom: 180px;
+}
+
+.homepage [role=main] {
+  padding-top: 40px;
+}
+
+.homepage .sheet {
+	text-align: justify;
+}
+.site-footer {
+	background: #5f6362;
+	position: absolute;
+  	bottom: 0;
+  	width: 100%;
+	overflow: hidden;
+}
+
+.footer-logotypes {
+	padding-top: 20px;
+}
+
+#ceon-tree {
+  position: absolute;
+  height: 140px;
+  bottom: -56px;
+}
+
+.toolbar {
+	padding: 0;
+}
+.toolbar .breadcrumb {
+	font-size: 15px;
+}
+
+.masthead .nav-div {
+	width: 100%;
+}
+
+.masthead .section.navigation {
+	float: right;
+	width: 55%;
+}
+.masthead .site-search {
+	float: left;
+	margin-left: 7px;
+}
+
+
+.masthead .site-search input {
+	width: 380px;
+	border-color: #cccccc;
+}
+
+.round-menu {
+	height: 450px;
+	width: 85px;
+	border-radius: 20px;
+	padding-top: 52px;
+}
+
+.round-item, .round-item img {
+	border-radius: 55px;
+  	height: 90px;
+  	width: 90px;
+}
+
+.round-item {
+	border: 5px solid #ffda08;
+	margin-bottom: 52px;
+	margin-left: 30px;
+	position: relative;
+}
+
+.round-item img { 
+  	float: left;
+}
+
+.active .round-item, a:hover .round-item {
+	border: 5px solid white;
+}
+
+.round-text {
+	position: absolute;
+	width: 90px;
+	left: 100px;
+	color: #c2c2c2;
+	height: 100%;
+}
+
+.active .round-text, a:hover .round-text {
+	color: #444444;
+}
+
+.round-text .row{
+	margin-left: 0px;
+	display: table;
+  	height: 100%;
+}
+
+.round-text .row div{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.sheet {
+	padding-right: 20px;
+}
+
+.sheet li {
+	padding-bottom: 15px;
+	margin-left: 30px;
+}
+
+#language_form {
+	float: left;
+	font-weight: bold;
+	padding-top: 5px;
+	margin-bottom: 0;
+}
+
+#language_form a{
+	color: white;
+}
+
+

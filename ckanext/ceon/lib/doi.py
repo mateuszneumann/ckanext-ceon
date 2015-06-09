@@ -49,6 +49,7 @@ class DataCiteAPI(object):
         # Add authorisation to request
         kwargs['auth'] = (account_name, account_password)
         log.info("Calling %s:%s - %s", endpoint, method, kwargs)
+
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)
         # Raise exception if we have an error
@@ -332,11 +333,16 @@ class DOIDataCiteAPI(DataCiteAPI):
         @return:
         """
         return self._call(
-                params={
-                    'doi': doi,
-                    'url': url
-                    },
+#                params={
+#                    'doi': doi.encode('utf-8'),
+#                    'url': url.encode('utf-8')
+#                    },
+                data="doi={}\nurl={}\n".format(
+                        doi.encode('utf-8'),
+                        url.encode('utf-8')
+                    ),
                 method='post',
+#                headers={'Content-Type': 'application/x-www-form-urlencoded'}
                 headers={'Content-Type': 'text/plain;charset=UTF-8'}
             )
 

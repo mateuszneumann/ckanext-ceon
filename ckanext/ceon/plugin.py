@@ -367,8 +367,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def after_show(self, context, data):
         if 'type' in data:
             self._package_after_show(context, data)
-        elif 'package_id' in data:
-            self._resource_after_show(context, data)
+
+    def before_show(self, data):
+        if 'package_id' in data:
+            self._resource_before_show(data)
 
     def after_update(self, context, data):
         if 'type' in data:
@@ -394,15 +396,15 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
         create_package_doi(pkg_dict)
     
-        def _package_after_show(self, context, pkg_dict):
-            # Load the DOI ready to display
-            pkg_doi = get_package_doi(pkg_dict['id'])
-            if pkg_doi:
-                pkg_dict['doi'] = pkg_doi.identifier
-                pkg_dict['doi_status'] = True if pkg_doi.published else False
-                pkg_dict['domain'] = get_site_url().replace('http://', '')
+    def _package_after_show(self, context, pkg_dict):
+        # Load the DOI ready to display
+        pkg_doi = get_package_doi(pkg_dict['id'])
+        if pkg_doi:
+            pkg_dict['doi'] = pkg_doi.identifier
+            pkg_dict['doi_status'] = True if pkg_doi.published else False
+            pkg_dict['domain'] = get_site_url().replace('http://', '')
 
-        def _package_after_update(self, context, pkg_dict):
+    def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
         if 'authors' in pkg_dict:
             update_authors(context, pkg_dict, pkg_dict['authors'])
@@ -435,7 +437,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 
-    def _resource_after_show(self, context, res_dict):
+    def _resource_before_show(self,res_dict):
         # Load the DOI ready to display
         res_doi = get_resource_doi(res_dict['id'])
         if res_doi:

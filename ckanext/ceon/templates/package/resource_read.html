@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block resource_additional_information %}
-  {% if pkg.doi %}
+  {% if res.doi %}
     {% snippet "doi/snippets/resource_citation.html", pkg_dict=pkg, res=res %}
   {% endif %}
   {{ super() }}

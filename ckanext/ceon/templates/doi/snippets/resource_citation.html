@@ -7,15 +7,24 @@ Renders a citation for a resource
 {% block citation %}
   <section class="module additional-info">
     <div class="module-content citation">
+      {% set authors = h.ckanext_ceon_get_authors(pkg_dict['id']) %}
       <h3>{{ _('Cite this as') }}</h3>
-      {% set site_title = h.get_site_title() %}
       <p>
-        {{ pkg_dict['author'] }} ({{ h.package_get_year(pkg_dict)   }}). {{ _('Dataset') }}: {{ pkg_dict['title'] }}. {{ _('Resource') }}: {{ res['name'] }}.
-        {% if site_title %}
-          {{ site_title }}.
-        {% endif %}
+        {% for a in authors %}
+          {% set author_name = a.lastname|default('NN', true) %}
+          {% if a.firstname %}
+            {% set author_name = [author_name, a.firstname]|join(', ') %}
+          {% endif %}
+          {#
+          <span>{{ author_name }}{% if a.affiliation %}&#160;({{ a.affiliation }}){% endif %}</span>{% if not loop.last %}; {% endif %}
+          #}
+          <span>{{ author_name }}</span>{% if not loop.last %}; {% endif %}
+        {% endfor %}
+        ({{ pkg_dict['publication_year'] }}).
+        {{ _('Dataset') }}: {{ pkg_dict['title'] }}. {{ _('Resource') }}: {{ res['name'] }}.
         {% block citation_link %}
-          {{ super() }}
+          <a href="http://dx.doi.org/{{ res['doi'] }}"
+             target="_blank">http://dx.doi.org/{{ res['doi'] }}</a>
         {% endblock %}
       </p>
       {% block citation_status %}

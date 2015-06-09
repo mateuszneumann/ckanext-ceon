@@ -6,13 +6,20 @@ Renders a citation for a package
   <section class="additional-info">
     <h3>{{ _('Cite this as') }}</h3>
     <div class="citation">
-      {% set site_title = h.get_site_title() %}
+      {% set authors = h.ckanext_ceon_get_authors(pkg_dict['id']) %}
       <p>
-        {{ pkg_dict['author'] }} ({{ h.package_get_year(pkg_dict) }}).
+        {% for a in authors %}
+          {% set author_name = a.lastname|default('NN', true) %}
+          {% if a.firstname %}
+            {% set author_name = [author_name, a.firstname]|join(', ') %}
+          {% endif %}
+          {#
+          <span>{{ author_name }}{% if a.affiliation %}&#160;({{ a.affiliation }}){% endif %}</span>{% if not loop.last %}; {% endif %}
+          #}
+          <span>{{ author_name }}</span>{% if not loop.last %}; {% endif %}
+        {% endfor %}
+        ({{ pkg_dict['publication_year'] }}).
         {{ _('Dataset') }}: {{ pkg_dict['title'] }}.
-        {% if site_title %}
-          {{ site_title }}.
-        {% endif %}
         {% block citation_link %}
           <a href="http://dx.doi.org/{{ pkg_dict['doi'] }}"
              target="_blank">http://dx.doi.org/{{ pkg_dict['doi'] }}</a>
@@ -20,7 +27,8 @@ Renders a citation for a package
       </p>
       {% block citation_status %}
         {% if not pkg_dict['doi_status'] %}
-          <span class="dataset-private label label-inverse" title="{{ _('This DOI has not yet been published') }}"><i class="icon-lock"></i>{{ _('Private DOI') }}</span>
+          <span class="dataset-private label label-inverse" title="{{
+              _('This DOI has not yet been published') }}"><i class="icon-lock"></i>&#160;{{ _('Private DOI') }}</span>
           <small>
             <i class="icon-exclamation-sign"></i>
             <strong>{{ _('This DOI is not yet resolvable.') }}</strong><br />

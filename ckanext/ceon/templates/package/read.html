@@ -36,10 +36,6 @@
 {% block package_additional_info %}
   {% set authors = h.ckanext_ceon_get_authors(pkg.id) %}
 
-  {% if pkg.doi %}
-    {% snippet "doi/snippets/package_citation.html", pkg_dict=pkg %}
-  {% endif %}
-
   {# Add our custom author fields to the package description element. #}
   {% if authors %}
     <section id="dataset-authors" class="additional-info">
@@ -71,6 +67,10 @@
         </tbody>
       </table>
     </section>
+  {% endif %}
+
+  {% if pkg.doi %}
+    {% snippet "doi/snippets/package_citation.html", pkg_dict=pkg %}
   {% endif %}
 
   {{ super() }}

@@ -3,7 +3,7 @@
 
 from logging import getLogger
 
-from ckan.model import Package, Session, Tag, Vocabulary
+from ckan.model import Package, Resource, Session, Tag, Vocabulary
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
 
 log = getLogger(__name__)

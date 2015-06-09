@@ -11,6 +11,7 @@ import ckan.logic as logic
 from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.lib import helpers as h
+from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
@@ -363,6 +364,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         elif 'package_id' in data:
             self._resource_create(context, data)
 
+    def after_show(self, context, data):
+        if 'type' in data:
+            self._package_after_show(context, data)
+        elif 'package_id' in data:
+            self._resource_after_show(context, data)
+
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
@@ -386,9 +393,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
         create_package_doi(pkg_dict)
-            
+    
+        def _package_after_show(self, context, pkg_dict):
+            # Load the DOI ready to display
+            pkg_doi = get_package_doi(pkg_dict['id'])
+            if pkg_doi:
+                pkg_dict['doi'] = pkg_doi.identifier
+                pkg_dict['doi_status'] = True if pkg_doi.published else False
+                pkg_dict['domain'] = get_site_url().replace('http://', '')
 
-    def _package_after_update(self, context, pkg_dict):
+        def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
         if 'authors' in pkg_dict:
             update_authors(context, pkg_dict, pkg_dict['authors'])
@@ -420,6 +434,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
+
+    def _resource_after_show(self, context, res_dict):
+        # Load the DOI ready to display
+        res_doi = get_resource_doi(res_dict['id'])
+        if res_doi:
+            res_dict['doi'] = res_doi.identifier
+            res_dict['doi_status'] = True if res_doi.published else False
+            res_dict['domain'] = get_site_url().replace('http://', '')
 
     def _resource_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))

@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8
 
 from logging import getLogger
+from datetime import datetime
 
 import ckan.model as _model
 import ckan.plugins as plugins
@@ -13,8 +14,8 @@ from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags
-from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 from ckan.logic.action.get import package_show as ckan_package_show
@@ -261,7 +262,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_get_moderation_state': moderationState,
                 'ckanext_ceon_get_moderation_notes': moderationNotes,
                 'ckanext_ceon_get_user_role': userRole,
-                'ckanext_ceon_not_group_member': not_group_member
+                'ckanext_ceon_not_group_member': not_group_member,
+                'now': datetime.now
                 }
 
     # IDatasetForm

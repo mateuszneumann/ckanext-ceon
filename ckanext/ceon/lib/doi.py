@@ -414,7 +414,7 @@ def update_package_doi(pkg_dict):
     if not package_doi:
         package_doi = create_package_doi(pkg_dict)
     metadata = MetadataDataCiteAPI()
-    metadata.upsert(package_doi.identifer, pkg_dict)
+    metadata.upsert(package_doi.identifier, pkg_dict)
     log.debug(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def update_resource_doi(pkg_dict, res_dict):

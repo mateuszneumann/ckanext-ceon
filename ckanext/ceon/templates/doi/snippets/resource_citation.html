@@ -18,10 +18,13 @@ Renders a citation for a resource
           {#
           <span>{{ author_name }}{% if a.affiliation %}&#160;({{ a.affiliation }}){% endif %}</span>{% if not loop.last %}; {% endif %}
           #}
-          <span>{{ author_name }}</span>{% if not loop.last %}; {% endif %}
+          <span class="citation-author">{{ author_name }}</span>{% if not loop.last %}; {% endif %}
         {% endfor %}
-        ({{ pkg_dict['publication_year'] }}).
-        {{ _('Dataset') }}: {{ pkg_dict['title'] }}. {{ _('Resource') }}: {{ res['name'] }}.
+        <span class="citation-year">({{ pkg_dict['publication_year'] }})</span>.
+        {{ _('Dataset') }}:
+        <span class="citation-dataset-title">{{ pkg_dict['title'] }}</span>.
+        {{ _('Resource') }}:
+        <span class="citation-resource-title">{{ res['name'] }}</span>.
         {% block citation_link %}
           <a href="http://dx.doi.org/{{ res['doi'] }}"
              target="_blank">http://dx.doi.org/{{ res['doi'] }}</a>

@@ -337,7 +337,7 @@ class DOIDataCiteAPI(DataCiteAPI):
 #                    'doi': doi.encode('utf-8'),
 #                    'url': url.encode('utf-8')
 #                    },
-                data="doi={}\nurl={}\n".format(
+                data="doi={}\nurl={}".format(
                         doi.encode('utf-8'),
                         url.encode('utf-8')
                     ),
@@ -439,7 +439,7 @@ def publish_package_doi(pkg_dict):
     if r.text == 'OK':
         query = Session.query(CeonPackageDOI)
         query = query.filter_by(package_id=pkg_dict['id'], identifier=package_doi.identifier)
-        num_affected = query.update({"published": datetime.datetime.now()})
+        num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
     log.debug(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
@@ -457,7 +457,7 @@ def publish_resource_doi(pkg_dict, res_dict):
     if r.text == 'OK':
         query = Session.query(CeonResourceDOI)
         query = query.filter_by(resource_id=res_dict['id'], identifier=resource_doi.identifier)
-        num_affected = query.update({"published": datetime.datetime.now()})
+        num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
     log.debug(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 

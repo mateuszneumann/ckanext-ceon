@@ -97,10 +97,10 @@ class MetadataDataCiteAPI(DataCiteAPI):
         subject = _ensure_list(pkg_dict.get('tag_string', '').split(','))
         subject.sort()
         description = pkg_dict.get('notes', '').encode('unicode-escape')
-        oa_funder = _ensure_list(pkg_dict.get('oa_funder', ['']))[0].encode('unicode-escape')
-        oa_funding_program = _ensure_list(pkg_dict.get('oa_funding_program', ['']))[0].encode('unicode-escape')
-        res_type = _ensure_list(pkg_dict.get('res_type', ['']))[0].encode('unicode-escape')
-        sci_discipline = _ensure_list(pkg_dict.get('sci_discipline', ['']))[0].encode('unicode-escape')
+        oa_funder = _get_first_elem(pkg_dict, 'oa_funder')
+        oa_funding_program = _get_first_elem(pkg_dict, 'oa_funding_program')
+        res_type = _get_first_elem(pkg_dict, 'res_type')
+        sci_discipline = _get_first_elem(pkg_dict, 'sci_discipline')
         oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
         rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
         version = pkg_dict.get('version', '').encode('unicode-escape')
@@ -498,6 +498,10 @@ def _ensure_list(var):
     # Make sure a var is a list so we can easily loop through it
     # Useful for properties were multiple is optional
     return var if isinstance(var, list) else [var]
+
+def _get_first_elem(pkg_dict, var):
+    a_list = _ensure_list(pkg_dict.get(var, ''))
+    return a_list[0].encode('unicode-escape') if len(a_list) > 0 else None
 
 def _get_creators(package_id):
     # Prepare list of authors for DataCite

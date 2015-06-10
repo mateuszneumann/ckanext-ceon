@@ -11,16 +11,16 @@ Renders a citation for a package
         {% for a in authors %}
           {% set author_name = a.lastname|default('NN', true) %}
           {% if a.firstname %}
-            {% set author_name = [author_name, a.firstname]|join(', ') %}
+            {% set author_name = [author_name, a.firstname[0]]|join(', ') + "."%}
           {% endif %}
           {#
           <span>{{ author_name }}{% if a.affiliation %}&#160;({{ a.affiliation }}){% endif %}</span>{% if not loop.last %}; {% endif %}
           #}
           <span class="citation-author">{{ author_name }}</span>{% if not loop.last %}; {% endif %}
         {% endfor %}
-        <span class="citation-year">({{ pkg_dict['publication_year'] }})</span>.
-        {{ _('Dataset') }}:
+        <span class="citation-year">({{ pkg_dict['publication_year'] }})</span>
         <span class="citation-dataset-title">{{ pkg_dict['title'] }}</span>.
+        <span class="citation-publisher">{{ pkg_dict['publisher'] }}</span>.
         {% block citation_link %}
           <a href="http://dx.doi.org/{{ pkg_dict['doi'] }}"
              target="_blank">http://dx.doi.org/{{ pkg_dict['doi'] }}</a>

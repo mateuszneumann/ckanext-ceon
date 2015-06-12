@@ -44,5 +44,9 @@ Renders a citation for a package
         {% endif %}
       {% endblock %}
     </div>
+    <h4>{{ _('Cite this document') }}</h4>
+    <div class="export_citation">
+      <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='bib' %}">{{ _('BibTeX') }}</a>
+    </div>
   </section>
 {% endblock %}

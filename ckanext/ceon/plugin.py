@@ -227,6 +227,13 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   '/group/add_me_as_member/{id}',
                     controller='ckanext.ceon.controllers:CeonController',
                     action='add_me_as_member')
+        m.connect('export_citation',
+                  '/dataset/citation/{package_name}.{citation_format}',
+                  requirements=dict(citation_format='|'.join([
+                      'bib', 'txt'
+                  ])),
+                  controller='ckanext.ceon.controllers:CitationController',
+                  action='export_citation')
         return m
     
     # IActions

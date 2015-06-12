@@ -15,6 +15,8 @@ import ckan.plugins as p
 
 from ckan.common import OrderedDict, c, g, request, _
 
+from ckanext.ceon.lib import get_authors
+
 log = getLogger(__name__)
 
 
@@ -71,9 +73,24 @@ class CitationController(base.BaseController):
             pylons.response.headers['Content-disposition'] = \
                     'attachment; filename="{name}.bib"'.format(name=package_name)
             f = StringIO.StringIO()
-            return [u"@other{{{name},\n  title={{{title}}}\n}}".format(
-                    name = package_name,
-                    title = result['title'])]
+            return [self._prepare_bibtex(result).encode('utf-8')]
         else:
             abort(400, p.toolkit._('Unknown citation format (%s)' % citation_format))
+
+    def _prepare_bibtex(self, pkg_dict):
+        orig_authors = get_authors(model.Session, pkg_dict['id'])
+        return u"@misc{{{name},\n" \
+                "  title={{{title}}},\n" \
+                "  author={{{author}}},\n" \
+                "  year={{{year}}}\n" \
+                "}}".format(
+                    name = pkg_dict['name'],
+                    title = pkg_dict['title'],
+                    author = " and ".join(", ".join([a.lastname, a.firstname]) for a in orig_authors),
+                    year = pkg_dict['publication_year'],
+                    publisher = pkg_dict['publisher'])
+
+                # publisher sould not occur in @misc entry
+                # https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+                #"  publisher={{{publisher}}},\n" \
 

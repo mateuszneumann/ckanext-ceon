@@ -187,3 +187,12 @@ body {
 }
 
 
+.resource-item .format-label {
+    font-size: x-small;
+    font-weight: normal;
+    height: auto;
+    padding-top: 36px;
+    text-align: center;
+    text-indent: 0;
+}
+}

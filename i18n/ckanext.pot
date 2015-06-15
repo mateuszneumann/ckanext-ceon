@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-28 13:37+0100\n"
+"POT-Creation-Date: 2015-06-15 08:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: ckanext/ceon/controllers.py:35
+#: ckanext/ceon/controllers.py:49
 #, python-format
 msgid "Unauthorized to add member to group %s"
 msgstr ""
 
-#: ckanext/ceon/controllers.py:37
+#: ckanext/ceon/controllers.py:51
 msgid "Group not found"
+msgstr ""
+
+#: ckanext/ceon/controllers.py:69
+msgid "Dataset not found"
+msgstr ""
+
+#: ckanext/ceon/controllers.py:78
+#, python-format
+msgid "Unknown citation format (%s)"
 msgstr ""
 
 #: ckanext/ceon/converters.py:35
@@ -32,11 +41,11 @@ msgstr ""
 msgid "Tag vocabulary \"%s\" does not exist"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:418 ckanext/ceon/plugin.py:450
+#: ckanext/ceon/plugin.py:443 ckanext/ceon/plugin.py:483
 msgid "DataCite DOI metadata updated"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:421 ckanext/ceon/plugin.py:453
+#: ckanext/ceon/plugin.py:446 ckanext/ceon/plugin.py:486
 msgid "DataCite DOI has been created"
 msgstr ""
 
@@ -80,29 +89,91 @@ msgid ""
 "   {package_link}\n"
 msgstr ""
 
-#: ckanext/ceon/templates/header.html:5
+#: ckanext/ceon/templates/footer.html:22
+msgid "CKAN API"
+msgstr ""
+
+#: ckanext/ceon/templates/header.html:39
+msgid "Create Dataset"
+msgstr ""
+
+#: ckanext/ceon/templates/header.html:40
 msgid "Datasets"
 msgstr ""
 
-#: ckanext/ceon/templates/header.html:6
-msgid "Organizations"
-msgstr ""
-
-#: ckanext/ceon/templates/header.html:7
+#: ckanext/ceon/templates/header.html:41
 msgid "Groups"
 msgstr ""
 
-#: ckanext/ceon/templates/header.html:8
-msgid "About"
+#: ckanext/ceon/templates/header.html:60
+msgid "Sysadmin settings"
 msgstr ""
 
-#: ckanext/ceon/templates/header.html:9 ckanext/ceon/templates/home/help.html:3
-#: ckanext/ceon/templates/home/help.html:6
-msgid "Help"
+#: ckanext/ceon/templates/header.html:62
+msgid "Admin"
+msgstr ""
+
+#: ckanext/ceon/templates/header.html:67
+msgid "View profile"
+msgstr ""
+
+#: ckanext/ceon/templates/header.html:73
+#, python-format
+msgid "Dashboard (%(num)d new item)"
+msgid_plural "Dashboard (%(num)d new items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/ceon/templates/header.html:76
+msgid "Dashboard"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:7
+#: ckanext/ceon/templates/doi/snippets/resource_citation.html:11
+msgid "Cite this as"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:32
+msgid "This DOI has not yet been published"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:32
+msgid "Private DOI"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:35
+msgid "This DOI is not yet resolvable."
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:36
+msgid ""
+"It is available for use in manuscripts, and will be published when the "
+"Dataset is made public."
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:40
+msgid "Retrieved"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:42
+msgid "GMT"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:47
+msgid "Cite this document"
+msgstr ""
+
+#: ckanext/ceon/templates/doi/snippets/package_citation.html:49
+msgid "BibTeX"
 msgstr ""
 
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
+msgstr ""
+
+#: ckanext/ceon/templates/home/help.html:3
+#: ckanext/ceon/templates/home/help.html:6
+msgid "Help"
 msgstr ""
 
 #: ckanext/ceon/templates/macros/ceonform.html:12
@@ -127,53 +198,57 @@ msgid "Remove"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:46
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:39
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:63
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:37
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:61
 msgid "Author"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:81
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
+#: ckanext/ceon/templates/package/read.html:85
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:74
 msgid "Publisher"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:87
+#: ckanext/ceon/templates/package/read.html:91
 msgid "Publication year"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:93
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
+#: ckanext/ceon/templates/package/read.html:97
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Related publication"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:99
+#: ckanext/ceon/templates/package/read.html:103
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
 msgid "Type of resource"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:105
+#: ckanext/ceon/templates/package/read.html:109
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:20
 msgid "Area of study"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:111
+#: ckanext/ceon/templates/package/read.html:115
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:31
 msgid "Funder"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:117
+#: ckanext/ceon/templates/package/read.html:121
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
 msgid "Funding program"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:123
+#: ckanext/ceon/templates/package/read.html:127
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:45
 msgid "Grant number"
 msgstr ""
 
-#: ckanext/ceon/templates/package/read.html:129
+#: ckanext/ceon/templates/package/read.html:133
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:48
 msgid "License for files"
+msgstr ""
+
+#: ckanext/ceon/templates/package/read.html:143
+msgid "This dataset has been deleted."
 msgstr ""
 
 #: ckanext/ceon/templates/package/resource_read.html:9
@@ -213,53 +288,53 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:9
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:8
 msgid "Title"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:9
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:8
 msgid "eg. A descriptive title"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:77
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
 msgid "Publication Year"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:77
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
 msgid "2012"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "http://example.com/article-123"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:90
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:88
 msgid "Visibility"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:99
 msgid "Private"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:99
 msgid "Waiting for approval"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
 msgid "Rejected"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:95
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
 msgid "Public"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:110
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:108
 msgid "Moderation notes"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:110
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:108
 msgid "eg. Some useful notes about moderation"
 msgstr ""
 

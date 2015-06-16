@@ -1,8 +1,18 @@
 {% set current_url = request.environ.CKAN_CURRENT_URL %}
 {% set current_lang = request.environ.CKAN_LANG %}
-<form id="language_form" class="form-inline lang-select" action="{% url_for controller='util', action='redirect' %}" data-module="select-switch" method="POST">
-      <input id="language" type="hidden" value="{% url_for current_url, locale=locale %}">
-      	<a href="#" id="pl" class="language" {% if "pl" == current_lang %}style="display: none"{% endif %}>PL </a>
-	<a href="#" id="en" class="language" {% if "en" == current_lang %}style="display: none"{% endif %}>EN </a>					
+<form id="language_form" class="form-inline form-select lang-select" action="{% url_for controller='util', action='redirect' %}" data-module="select-switch"  method="POST">
+	<select style="display: none" id="field-lang-select" name="url" data-module="autocomplete" data-module-dropdown-class="lang-dropdown" data-module-container-class="lang-container">
+    	{% for locale in h.get_available_locales() %}
+      		<option value="{% url_for current_url, locale=locale %}" {% if locale == current_lang %}selected="selected"{% endif %}>
+        		{{ locale.display_name or locale.english_name }}
+      		</option>
+    	{% endfor %}
+  	</select>
+
+	{% for locale in h.get_available_locales() %}
+      	<a href id="{{ locale }}" class="language" {% if locale == current_lang %}style="display: none"{% endif %}>
+			{{ locale|upper }}
+		</a>
+	{% endfor %}					
 </form>
 

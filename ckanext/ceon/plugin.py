@@ -19,7 +19,6 @@ from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_packa
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
-from ckan.logic.action.get import package_show as ckan_package_show
 
 log = getLogger(__name__)
 

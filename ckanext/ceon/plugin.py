@@ -11,6 +11,7 @@ import ckan.logic as logic
 
 from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
+from ckan.logic.action.get import package_show as ckan_package_show
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags

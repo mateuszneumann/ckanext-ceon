@@ -15,7 +15,7 @@ import ckan.plugins as p
 
 from ckan.common import OrderedDict, c, g, request, _
 
-from ckanext.ceon.lib import get_authors, get_package_doi
+from ckanext.ceon.lib import get_authors, get_package_doi, get_package_link
 
 log = getLogger(__name__)
 
@@ -99,27 +99,25 @@ class CitationController(base.BaseController):
     def _prepare_ris(self, pkg_dict):
         orig_authors = get_authors(model.Session, pkg_dict['id'])
         pkg_doi = get_package_doi(pkg_dict['id'])
-        return u"TY  - DATA\n" \
-                "ID  - {doi}\n" \
-                "TI  - {title}\n" \
-                "{authors}\n" \
-                "PB  - {publisher}\n" \
-                "PY  - {year}\n" \
-                "{tags}\n" \
-                "UR  - {url}\n" \
-                "DO  - {doi}\n" \
-                "ER  -".format(
+        export = u"TY  - DATA\n" \
+                  "TI  - {title}\n" \
+                  "{authors}\n" \
+                  "PB  - {publisher}\n" \
+                  "PY  - {year}\n" \
+                  "{tags}\n" \
+                  "UR  - {url}".format(
                     name = pkg_dict['name'],
                     title = pkg_dict['title'],
                     authors = "\n".join(" ".join(["AU  -", a.lastname, a.firstname[0]]) for a in orig_authors),
                     year = pkg_dict['publication_year'],
                     publisher = pkg_dict['publisher'],
-                    tags = "\n".join(" ".join(["KW  -", t.name]) for t in pkg_dict['tags']),
-                    doi = pkg_doi.identifier if pkg_doi else None,
-                    url = pkg_dict['url'],
+                    tags = "\n".join(" ".join(["KW  -", t['name']]) for t in pkg_dict['tags']),
+                    url = get_package_link(pkg_dict['name']),
                     )
+        if (pkg_doi):
+            export = u"{e}\n" \
+                      "DO  - {doi}".format(e=export, doi=pkg_doi.identifier)
+        export = u"{e}\nER  -".format(e=export)
+        return export
 
-                # publisher sould not occur in @misc entry
-                # https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
-                #"  publisher={{{publisher}}},\n" \
-
+#                  "ID  - {doi}\n" \

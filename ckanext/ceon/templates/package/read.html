@@ -72,6 +72,7 @@
   {% if pkg.doi %}
     {% snippet "doi/snippets/package_citation.html", pkg_dict=pkg %}
   {% endif %}
+  {% snippet "citation/snippets/package_citation.html", pkg_dict=pkg %}
 
   {{ super() }}
 

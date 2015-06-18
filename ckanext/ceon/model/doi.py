@@ -89,6 +89,8 @@ class CeonResourceDOI(DomainObject):
     @staticmethod
     def get_all_in_package(package_id):
         package_doi = CeonPackageDOI.get(package_id)
+        if not package_doi:
+            return []
         query = meta.Session.query(CeonResourceDOI)
         query = query.filter(CeonResourceDOI.identifier.like(
             '{}/%'.format(package_doi.identifier)))

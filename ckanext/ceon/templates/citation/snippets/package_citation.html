@@ -8,6 +8,9 @@ Renders a citation for a package
     <div class="export_citation">
       <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='bib' %}">{{ _('BibTeX') }}</a>
       <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='ris' %}">{{ _('RIS') }}</a>
+      {% if pkg_dict['doi'] %}
+        <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='xml' %}">{{ _('DataCite') }}</a>
+      {% endif %}
     </div>
   </section>
 {% endblock %}

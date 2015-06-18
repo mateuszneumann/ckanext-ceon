@@ -15,7 +15,7 @@ import ckan.plugins as p
 
 from ckan.common import OrderedDict, c, g, request, _
 
-from ckanext.ceon.lib import get_authors, get_package_doi, get_package_link
+from ckanext.ceon.lib import get_authors, get_package_doi, get_package_link, MetadataDataCiteAPI
 
 log = getLogger(__name__)
 
@@ -80,6 +80,12 @@ class CitationController(base.BaseController):
                     'attachment; filename="{name}.ris"'.format(name=package_name)
             f = StringIO.StringIO()
             return [self._prepare_ris(result).encode('utf-8')]
+        elif 'xml' == citation_format:
+            pylons.response.headers['Content-Type'] = 'text/plain'
+            pylons.response.headers['Content-disposition'] = \
+                    'attachment; filename="{name}.xml"'.format(name=package_name)
+            f = StringIO.StringIO()
+            return [self._prepare_datacite(result).encode('utf-8')]
         else:
             abort(400, p.toolkit._('Unknown citation format (%s)' % citation_format))
 
@@ -120,4 +126,11 @@ class CitationController(base.BaseController):
         export = u"{e}\nER  -".format(e=export)
         return export
 
-#                  "ID  - {doi}\n" \
+    def _prepare_datacite(self, pkg_dict):
+        pkg_doi = get_package_doi(pkg_dict['id'])
+        export = MetadataDataCiteAPI.package_to_xml(
+                pkg_doi.identifier if pkg_doi else "UNKNOWN",
+                pkg_dict)
+        return export
+
+

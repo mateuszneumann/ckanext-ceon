@@ -103,7 +103,11 @@ class MetadataDataCiteAPI(DataCiteAPI):
         sci_discipline = _get_first_elem(pkg_dict, 'sci_discipline')
         oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
         rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
-        version = pkg_dict.get('version', '').encode('unicode-escape')
+        version = None
+        if 'version' in pkg_dict:
+            version = pkg_dict.get('version')
+            if version:
+                version = version.encode('unicode-escape')
         if sci_discipline:
             if subject:
                 subject.append(sci_discipline)

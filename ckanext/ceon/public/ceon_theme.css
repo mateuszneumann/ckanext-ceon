@@ -188,10 +188,10 @@ body {
 
 
 .resource-item .format-label {
-    font-size: x-small;
+    font-size: xx-small;
     font-weight: normal;
     height: auto;
-    padding-top: 36px;
+    padding-top: 32px;
     text-align: center;
     text-indent: 0;
 }

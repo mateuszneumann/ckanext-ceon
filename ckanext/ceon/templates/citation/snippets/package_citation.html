@@ -1,0 +1,13 @@
+{#
+Renders a citation for a package
+#}
+
+{% block export_citation %}
+  <section class="additional-info">
+    <h3>{{ _('Cite this document') }}</h3>
+    <div class="export_citation">
+      <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='bib' %}">{{ _('BibTeX') }}</a>
+      <a class="btn btn-small" href="{% url_for 'export_citation', package_name=pkg_dict['name'], citation_format='ris' %}">{{ _('RIS') }}</a>
+    </div>
+  </section>
+{% endblock %}

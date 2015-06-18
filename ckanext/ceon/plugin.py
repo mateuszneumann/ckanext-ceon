@@ -230,7 +230,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         m.connect('export_citation',
                   '/dataset/citation/{package_name}.{citation_format}',
                   requirements=dict(citation_format='|'.join([
-                      'bib', 'txt'
+                      'bib', 'ris', 'txt'
                   ])),
                   controller='ckanext.ceon.controllers:CitationController',
                   action='export_citation')

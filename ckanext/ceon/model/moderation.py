@@ -56,7 +56,7 @@ def get_moderation_status(session, package_id):
         packageModeration = session.query(CeonPackageModeration).filter(CeonPackageModeration.package_id == package_id).first()
         if packageModeration:
             return packageModeration.status
-    return 'private'
+    return 'waitingForApproval'
 
 def get_moderation_notes(session, package_id):
     if package_id:

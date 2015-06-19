@@ -72,34 +72,55 @@
 
 {% endblock %}
 
-    {% block package_metadata_fields_visibility %}
+{% block package_basic_fields_org %}
       
+      {% if data.owner_org %}
+      <input type="hidden" name="owner_org" value="{{ data.owner_org }}" />
+      {% else %}
+        {% set organizations_available = h.organizations_available('create_dataset') %}
+
+        <input type="hidden" name="owner_org" value="{{ organizations_available[0].id }}" />
+      {% endif %}
+        
       {% set moderationStatus = h.ckanext_ceon_get_moderation_state(data.id) %}
       {% set moderationNotes = h.ckanext_ceon_get_moderation_notes(data.id) %}
       {% set user_is_admin = h.ckanext_ceon_get_user_role(c.userobj.id) == 'admin' %}
       
       
+      {% if user_is_admin %}
+
       <div class="control-group">
         <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
         <div class="controls">
           <select id="field-private" name="moderationStatus">
-            {% if user_is_admin %}
 
-            	{% for option in [('private', _('Private')), ('waitingForApproval', _('Waiting for approval')), ('rejected', _('Rejected')), ('public', _('Public'))] %}
+            	{% for option in [('waitingForApproval', _('Waiting for approval')), ('rejected', _('Rejected')), ('public', _('Public'))] %}
             	<option value="{{ option[0] }}" {% if option[0] == moderationStatus|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
             	{% endfor %}
             
-            {% else %}
-            
-            	{% for option in [('private', _('Private')), ('waitingForApproval', _('Waiting for approval'))] %}
-            	<option value="{{ option[0] }}" {% if option[0] == moderationStatus|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
-            	{% endfor %}
-			
-			{% endif %}
           </select>
         </div>
       </div>
+      {% else %}
+      <input type="hidden" name="moderationStatus" value="{{ moderationStatus }}" />
+      {% endif %}
       {% if user_is_admin and moderationStatus == 'waitingForApproval' %}
       	{{ form.markdown('moderationNotes', id='field-moderation-notes', label=_('Moderation notes'), placeholder=_('eg. Some useful notes about moderation'), value=moderationNotes, error=errors.moderationNotes) }}
       {% endif %}
+    
+      {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
+    <div class="control-group">
+      <label for="field-state" class="control-label">{{ _('State') }}</label>
+      <div class="controls">
+        <select id="field-state" name="state">
+          <option value="active" {% if data.get('state', 'none') == 'active' %} selected="selected" {% endif %}>{{ _('Active') }}</option>
+          <option value="deleted" {% if data.get('state', 'none') == 'deleted' %} selected="selected" {% endif %}>{{ _('Deleted') }}</option>
+        </select>
+      </div>
+    </div>
+  {% endif %}
+    
+    
     {% endblock %}
+    
+    

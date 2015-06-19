@@ -1,28 +1,24 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8
 
-#import collections
-#import datetime
-#from itertools import count
-#import re
-#import mimetypes
-
-#import ckan.lib.navl.dictization_functions as df
-#import ckan.logic as logic
-#import ckan.lib.helpers as h
-
-#from ckan.common import _
-
-#Invalid = df.Invalid
-#StopOnError = df.StopOnError
-#Missing = df.Missing
-#missing = df.missing
-
-import ckan.lib.helpers as h
-
-from ckan.lib.mailer import mail_user
-from urlparse import urljoin
+import os
+import random
+from logging import getLogger
 from ckan.common import _, g
+import ckan.lib.helpers as h
+from ckan.lib.mailer import mail_user
+from ckan.model import Session
+from pylons import config
+from paste.deploy.converters import asbool
+from requests.exceptions import HTTPError
+from urlparse import urljoin
+
+from model import CeonPackageDOI
+from api import MetadataDataCiteAPI, DOIDataCiteAPI
+from config import get_doi_prefix
+
+
+log = getLogger(__name__)
 
 def tag_in_vocabulary(tag, vocabulary_id, context):
     """
@@ -104,3 +100,31 @@ def get_package_link(package_id):
                    h.url_for(controller='package',
                            action='read',
                            id=package_id))
+def create_unique_identifier(package_id):
+    """
+    Create a unique identifier, using the prefix and a random number: 10.5072/0044634
+    Checks the random number doesn't exist in the table or the datacite repository
+    All unique identifiers are created with
+    @return:
+    """
+    log.debug(u"Creating unique identifier for package {}".format(package_id))
+    datacite_api = DOIDataCiteAPI()
+    log.debug(u"Creating unique identifier datacite_api {}".format(datacite_api))
+    while True:
+        identifier = os.path.join(get_doi_prefix(), '{0:07}'.format(random.randint(1, 100000)))
+        # Check this identifier doesn't exist in the table
+        if not Session.query(CeonPackageDOI).filter(CeonPackageDOI.identifier == identifier).count():
+            # And check against the datacite service
+            try:
+                datacite_doi = datacite_api.get(identifier)
+            except HTTPError:
+                pass
+            else:
+                if datacite_doi.text:
+                    continue
+        doi = CeonPackageDOI(package_id=package_id, identifier=identifier)
+        Session.add(doi)
+        Session.commit()
+        log.debug(u"Creating unique identifier added DOI {}".format(doi))
+        return doi
+

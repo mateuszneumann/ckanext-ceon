@@ -1,0 +1,40 @@
+{#
+Renders a citation for a resource
+#}
+
+{% extends "doi/snippets/package_citation.html" %}
+
+{% block citation %}
+  <section class="module additional-info">
+    <div class="module-content citation">
+      {% set authors = h.ckanext_ceon_get_authors(pkg_dict['id']) %}
+      <h3>{{ _('Cite this as') }}</h3>
+      <p>
+        {% for a in authors %}
+          {% set author_name = a.lastname|default('NN', true) %}
+          {% if a.firstname %}
+            {% set author_name = [author_name, a.firstname[0]]|join(', ') + "."%}
+          {% endif %}
+          {#
+          <span>{{ author_name }}{% if a.affiliation %}&#160;({{ a.affiliation }}){% endif %}</span>{% if not loop.last %}; {% endif %}
+          #}
+          <span class="citation-author">{{ author_name }}</span>{% if not loop.last %}; {% endif %}
+        {% endfor %}
+        <span class="citation-year">({{ pkg_dict['publication_year'] }})</span>
+        <span class="citation-dataset-title">{{ pkg_dict['title'] }}</span>.
+        <span class="citation-publisher">{{ pkg_dict['publisher'] }}</span>.
+        {#
+        {{ _('Resource') }}:
+        <span class="citation-resource-title">{{ res['name'] }}</span>.
+        #}
+        {% block citation_link %}
+          <a href="http://dx.doi.org/{{ res['doi'] }}"
+             target="_blank">http://dx.doi.org/{{ res['doi'] }}</a>
+        {% endblock %}
+      </p>
+      {% block citation_status %}
+        {{ super() }}
+      {% endblock %}
+    </div>
+  </section>
+{% endblock %}

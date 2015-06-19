@@ -2,17 +2,23 @@
 # vim: set fileencoding=utf-8
 
 from logging import getLogger
+from datetime import datetime
 
 import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.logic as logic
 
-from model import create_tables, get_authors, create_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
-from model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
-from converters import convert_to_oa_tags
+from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.logic.action.get import package_show as ckan_package_show
+from ckan.lib import helpers as h
+from ckanext.ceon.config import get_site_url
+from ckanext.ceon.converters import convert_to_oa_tags
+from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
+from ckanext.ceon.model import create_tables
+from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
 log = getLogger(__name__)
 
@@ -221,8 +227,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   '/group/add_me_as_member/{id}',
                     controller='ckanext.ceon.controllers:CeonController',
                     action='add_me_as_member')
+        m.connect('export_citation',
+                  '/dataset/citation/{package_name}.{citation_format}',
+                  requirements=dict(citation_format='|'.join([
+                      'bib', 'ris', 'xml'
+                  ])),
+                  controller='ckanext.ceon.controllers:CitationController',
+                  action='export_citation')
         return m
     
+    # IActions
     def get_actions(self):
         actions = {'user_create': ceon_user_create, 'package_show': ceon_package_show}
         return actions
@@ -255,7 +269,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_get_moderation_state': moderationState,
                 'ckanext_ceon_get_moderation_notes': moderationNotes,
                 'ckanext_ceon_get_user_role': userRole,
-                'ckanext_ceon_not_group_member': not_group_member
+                'ckanext_ceon_not_group_member': not_group_member,
+                'now': datetime.now
                 }
 
     # IDatasetForm
@@ -279,9 +294,9 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema = super(CeonPlugin, self).show_package_schema()
         schema.update({
             'publisher': [toolkit.get_converter('convert_from_extras'),
-                toolkit.get_validator('ignore_empty')],
+                toolkit.get_validator('not_empty')],
             'publication_year': [toolkit.get_converter('convert_from_extras'),
-                toolkit.get_validator('ignore_empty')],
+                toolkit.get_validator('natural_number_validator')],
             'rel_citation': [toolkit.get_converter('convert_from_extras'),
                 toolkit.get_validator('ignore_empty')],
             'sci_discipline': [toolkit.get_converter('convert_from_tags')('sci_disciplines'),
@@ -309,9 +324,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema.update({
             '__authors': [toolkit.get_validator('ignore')],
             'authors': self._authors_schema(),
-            'publisher': [toolkit.get_validator('ignore_empty'),
+            'publisher': [toolkit.get_validator('not_empty'),
                 toolkit.get_converter('convert_to_extras')],
-            'publication_year': [toolkit.get_validator('ignore_empty'),
+            'publication_year':
+            [toolkit.get_validator('natural_number_validator'),
                 toolkit.get_converter('convert_to_extras')],
             'rel_citation': [toolkit.get_validator('ignore_empty'),
                 toolkit.get_converter('convert_to_extras')],
@@ -357,6 +373,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         elif 'package_id' in data:
             self._resource_create(context, data)
 
+    def after_show(self, context, data):
+        if 'type' in data:
+            self._package_after_show(context, data)
+
+    def before_show(self, data):
+        if 'package_id' in data:
+            self._resource_before_show(data)
+
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
@@ -373,15 +397,21 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
-        if 'ancestral_license' in pkg_dict:
-            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
-        else:
-            update_ancestral_license(context, pkg_dict, None)
+        update_ancestral_license(context, pkg_dict, 
+                pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         create_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
-            
+        create_package_doi(pkg_dict)
+    
+    def _package_after_show(self, context, pkg_dict):
+        # Load the DOI ready to display
+        pkg_doi = get_package_doi(pkg_dict['id'])
+        if pkg_doi:
+            pkg_dict['doi'] = pkg_doi.identifier
+            pkg_dict['doi_status'] = True if pkg_doi.published else False
+            pkg_dict['domain'] = get_site_url().replace('http://', '')
 
     def _package_after_update(self, context, pkg_dict):
         log.debug(u"Updating package {}".format(pkg_dict['name']))
@@ -391,23 +421,67 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
-        if 'ancestral_license' in pkg_dict:
-            update_ancestral_license(context, pkg_dict, pkg_dict['ancestral_license'])
-        else:
-            update_ancestral_license(context, pkg_dict, None)
+        update_ancestral_license(context, pkg_dict, 
+                pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         update_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+            orig_pkg_dict = toolkit.get_action('package_show')(context,
+                    {'id': pkg_dict['id']})
+            pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
+            package_doi = get_package_doi(pkg_dict['id'])
+            if not package_doi:
+                package_doi = create_package_doi(pkg_dict)
+            # TODO verify if crucial metadata has been changed and only then
+            # send updates to DataCite.  But the truth is that in our case
+            # almost every change in metadata is crucial, so let's skip that
+            # check for a while.
+            if package_doi.published:
+                update_package_doi(pkg_dict)
+                h.flash_success(_('DataCite DOI metadata updated'))
+            else:
+                publish_package_doi(pkg_dict)
+                h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
+
+    def _resource_before_show(self,res_dict):
+        # Load the DOI ready to display
+        res_doi = get_resource_doi(res_dict['id'])
+        if res_doi:
+            res_dict['doi'] = res_doi.identifier
+            res_dict['doi_status'] = True if res_doi.published else False
+            res_dict['domain'] = get_site_url().replace('http://', '')
 
     def _resource_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
+        pkg_dict = toolkit.get_action('package_show')(context,
+            {'id': res_dict['package_id']})
+        create_resource_doi(pkg_dict, res_dict)
 
     def _resource_update(self, context, res_dict):
         log.debug(u"Updating resource {}".format(res_dict['name']))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
-            
+        if not res_dict.get('clear_upload', ''):
+            pkg_dict = toolkit.get_action('package_show')(context,
+                {'id': res_dict['package_id']})
+            log.debug(u'PKG_DICT: {}'.format(pkg_dict))
+            orig_res_dict = toolkit.get_action('resource_show')(context,
+                    {'id': res_dict['id']})
+            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
+            res_dict['created'] = orig_res_dict['created']
+            res_dict['last_modified'] = orig_res_dict['last_modified']
+            resource_doi = get_resource_doi(res_dict['id'])
+            if not resource_doi:
+                resource_doi = create_resource_doi(pkg_dict, res_dict)
+            if resource_doi.published:
+                update_resource_doi(pkg_dict, res_dict)
+                h.flash_success(_('DataCite DOI metadata updated'))
+            else:
+                publish_resource_doi(pkg_dict, res_dict)
+                h.flash_success(_('DataCite DOI has been created'))
+        return res_dict

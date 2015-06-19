@@ -149,6 +149,21 @@
     "status": "active",
     "title": "MIT License",
     "url": "http://www.opensource.org/licenses/MIT"
+  },
+  {
+    "domain_content": false,
+    "domain_data": false,
+    "domain_software": false,
+    "family": "",
+    "id": "ceon-package-special",
+    "is_generic": true,
+    "maintainer": "",
+    "od_conformance": "not reviewed",
+    "osd_conformance": "not reviewed",
+    "is_okd_compliant": false,
+    "is_osi_compliant": false,
+    "status": "inactive",
+    "title": "To the extent possible under law, copyright and related or neighboring rights that apply to this data package as a whole have been waived under the CC0 1.0 license. Separate licenses may apply to individual files in the package",
+    "url": ""
   }
-
 ]

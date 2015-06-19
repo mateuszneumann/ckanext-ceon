@@ -2,7 +2,8 @@
 ckanext-ceon
 =============
 
-Extension implementing various CeON changes to default CKAN installation
+Extension implementing various CeON changes to default CKAN installation.
+The part handling DOI is based upon https://github.com/NaturalHistoryMuseum/ckanext-doi
 
 
 ------------
@@ -61,6 +62,6 @@ do::
     git clone https://github.com/mateuszneumann/ckanext-ceon.git
     cd ckanext-ceon
     python setup.py develop
+    export C_INCLUDE_PATH="/usr/include/libxml2:/usr/include/libxslt"
     pip install -r dev-requirements.txt
-
 

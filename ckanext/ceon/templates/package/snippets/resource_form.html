@@ -106,6 +106,9 @@
       {% block previous_button %}
         <button class="btn" name="save" value="go-dataset" type="submit">{{ _('Previous') }}</button>
       {% endblock %}
+      {% block draft_button %}
+        <a class="btn btn-default" href="{{ h.url_for(controller='user', action='activity', id=c.userobj.name) }}" role="button">{{ _('Save as draft') }}</a>
+      {% endblock %}
       {% block again_button %}
         <button class="btn" name="save" value="again" type="submit">{{ _('Save & add another') }}</button>
         {% endblock %}

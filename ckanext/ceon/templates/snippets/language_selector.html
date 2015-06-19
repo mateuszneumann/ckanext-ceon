@@ -9,10 +9,12 @@
     	{% endfor %}
   	</select>
 
-	{% for locale in h.get_available_locales() %}
-      	<a href id="{{ locale }}" class="language" {% if locale == current_lang %}style="display: none"{% endif %}>
-			{{ locale|upper }}
+	
+      	<a href id="pl" class="language" {% if "pl" == current_lang %}style="display: none"{% endif %}>
+			PL
 		</a>
-	{% endfor %}					
+	<a href id="en_AU" class="language" {% if "en_AU" == current_lang %}style="display: none"{% endif %}>
+			EN
+		</a>					
 </form>
 

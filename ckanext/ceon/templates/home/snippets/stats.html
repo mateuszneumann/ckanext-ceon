@@ -1,0 +1,35 @@
+{% set stats = h.get_site_statistics() %}
+
+<div class="stats">
+    <h3>{{ _('{0} statistics').format(g.site_title) }}</h3>
+    <div id="carousel-stats" class="inner carousel slide"  data-ride="carousel">
+      <div class="carousel-inner" role="listbox">
+        {% block stats_group %}
+        <div class="stats-text item active">
+          <a href="{{ h.url_for(controller='package', action='search') }}">
+            <span class="title">{{ _('dataset') if stats.dataset_count == 1 else _('datasets') }}</span>
+            <span class="value"><b>{{ h.SI_number_span(stats.dataset_count) }}</b></span>
+          </a>
+        </div>
+        <div class="stats-text item">
+          <a href="{{ h.url_for(controller='group', action='index') }}">
+            <span class="title">{{ _('group') if stats.group_count == 1 else _('groups') }}</span>
+            <span class="value"><b>{{ h.SI_number_span(stats.group_count) }}</b></span>
+          </a>
+        </div>
+        <div class="stats-text item">
+          <a href="{{ h.url_for(controller='related', action='dashboard') }}">
+            <span class="title">{{ _('related item') if stats.related_count == 1 else _('related items') }}</span>
+            <span class="value"><b>{{ h.SI_number_span(stats.related_count) }}</b></span>
+          </a>
+        </div>
+        {% endblock %}
+      </div>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#carousel-stats" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-stats" data-slide-to="1"></li>
+        <li data-target="#carousel-stats" data-slide-to="2"></li>
+      </ol>
+    </div>
+</div>

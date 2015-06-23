@@ -9,9 +9,13 @@
 	
 	<header class="logo-ceon">
 		<div class="container">
-			<a class="media-image" href="#">
-    			<img src="/logo_940_22353-35.png" alt="Ceon RepPOD" />
-  			</a>
+			<div class="media-image">
+    			<img src="/logo.png" alt="Ceon RepPOD" usemap="#ceonRepodMap"/>
+          <map id="ceonRepodMap" name="ceonRepodMap">
+            <area shape="poly" title="CeON" alt="CeON" title="" coords="153,89,153,20,150,11,144,5,135,0,17,0,9,4,5,10,0,17,0,70,2,77,4,82,10,84,10,89,15,89" href="http://ceon.pl" target="_blank" />
+            <area shape="poly" alt="RePOD" title="RePOD" coords="135,0,143,3,147,7,151,13,154,19,154,89,945,89,952,83,953,6,944,1,935,0" href="{{ h.url('home') }}" target="" />
+          </map>
+  			</div>
 		</div>
 	</header>
 	<header class="navbar navbar-static-top masthead">
@@ -36,9 +40,9 @@
         			<nav class="section navigation">
           				<ul class="nav nav-pills">
           					{% block header_site_navigation_tabs %}
-								<li><a href="/dataset/new"><img src="/icon_share_white.png"/>{{_('Create Dataset') }}</a></li>
-								<li><a href="/dataset"><img src="/icon_share2_white.png"/>{{_('Datasets')}}</a></li>
-								<li><a href="/group" ><img src="/icon_group_white.png"/>{{_('Groups')}}</a></li>
+								<li><a href="{{ h.url_for(controller='package', action='new') }}"><img src="/icon_share_white.png"/>{{_('Create Dataset') }}</a></li>
+								<li><a href="{{ h.url_for(controller='package', action='search') }}"><img src="/icon_share2_white.png"/>{{_('Datasets')}}</a></li>
+								<li><a href="{{ h.url_for(controller='group', action='index') }}" ><img src="/icon_group_white.png"/>{{_('Groups')}}</a></li>
             					{% endblock %}
           				</ul>
        				</nav>

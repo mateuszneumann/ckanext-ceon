@@ -1,5 +1,9 @@
 {% ckan_extends %}
 
+{% block links %}
+	<link rel="shortcut icon" href="/favicon.ico" />
+{% endblock %}
+
 {% block styles %}
   {{ super() }}
   <link rel="stylesheet" href="/ceon_theme.css" />
@@ -8,4 +12,5 @@
 {% block scripts %}
 	{{ super() }}
 	{% resource 'ceon/language-selector.js' %}
+    {# {% resource 'ceon/home-page.js' %} #}
 {% endblock -%}

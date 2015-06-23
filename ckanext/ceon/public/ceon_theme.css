@@ -2,7 +2,7 @@ a, .editor .editor-info-block a {
 	color: #5a6fa3;
 }
 
-.account-masthead, .masthead, .logo-ceon, .round-menu, .btn-primary, .btn-primary:focus, .btn-primary:hover, .media-grid {
+.account-masthead, .masthead, .logo-ceon, .round-menu, .btn-primary, .btn-primary:focus, .btn-primary:hover {
 	background-color: #5a6fa3;
 }
 
@@ -10,7 +10,24 @@ a, .editor .editor-info-block a {
 	background: #5a6fa3 url("../../../base/images/bg.png");;
 }
 
-.module-heading {
+.btn-group.open .btn-primary.dropdown-toggle {
+  background-color: #546798;
+}
+
+@media (max-width: 767px) {
+	.logo-ceon {
+  		margin-left: -20px;
+  		margin-right: -20px;
+  		padding-left: 20px;
+  		padding-right: 20px;
+	}
+}
+
+.masthead .btn-navbar, .masthead .btn-navbar:hover, .masthead .btn-navbar:focus, .masthead .btn-navbar:active, .masthead .btn-navbar.active, .masthead .btn-navbar.disabled, .masthead .btn-navbar[disabled] {
+	  background-color: #384669;
+}
+
+.module-heading, .media-grid {
 	background: #d8def3;
 }
 
@@ -19,7 +36,15 @@ a, .editor .editor-info-block a {
 }
 
 .media-view {
-	border-color: #5a6fa3;
+	border-color: #B7C1E2;
+}
+
+.media-item, .media-view {
+	  border-radius: 3px 3px 25px 25px;
+}
+
+.media-view:hover, .media-view.hovered {
+	  border-color: #6F8CC8;
 }
 
 .stages li.active .highlight {
@@ -136,7 +161,7 @@ body {
 
 .masthead .section.navigation {
 	float: right;
-	width: 55%;
+	width: 53%;
 }
 .masthead .site-search {
 	float: left;
@@ -160,6 +185,11 @@ body {
 	width: 85px;
 	border-radius: 20px;
 	padding-top: 52px;
+}
+
+@media (max-width: 979px)
+.round-menu {
+	display: none;
 }
 
 .round-item, .round-item img {
@@ -321,6 +351,10 @@ body {
 }
 
 .js-collapse, .paragraph {display:none;}
+@media (max-width: 979px)
+.sheet {
+	display: initial;
+}
 
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
 	  border-color: rgba(90, 111, 163, 1);
@@ -334,3 +368,4 @@ a:hover, a:focus {
   text-decoration: underline;
   cursor: pointer;
 }
+

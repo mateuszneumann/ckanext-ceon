@@ -186,7 +186,7 @@ def ceon_user_create(context, data_dict):
         if not has_folder:
             context = {'user': result['name']}
             data = {'name': 'user_folder_' + result['name'],
-                    'title': 'Folder of user ' + result['display_name'],
+                    'title': result['display_name'],
                     'users': [{'name': result['name']}]}
             toolkit.get_action('organization_create')(context, data)
     return result

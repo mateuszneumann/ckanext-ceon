@@ -1,0 +1,11 @@
+{% ckan_extends %}
+
+{% block title %}
+  <h3 class="media-heading">{{ _('Folder of user {organization_name}').format(organization_name=organization.display_name) }}</h3>
+{% endblock %}
+
+{% block link %}
+  <a href="{{ url }}" title="{{ _('View {organization_name}').format(organization_name=organization.display_name) }}" class="media-view">
+    <span>{{ _('View {organization_name}').format(organization_name=organization.display_name) }}</span>
+  </a>
+{% endblock %}

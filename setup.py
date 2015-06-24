@@ -8,6 +8,15 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+entry_points = {
+    'ckan.plugins': [
+        'ceon = ckanext.ceon.plugin:CeonPlugin',
+    ],
+    'babel.extractors': [
+        'ckan = ckan.lib.extract:extract_ckan',
+    ],
+}
+
 setup(
     name='''ckanext-ceon''',
 
@@ -76,8 +85,6 @@ setup(
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    entry_points='''
-        [ckan.plugins]
-        ceon=ckanext.ceon.plugin:CeonPlugin
-    ''',
+    entry_points=entry_points,
+
 )

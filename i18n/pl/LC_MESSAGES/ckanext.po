@@ -22,7 +22,7 @@ msgstr ""
 #: ckanext/ceon/controllers.py:49
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr "Brak upoważnienia, by dosać członka do grupy %s"
+msgstr "Brak upoważnienia, by dodać członka do grupy %s"
 
 #: ckanext/ceon/controllers.py:51
 msgid "Group not found"
@@ -31,12 +31,12 @@ msgstr "Nie znaleziono grupy"
 #: ckanext/ceon/controllers.py:69
 #, fuzzy
 msgid "Dataset not found"
-msgstr "Nie znaleziono grupy"
+msgstr "Nie znaleziono zbioru danych"
 
 #: ckanext/ceon/controllers.py:78
 #, python-format
 msgid "Unknown citation format (%s)"
-msgstr ""
+msgstr "Nieznany format cytowania (%s)"
 
 #: ckanext/ceon/converters.py:35
 #, python-format
@@ -53,7 +53,7 @@ msgstr "Utworzono metadane DataCite DOI"
 
 #: ckanext/ceon/lib/moderation.py:18
 msgid "Moderation request from {site_title}"
-msgstr "Zapytanie od moderację od {site_title}"
+msgstr "Prośba o moderację od {site_title}"
 
 #: ckanext/ceon/lib/moderation.py:23
 msgid "Package accepted info from {site_title}"
@@ -73,7 +73,7 @@ msgid ""
 msgstr ""
 "Nowy pakiet oczekuje na moderację.\n"
 "\n"
-"Proszę klinknąć poniższy link, by zmoderować zapytanie:\n"
+"Aby moderować ten pakiet, proszę kliknąć poniższy link:\n"
 "\n"
 "   {package_link}\n"
 
@@ -85,9 +85,9 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
-"Pakit został odrzucony przez moderatora.\n"
+"Pakiet został zaakceptowany przez moderatora.\n"
 "\n"
-"Proszę klinąć poniższy link, by zobaczyć pakiet:\n"
+"Proszę kliknąć poniższy link, by zobaczyć pakiet:\n"
 "\n"
 "   {package_link}\n"
 
@@ -100,10 +100,10 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
-"Pakiet odrzucony przez moderatora.\n"
+"Pakiet został odrzucony przez moderatora.\n"
 "Powód:\n"
 "{reason}\n"
-"Proszę klinknąć poniższy link, by obejrzeć pakiet:\n"
+"Proszę kliknąć poniższy link, by obejrzeć pakiet:\n"
 "\n"
 "   {package_link}\n"
 
@@ -113,19 +113,19 @@ msgstr ""
 
 #: ckanext/ceon/templates/header.html:39
 msgid "Create Dataset"
-msgstr ""
+msgstr "Utwórz zbiór danych"
 
 #: ckanext/ceon/templates/header.html:40
 msgid "Datasets"
-msgstr "Zestawy danych"
+msgstr "Przeglądaj zbiory danych"
 
 #: ckanext/ceon/templates/header.html:41
 msgid "Groups"
-msgstr "Grupy"
+msgstr "Przeglądaj grupy"
 
 #: ckanext/ceon/templates/header.html:60
 msgid "Sysadmin settings"
-msgstr ""
+msgstr "Ustawienia administratora systemu"
 
 #: ckanext/ceon/templates/header.html:62
 msgid "Admin"
@@ -133,7 +133,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/header.html:67
 msgid "View profile"
-msgstr ""
+msgstr "Zobacz profil"
 
 #: ckanext/ceon/templates/header.html:73
 #, python-format
@@ -145,31 +145,31 @@ msgstr[2] ""
 
 #: ckanext/ceon/templates/header.html:76
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablica"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:7
 #: ckanext/ceon/templates/doi/snippets/resource_citation.html:11
 msgid "Cite this as"
-msgstr ""
+msgstr "Ten zbiór danych należy cytować następująco:"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:32
 msgid "This DOI has not yet been published"
-msgstr ""
+msgstr "Ten numer DOI nie został jeszcze upubliczniony"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:32
 #, fuzzy
 msgid "Private DOI"
-msgstr "Prywatne"
+msgstr "Prywatny numer DOI"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:35
 msgid "This DOI is not yet resolvable."
-msgstr ""
+msgstr "Ten numer DOI nie jest jeszcze aktywny."
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:36
 msgid ""
 "It is available for use in manuscripts, and will be published when the "
 "Dataset is made public."
-msgstr ""
+msgstr "Można go podawać w manuskryptach publikacji opartych na tym zbiorze danych. Numer stanie się aktywny z chwilą upublicznienia datasetu."
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:40
 #, fuzzy
@@ -182,7 +182,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:47
 msgid "Cite this document"
-msgstr ""
+msgstr "Ściągnij dane bibliograficzne"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:49
 msgid "BibTeX"
@@ -212,7 +212,7 @@ msgstr "E-mail"
 #: ckanext/ceon/templates/macros/ceonform.html:16
 #: ckanext/ceon/templates/package/read.html:47
 msgid "Affiliation"
-msgstr "Aifliacja"
+msgstr "Afiliacja"
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 msgid "Remove"
@@ -236,7 +236,7 @@ msgstr "Rok wydania"
 #: ckanext/ceon/templates/package/read.html:97
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Related publication"
-msgstr "Powiązane publikacje"
+msgstr "Powiązana publikacja"
 
 #: ckanext/ceon/templates/package/read.html:103
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
@@ -246,17 +246,17 @@ msgstr "Typ zasobu"
 #: ckanext/ceon/templates/package/read.html:109
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:20
 msgid "Area of study"
-msgstr "Obszra badań"
+msgstr "Obszar badań"
 
 #: ckanext/ceon/templates/package/read.html:115
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:31
 msgid "Funder"
-msgstr "Grantodawca"
+msgstr "Instytucja finansująca badania"
 
 #: ckanext/ceon/templates/package/read.html:121
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
 msgid "Funding program"
-msgstr "Program finansowania"
+msgstr "Program finansowania badań"
 
 #: ckanext/ceon/templates/package/read.html:127
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:45
@@ -271,7 +271,7 @@ msgstr "Licencja na pliki"
 #: ckanext/ceon/templates/package/read.html:143
 #, fuzzy
 msgid "This dataset has been deleted."
-msgstr "Utworzono metadane DataCite DOI"
+msgstr "Ten zbiór danych został usunięty."
 
 #: ckanext/ceon/templates/package/resource_read.html:9
 msgid "Additional Information"
@@ -363,7 +363,7 @@ msgstr "np. Przydatne uwagi o moderowaniu"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:51
 msgid "Hereby I grant this license for all resources "
-msgstr "Niniejszym udzielam licencji dla wszystkich zasobów"
+msgstr "Niniejszym nadaję następującą licencję dla wszystkich plików w tym zbiorze danych"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:64
 #: ckanext/ceon/templates/package/snippets/resource_form.html:69
@@ -373,12 +373,12 @@ msgid ""
 "              "
 msgstr ""
 "\n"
-"                Informacje prawne</a>\n"
+"                Poradnik prawny RepOD</a>\n"
 "              "
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
 msgid "I will grant different licenses for different resources "
-msgstr "Udzielam różnych licencji dla różnych zasobów"
+msgstr "Wybiorę osobną licencję dla każdego pliku w tym zbiorze danych"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:27
 msgid "File"
@@ -394,7 +394,7 @@ msgstr "Nazwa"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:31
 msgid "eg. January 2011 Gold Prices"
-msgstr "np. styczeń 2011 Ceny złota"
+msgstr "np. Wyniki bardzo ciekawych pomiarów"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Description"
@@ -402,7 +402,7 @@ msgstr "Opis"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Some useful notes about the data"
-msgstr "Przydatne uwagi na temat danych"
+msgstr "Opis zawartości tego konkretnego pliku."
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:40
 msgid "eg. CSV, XML or JSON"
@@ -470,11 +470,11 @@ msgstr "Wstecz"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:110
 msgid "Save as draft"
-msgstr "Zapisz jako szkic"
+msgstr "Zapisz jako wersję roboczą"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:113
 msgid "Save & add another"
-msgstr "Zapisz i dodaj kolejny"
+msgstr "Zapisz i dodaj kolejny plik"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:116
 msgid "Finish"
@@ -499,8 +499,8 @@ msgid "Keywords"
 msgstr "Słowa kluczowe"
 
 #~ msgid "Organizations"
-#~ msgstr "Organizacje"
+#~ msgstr "Foldery użytkowników"
 
 #~ msgid "About"
-#~ msgstr "O serwisie"
+#~ msgstr "O repozytorium"
 

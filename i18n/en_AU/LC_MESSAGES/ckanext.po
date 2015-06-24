@@ -371,7 +371,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:31
 msgid "eg. January 2011 Gold Prices"
-msgstr ""
+msgstr "eg. Results of interesting measurements"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Description"
@@ -379,7 +379,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:35
 msgid "Some useful notes about the data"
-msgstr ""
+msgstr "A description of the content of this file."
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:40
 msgid "eg. CSV, XML or JSON"

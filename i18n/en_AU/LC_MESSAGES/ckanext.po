@@ -95,15 +95,15 @@ msgstr ""
 
 #: ckanext/ceon/templates/header.html:39
 msgid "Create Dataset"
-msgstr ""
+msgstr "Create dataset"
 
 #: ckanext/ceon/templates/header.html:40
 msgid "Datasets"
-msgstr ""
+msgstr "Browse datasets"
 
 #: ckanext/ceon/templates/header.html:41
 msgid "Groups"
-msgstr ""
+msgstr "Browse groups"
 
 #: ckanext/ceon/templates/header.html:60
 msgid "Sysadmin settings"
@@ -131,7 +131,7 @@ msgstr ""
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:7
 #: ckanext/ceon/templates/doi/snippets/resource_citation.html:11
 msgid "Cite this as"
-msgstr ""
+msgstr "Cite this dataset as:"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:32
 msgid "This DOI has not yet been published"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:47
 msgid "Cite this document"
-msgstr ""
+msgstr "Download the dataset citation"
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:49
 msgid "BibTeX"
@@ -340,7 +340,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:51
 msgid "Hereby I grant this license for all resources "
-msgstr ""
+msgstr "Hereby I grant the following license for all files in this dataset:"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:64
 #: ckanext/ceon/templates/package/snippets/resource_form.html:69
@@ -349,10 +349,13 @@ msgid ""
 "                Legal notice</a>\n"
 "              "
 msgstr ""
+"\n"
+"                RepOD Legal Guide</a>\n"
+"              "
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
 msgid "I will grant different licenses for different resources "
-msgstr ""
+msgstr "I will choose a separate license for each file in this dataset."
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:27
 msgid "File"
@@ -464,7 +467,7 @@ msgid "Keywords"
 msgstr ""
 
 #~ msgid "Organizations"
-#~ msgstr ""
+#~ msgstr "User folders"
 
 #~ msgid "About"
 #~ msgstr ""

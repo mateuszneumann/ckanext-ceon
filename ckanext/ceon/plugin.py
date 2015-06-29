@@ -184,7 +184,7 @@ def ceon_user_create(context, data_dict):
             if group.name == 'user_folder' and group.is_organization:
                 has_folder = True
         if not has_folder:
-            context = {'user': result['name']}
+            context = {'user': result['name'], 'ignore_auth': True}
             data = {'name': 'user_folder_' + result['name'],
                     'title': 'Folder of user ' + result['display_name'],
                     'users': [{'name': result['name']}]}

@@ -23,7 +23,7 @@ a, .editor .editor-info-block a {
 	}
 }
 
-.masthead .btn-navbar, .masthead .btn-navbar:hover, .masthead .btn-navbar:focus, .masthead .btn-navbar:active, .masthead .btn-navbar.active, .masthead .btn-navbar.disabled, .masthead .btn-navbar[disabled] {
+.masthead .btn-navbar, .masthead .btn-navbar:hover, .masthead .btn-navbar:focus, .masthead .btn-navbar:active, .masthead .btn-navbar.active, .masthead .btn-navbar.disabled, .masthead .btn-navbar[disabled], .account-masthead .account .notifications a span, .account-masthead .account ul li a:hover {
 	  background-color: #384669;
 }
 
@@ -37,6 +37,10 @@ a, .editor .editor-info-block a {
 
 .media-view {
 	border-color: #B7C1E2;
+}
+
+.media-image {
+	background-color: #6F8CC8;
 }
 
 .media-item, .media-view {

@@ -91,7 +91,7 @@ a, .editor .editor-info-block a {
 
 .masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
 	color: white;
-	padding: 6px 15px 10px
+	padding: 6px 9px 10px
 }
 
 .masthead .nav > li > a > img {
@@ -99,7 +99,13 @@ a, .editor .editor-info-block a {
   	padding-right: 5px;
 }
 
+.navbar .nav {
+	margin: 0;
+ }
 
+.masthead .navigation {
+  	margin-right: 0px;
+}
 
 .masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
 	background-color: transparent;
@@ -165,7 +171,7 @@ body {
 
 .masthead .section.navigation {
 	float: right;
-	width: 53%;
+	width: 56%;
 }
 .masthead .site-search {
 	float: left;
@@ -371,5 +377,10 @@ a:hover, a:focus {
   color: #354677;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.homepage .alert {
+	margin-bottom: 0px;
+	margin-top: 20px;
 }
 

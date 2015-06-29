@@ -3,9 +3,9 @@
     <div class="row row1">
       <div class="span3 col1">
         <div class="round-menu">
-          {% set text1 = _('Po co udostępniać dane badawcze?') %}
-          {% set text2 = _('Kto i jak może udostępniać dane?') %}
-          {% set text3 = _('Kto i jak może korzystać z danych?') %}
+          {% set text1 = _('Why share research data?') %}
+          {% set text2 = _('Who and how can share data?') %}
+          {% set text3 = _('Who can use the deposited data and how?') %}
           {% snippet 'snippets/bubble.html', index="1", imgSrc="/binary.jpg", text=text1  %}
           {% snippet 'snippets/bubble.html', index="2", imgSrc="/share.jpg", text=text2  %}
           {% snippet 'snippets/bubble.html', index="3", imgSrc="/using.jpg", text=text3  %}
@@ -15,7 +15,7 @@
       <div class="span9">
         <div class="sheet hidden" id="sheet_1">
           <h1>{{ _('Why share research data in an open repository?') }}</h1>
-          {{ _('Open sharing of data can bring advantages both to the development of science and to the researcher's career:') }}
+          {{ _('Open sharing of data can bring advantages both to the development of science and to the researcher\'s career:') }}
           <ul>
             {% trans %}<li>sharing data allows its <strong>re-analysis</strong> and encourages <strong>new interpretations</strong>,</li>
             <li>open data can be used for conducting <strong>new research</strong>, and it can be merged with existing data to create <strong>new combinations</strong>,</li>
@@ -83,16 +83,16 @@
             <h2>{{ _('How to prepare data for sharing?') }}</h2>
           </a>
           <div class="paragraph">
-            <p>{{ _('A dataset in our repository is just a collection of files with a description in the form of metadata. The dataset can be a collection of all data related to one publication or one research project, research question or experiment. The decision about the scope of data combined into one dataset lies solely with the dataset's creator. The dataset's structure, and the number and formats of files that constitute it, can be shaped accordingly. Please refer to the guidelines below.') }}</p>
+            <p>{{ _('A dataset in our repository is just a collection of files with a description in the form of metadata. The dataset can be a collection of all data related to one publication or one research project, research question or experiment. The decision about the scope of data combined into one dataset lies solely with the dataset\'s creator. The dataset\'s structure, and the number and formats of files that constitute it, can be shaped accordingly. Please refer to the guidelines below.') }}</p>
             <ol>
-              <li>{{ _('It is possible to use any file formats, but it is better to avoid formats that require one particular (especially commercial) software to work properly. Remember that the data will be stored over the long term, and popular programs appear and disappear all the time, so it's best to use formats that do not depend on a particular software. For example, it is better to store tabular data as .csv and not .xls. You can also deposit the same table in two formats.') }}</li>
+              <li>{{ _('It is possible to use any file formats, but it is better to avoid formats that require one particular (especially commercial) software to work properly. Remember that the data will be stored over the long term, and popular programs appear and disappear all the time, so it\'s best to use formats that do not depend on a particular software. For example, it is better to store tabular data as .csv and not .xls. You can also deposit the same table in two formats.') }}</li>
               <li>{{ _('If you have a lot of files to deposit and the files can be grouped in a sensible manner, you can consider packaging them into .zip archives.') }}</li>
               <li>{{ _('A single file in the dataset cannot exceed 2&nbsp;GB. If it is not possible to divide your data into files of this size – please contact us. We will try to search for a solution together.') }}</li>
               <li>{{ _('The naming pattern of the files should be informative and transparent; this can significantly help users to understand and use the data.') }}</li>
               <li>{{ _('Not all metadata fields are compulsory, but try to fill as many as possible. The more information gets stored in the metadata, the bigger the chance that people who are genuinely interested in your data will be able to find it.') }}</li>
               <li>{{ _('6. In order for the data to be usable, the research process should be described in as much detail as possible. You can put the methodology descriptions into the data files themselves, but if – for some reason – this is not a good solution in your case, you can also create a separate ReadMe.txt file in which the research methodology and context will be described. If there is a scientific publication describing how the data was collected, you should link to that as well, pasting the link into the provided field when entering the metadata.') }}</li>
               <li>{{ _('The description of the data can be written in Polish or English. We encourage you to write in English, as it will make the shared data available to more people.') }}</li>
-              <li>{{ _('Research data can be shared in many ways. We encourage you to use one of the open licences (CC0, CC-BY, CC-BY-SA), but it is also possible to share data in RepOD without specifying a licence, under the conditions of fair use. Please remember that in order to share data, you need to have the necessary legal rights (including verbal consent of all co-authors). Please also note that it is the depositer who is responsible for proper anonymization of all personal and sensitive data. More information on legal issues can be found in the <a href="#">RepOD Legal Guide</a>.') }}</li>
+              <li>{% trans %}Research data can be shared in many ways. We encourage you to use one of the open licences (CC0, CC-BY, CC-BY-SA), but it is also possible to share data in RepOD without specifying a licence, under the conditions of fair use. Please remember that in order to share data, you need to have the necessary legal rights (including verbal consent of all co-authors). Please also note that it is the depositer who is responsible for proper anonymization of all personal and sensitive data. More information on legal issues can be found in the <a href="#">RepOD Legal Guide</a>.{% endtrans %}</li>
             </ol>
           </div>
         </div>

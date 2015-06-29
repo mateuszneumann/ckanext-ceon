@@ -213,6 +213,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
+    plugins.implements(plugins.IFacets, inherit=True)
+    
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict.pop('organization', None)
+        facets_dict.update({'dataset_type': _('Type of resources'),
+                            'vocab_sci_disciplines': _('Area of study')})
+        return facets_dict
+        
     
     def get_auth_functions(self):
         functions = {'package_delete': ceon_package_delete_function}

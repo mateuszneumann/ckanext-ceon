@@ -684,24 +684,6 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:101
 #, fuzzy
-#| msgid "" "<p>Using our services <strong>does not require
-#| registration</strong>. Any" " interested party can view, download and use
-#| the shared files. Any " "restrictions in using the data result only from the
-#| legal status of the " "files: the open licence granted by the depositer or
-#| the provisions of " "fair use (<a href=\"#\">RepOD Legal Guide</a>).</p>
-#| <p>Please note that " "<strong>regardless</strong> of the legal status of
-#| the data, <strong>good" " scientific practice</strong> requires that you
-#| state the name of the " "author(s) and the source whenever you use the data
-#| – even if it is shared" " under a CC0 licence. The only exception to this
-#| rule is when such " "attribution is technically impossible (e.g. automatic
-#| data mining). If " "you use the data in your own publication, you should
-#| <strong>formally " "cite</strong> both the <strong>dataset</strong>
-#| available from the " "repository and the related <strong>scientific
-#| publication</strong>, if it" " exists.</p> <p>Here is an example of a proper
-#| citation format for a " "dataset downloaded from RepOD: Kowalska, A.,
-#| Wiśniewska, B. (2015) " "Results of measurements from 2002-2004. Institute
-#| of Very Important " "Research. <a "
-#| "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a>.</p>"
 msgid ""
 "<p>Using our services <strong>does not require registration</strong>. Any"
 " interested party can view, download and use the shared files. Any "

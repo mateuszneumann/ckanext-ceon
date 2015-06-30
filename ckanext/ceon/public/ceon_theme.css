@@ -203,7 +203,9 @@ body {
 }
 
 .round-item, .round-item img {
-	border-radius: 55px;
+	-moz-border-radius: 55px;
+ 	-webkit-border-radius: 55px;
+ 	border-radius: 55px;
   	height: 90px;
   	width: 90px;
 }
@@ -360,6 +362,10 @@ body {
 	margin-right: 0px;
 }
 
+.form-horizontal .info-block {
+  padding: 0px;
+}
+
 .js-collapse, .paragraph {display:none;}
 @media (max-width: 979px)
 .sheet {
@@ -379,8 +385,23 @@ a:hover, a:focus {
   cursor: pointer;
 }
 
+input[type=radio] {
+  top: 0px;
+}
+
+.info-link, .info-link:hover {
+	  color: #aaaaaa;
+	  font-size: 11px;
+	  line-height: 1.3;
+	  text-decoration: underline;
+}
+
 .homepage .alert {
 	margin-bottom: 0px;
 	margin-top: 20px;
+}
+
+.form-horizontal .info-block a.tooltip-info, a.tooltip-info {
+	text-decoration: none;
 }
 

@@ -217,7 +217,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     
     def dataset_facets(self, facets_dict, package_type):
         facets_dict.pop('organization', None)
-        facets_dict.update({'dataset_type': _('Type of resources'),
+        facets_dict.update({'dataset_type': _('Type of resource'),
                             'vocab_sci_disciplines': _('Area of study')})
         return facets_dict
         

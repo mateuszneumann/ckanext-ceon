@@ -92,6 +92,15 @@ def get_licenses():
             licenses.append((l.title, l.id))
     return licenses
 
+def get_resources_licenses(session, pkg_dict):
+    license_ids = []
+    package = Package.get(pkg_dict['id'])
+    for resource in package.resources:
+        res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
+        if res_license:
+            license_ids.append(res_license.license_id)
+    return license_ids
+
 def update_ancestral_license(context, pkg_dict, license_id):
     session = context['session']
     package = Package.get(pkg_dict['id'])

@@ -9,13 +9,13 @@
         {% block footer_nav %}
           <ul class="unstyled push-left span3">
               {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
-		<li><a href="{{ h.url_for(controller='home', action='about') }}">O reopzytorium</a></li>
-              <li><a href="{{ api_url }}">Regulamin RepOD</a></li>
+              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('About repository') }}</a></li>
+              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('RepOD Terms of Use') }}</a></li>
           </ul>
 	<ul class="unstyled push-left span3">
               {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
-		<li><a href="#">Poradnik prawny</a></li>
-              <li><a href="{{ api_url }}">Kontakt z nami</a></li>
+              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('Legal guide') }}</a></li>
+              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('Contact')}}</a></li>
           </ul>
           <ul class="unstyled span3">
  		<li><a href="http://ckan.org">CKAN</a></li>

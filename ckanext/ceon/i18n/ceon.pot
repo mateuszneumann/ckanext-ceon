@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-30 07:49+0000\n"
+"POT-Creation-Date: 2015-06-30 12:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,6 +134,22 @@ msgid ""
 "Please click the following link to view package:\n"
 "\n"
 "   {package_link}\n"
+msgstr ""
+
+#: ckanext/ceon/templates/footer.html:12
+msgid "About repository"
+msgstr ""
+
+#: ckanext/ceon/templates/footer.html:13
+msgid "RepOD Terms of Use"
+msgstr ""
+
+#: ckanext/ceon/templates/footer.html:17
+msgid "Legal guide"
+msgstr ""
+
+#: ckanext/ceon/templates/footer.html:18
+msgid "Contact"
 msgstr ""
 
 #: ckanext/ceon/templates/footer.html:22
@@ -431,7 +447,7 @@ msgid ""
 "The decision about the scope of data combined into one dataset lies solely "
 "with the dataset's creator. The dataset's structure, and the number and "
 "formats of files that constitute it, can be shaped accordingly. Please refer "
-"to the guidelines below."
+"to the guidelines below:"
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:88
@@ -473,14 +489,14 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:93
 msgid ""
-"6. In order for the data to be usable, the research process should be "
-"described in as much detail as possible. You can put the methodology "
-"descriptions into the data files themselves, but if – for some reason – this "
-"is not a good solution in your case, you can also create a separate "
-"ReadMe.txt file in which the research methodology and context will be "
-"described. If there is a scientific publication describing how the data was "
-"collected, you should link to that as well, pasting the link into the "
-"provided field when entering the metadata."
+"In order for the data to be usable, the research process should be described "
+"in as much detail as possible. You can put the methodology descriptions into "
+"the data files themselves, but if – for some reason – this is not a good "
+"solution in your case, you can also create a separate ReadMe.txt file in "
+"which the research methodology and context will be described. If there is a "
+"scientific publication describing how the data was collected, you should link"
+" to that as well, pasting the link into the provided field when entering the "
+"metadata."
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:94
@@ -504,7 +520,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:101
 msgid ""
-"Using our services <strong>does not require registration</strong>. Any "
+"<p>Using our services <strong>does not require registration</strong>. Any "
 "interested party can view, download and use the shared files. Any "
 "restrictions in using the data result only from the legal status of the "
 "files: the open licence granted by the depositer or the provisions of fair "

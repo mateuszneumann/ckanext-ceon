@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: M.Hoffman-Sommer@icm.edu.pl\n"
-"POT-Creation-Date: 2015-06-30 14:44+0000\n"
+"POT-Creation-Date: 2015-06-30 15:05+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: en_AU <LL@li.org>\n"
@@ -47,7 +47,7 @@ msgid "Type of resource"
 msgstr ""
 
 #: ckanext/ceon/plugin.py:221 ckanext/ceon/templates/package/read.html:110
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:20
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:22
 msgid "Area of study"
 msgstr ""
 
@@ -137,29 +137,27 @@ msgid ""
 "   {package_link}\n"
 msgstr ""
 
+#: ckanext/ceon/templates/footer.html:11
+msgid "About the repository"
+msgstr ""
+
 #: ckanext/ceon/templates/footer.html:12
-msgid "About repository"
+msgid "Terms of use"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:13
-#: ckanext/ceon/templates/home/terms.html:3
-#: ckanext/ceon/templates/home/terms.html:6
-msgid "RepOD Terms of Use"
-msgstr ""
-
-#: ckanext/ceon/templates/footer.html:17
+#: ckanext/ceon/templates/footer.html:15
 #: ckanext/ceon/templates/home/legal.html:3
 #: ckanext/ceon/templates/home/legal.html:6
 msgid "Legal guide"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:18
+#: ckanext/ceon/templates/footer.html:16
 #: ckanext/ceon/templates/home/contact.html:3
-#: ckanext/ceon/templates/home/contact.html:6
-msgid "Contact"
+#: ckanext/ceon/templates/home/contact.html:12
+msgid "Contact us"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:22
+#: ckanext/ceon/templates/footer.html:21
 msgid "CKAN API"
 msgstr ""
 
@@ -250,8 +248,13 @@ msgstr ""
 msgid "Add me as member"
 msgstr ""
 
+#: ckanext/ceon/templates/home/contact.html:6
+msgid "Contact"
+msgstr ""
+
 #: ckanext/ceon/templates/home/help.html:3
 #: ckanext/ceon/templates/home/help.html:6
+#: ckanext/ceon/templates/home/help.html:12
 msgid "Help"
 msgstr ""
 
@@ -556,6 +559,60 @@ msgid ""
 "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a></p>"
 msgstr ""
 
+#: ckanext/ceon/templates/home/terms.html:3
+#: ckanext/ceon/templates/home/terms.html:6
+msgid "RepOD Terms of Use"
+msgstr ""
+
+#: ckanext/ceon/templates/home/terms_of_use.html:3
+#: ckanext/ceon/templates/home/terms_of_use.html:6
+msgid "RepOD Terms of use"
+msgstr ""
+
+#: ckanext/ceon/templates/home/terms_of_use.html:12
+msgid "Regulamin korzystania z Repozytorium Otwartych Danych RepOD"
+msgstr ""
+
+#: ckanext/ceon/templates/home/snippets/about_text.html:1
+msgid ""
+" <p>RepOD – Repository for Open Data – is an online platform designed for"
+" open sharing of research data. Its purpose is to serve all researchers "
+"in Poland who would like to share their data on the Internet, so that any"
+" interested parties – other scientists and people from outside the "
+"academic community – can use it. By “scientific data” we mean all data "
+"that is produced, collected or annotated for the purpose of scientific "
+"research. RepOD is intended for so-called “small data”, generated during "
+"research conducted by individual scientists or small project teams. The "
+"purpose of our repository is to create a place where such data can be "
+"stored and shared with others.</p> <p>RepOD is maintained by the <a "
+"href=\"http://www.icm.edu.pl\" target=\"_blank\">Interdisciplinary Centre"
+" for Mathematical and Computational Modelling of the University of Warsaw"
+" (ICM UW)</a> as part of the services run by the <a "
+"href=\"http://pon.edu.pl\" target=\"_blank\">Open Science Platform "
+"(PON)</a> – a centre for the development of Polish open scientific "
+"resources. Among the services run by PON are also the <a "
+"href=\"http://depot.ceon.pl\" target=\"_blank\">CeON Repository</a> – an "
+"open repository for scientific texts (articles, books, chapters, doctoral"
+" dissertations, etc.) – and <a href=\"http://otworzksiazke.pl\" "
+"target=\"_blank\">Open the Book</a>, which hosts digital versions of "
+"scientific books written by Polish scientists. PON also maintains the <a "
+"href=\"yadda.icm.edu.pl/yadda/browse/articles.action\" "
+"target=\"_blank\">Library of Science</a> – a platform for Polish open "
+"scientific journals.</p> "
+msgstr ""
+
+#: ckanext/ceon/templates/home/snippets/contact_text.html:1
+msgid ""
+" <h2>Repository for Open Data:</h2> <p>E-mail: <a "
+"href=\"mailto:repod@pon.edu.pl\">repod@pon.edu.pl</a></p> <h2>RepOD is "
+"run by the Open Science Platform:</h2> <p><a "
+"href=\"http://pon.edu.pl\">http://pon.edu.pl</a><br> E-mail: <a "
+"href=\"mailto:pon@icm.edu.pl\">pon@icm.edu.pl</a></p> <h2>Postal "
+"address:</h2> <p>Interdisciplinary Centre for Mathematical and "
+"Computational Modelling<br> University of Warsaw<br> ul. Prosta 69,<br> "
+"00-838 Warsaw,<br> Poland<br> (entrance from Towarowa street)</p> "
+msgstr ""
+
 #: ckanext/ceon/templates/home/snippets/stats.html:4
 msgid "{0} statistics"
 msgstr ""
@@ -641,13 +698,13 @@ msgid "There are no groups associated with this dataset"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:46
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:37
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:61
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:38
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:62
 msgid "Author"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:86
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:74
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
 msgstr ""
 
@@ -656,27 +713,27 @@ msgid "Publication year"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:98
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:82
 msgid "Related publication"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:116
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:31
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:35
 msgid "Funder"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:122
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:44
 msgid "Funding program"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:128
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:45
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:53
 msgid "Grant number"
 msgstr ""
 
 #: ckanext/ceon/templates/package/read.html:134
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:48
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:56
 msgid "License for files"
 msgstr ""
 
@@ -733,65 +790,138 @@ msgstr ""
 msgid "eg. A descriptive title"
 msgstr ""
 
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:25
+msgid ""
+"After you fill in the data for one author, a new field will appear for "
+"the next author."
+msgstr ""
+
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
+msgid ""
+"Please enter the name of the institution or organization that holds, "
+"archives, publishes, prints, distributes, releases, issues, or produces "
+"the data you are depositing. For research data this will typically be the"
+" scientific unit where the main author of the dataset is affiliated, e.g."
+" University of Something or Institute for Some Kind of Research. When "
+"deciding upon the publisher you should consider that this name will be "
+"used for citation of your dataset."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
+msgid ""
+"Year when the data was made or is being made publicly available. For "
+"research data this may also be the year when the data was first made "
+"available to the research community. If the data underwent an embargo "
+"period (time between the creation of the dataset and making it publicly "
+"available), please provide the end date of the embargo. In complicated "
+"cases, when you are not sure which date should be given, please consider "
+"which date makes most sense for citation purposes."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:79
 msgid "Publication Year"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:79
 msgid "2012"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:81
+msgid ""
+"Please provide a link – including a DOI number if possible – to a "
+"research publication based on the data being deposited. Please choose "
+"here only one major publication. If you want to link the data to "
+"additional publications, you can enter them later into the „Related "
+"items” section on your datasets' webpage."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:82
 msgid "http://example.com/article-123"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:98
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:104
 msgid "Visibility"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:102
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:108
 msgid "Waiting for approval"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:102
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:108
 msgid "Rejected"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:102
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:108
 msgid "Public"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:113
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
 msgid "Moderation notes"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:113
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
 msgid "eg. Some useful notes about moderation"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:118
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:124
 msgid "State"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:121
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:127
 msgid "Active"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:122
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:128
 #: ckanext/ceon/templates/snippets/organization.html:5
 msgid "Deleted"
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:51
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:16
+msgid ""
+"For structured data, for example in tabular form, please choose “Dataset "
+"(Zbiór danych)”. For datasets containing files of different types, choose"
+" “Collection (Zestawienie)”. A more detailed description of all resource "
+"types can be found on pages 26-27 of the DataCite Metadata Schema for the"
+" Publication and Citation of Research Data (Version 3.1)."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:29
+msgid ""
+"Please choose an area of research that best describes the kind of "
+"research for which your dataset was created."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:38
+msgid ""
+"If the relevant research funder is not listed, please enter the name "
+"manually."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:47
+msgid ""
+"If the relevant funding program is not listed, please enter its name "
+"manually."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:59
 msgid "Hereby I grant this license for all resources "
 msgstr "Hereby I grant the following license for all files in this dataset:"
 
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:64
-#: ckanext/ceon/templates/package/snippets/resource_form.html:71
-msgid " Legal notice</a> "
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
+msgid ""
+"If you are releasing all the files in your dataset under the same legal "
+"conditions, please choose from the list provided here. If at least one "
+"file will be released under different conditions than the rest of the "
+"dataset, please check the option „I will choose a separate license for "
+"each file in this dataset”. License descriptions and additional "
+"information on legal issues can be found in the RepOD Legal guide."
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:75
+msgid " Legal notice "
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:83
 msgid "I will grant different licenses for different resources "
 msgstr "I will choose a separate license for each file in this dataset."
 
@@ -831,6 +961,10 @@ msgstr ""
 msgid ""
 " License definitions and additional information can be found at <a "
 "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a> "
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_form.html:71
+msgid " Legal notice</a> "
 msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
@@ -900,91 +1034,6 @@ msgstr ""
 msgid "Keywords"
 msgstr ""
 
-#~ msgid ""
-#~ "<p>Data can be deposited by "
-#~ "<strong>every registered user</strong> who "
-#~ "conducts research and wants to share "
-#~ "data pertaining to their research "
-#~ "project. You only need to remember "
-#~ "that the person depositing data must "
-#~ "have all intellectual property and "
-#~ "related <strong>rights</strong> necessary for "
-#~ "open sharing of the materials (<a "
-#~ "href=\"#\">RepOD Legal Guide</a>).</p>"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "To start depositing data, select the "
-#~ "“Create dataset” option from the menu."
-#~ " Then enter the <strong>metadata</strong> "
-#~ "(the information that describes your "
-#~ "dataset) into the provided fields, "
-#~ "according to the instructions next to"
-#~ " the fields. Then <strong>add the "
-#~ "prepared files</strong> (<a href=\"#\">How to"
-#~ " prepare data for sharing?</a>). At "
-#~ "this stage you should also fill in"
-#~ " the metadata for individual files. "
-#~ "You can interrupt these actions at "
-#~ "any time, save the entered data by"
-#~ " clicking <strong>“Save as draft”</strong>, "
-#~ "and come back to finish it later."
-#~ " When the dataset is ready, click "
-#~ "<strong>“Finish”</strong>."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Research data can be shared in "
-#~ "many ways. We encourage you to use"
-#~ " one of the open licences (CC0, "
-#~ "CC-BY, CC-BY-SA), but it is"
-#~ " also possible to share data in "
-#~ "RepOD without specifying a licence, "
-#~ "under the conditions of fair use. "
-#~ "Please remember that in order to "
-#~ "share data, you need to have the"
-#~ " necessary legal rights (including verbal"
-#~ " consent of all co-authors). Please"
-#~ " also note that it is the "
-#~ "depositer who is responsible for proper"
-#~ " anonymization of all personal and "
-#~ "sensitive data. More information on "
-#~ "legal issues can be found in the"
-#~ " <a href=\"#\">RepOD Legal Guide</a>."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "<p>Using our services <strong>does not "
-#~ "require registration</strong>. Any interested "
-#~ "party can view, download and use "
-#~ "the shared files. Any restrictions in"
-#~ " using the data result only from "
-#~ "the legal status of the files: the"
-#~ " open licence granted by the "
-#~ "depositer or the provisions of fair "
-#~ "use (<a href=\"#\">RepOD Legal Guide</a>).</p>"
-#~ " <p>Please note that <strong>regardless</strong>"
-#~ " of the legal status of the "
-#~ "data, <strong>good scientific practice</strong> "
-#~ "requires that you state the name "
-#~ "of the author(s) and the source "
-#~ "whenever you use the data – even"
-#~ " if it is shared under a CC0"
-#~ " licence. The only exception to this"
-#~ " rule is when such attribution is "
-#~ "technically impossible (e.g. automatic data"
-#~ " mining). If you use the data "
-#~ "in your own publication, you should "
-#~ "<strong>formally cite</strong> both the "
-#~ "<strong>dataset</strong> available from the "
-#~ "repository and the related <strong>scientific"
-#~ " publication</strong>, if it exists.</p> "
-#~ "<p>Here is an example of a proper"
-#~ " citation format for a dataset "
-#~ "downloaded from RepOD: Kowalska, A., "
-#~ "Wiśniewska, B. (2015) Results of "
-#~ "measurements from 2002-2004. Institute of "
-#~ "Very Important Research. <a "
-#~ "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a></p>"
+#~ msgid "About repository"
 #~ msgstr ""
 

@@ -1,15 +1,18 @@
+function changeSheet(target, section_link) {
+	if($(target).hasClass("hidden")) {
+		$(".sheet").addClass("hidden")
+		$(target).removeClass("hidden")
+		$(".section-link").removeClass("active")
+		section_link.addClass("active")
+	}
+}
+
 $(function(){
 	$('.carousel').carousel()
 
 	$(".section-link").click(function(){
 		var target = $(this).attr('href')
-		console.log(target, !($(target).is(":visible")))
-		if($(target).hasClass("hidden")) {
-			$(".sheet").addClass("hidden")
-			$(target).removeClass("hidden")
-			$(".section-link").removeClass("active")
-			$(this).addClass("active")
-		}
+		changeSheet(target, $(this))
 	})
 
 	$(".paragraph-title").click(function(){
@@ -21,9 +24,10 @@ $(function(){
 	})
 
 	if(window.location.hash) {
-		$('a[href="'+window.location.hash+'"]').click()
+		var target = window.location.hash
+		changeSheet(target, $('a[href="'+target+'"]'))
 	}
 	else {
-		$('a[href="#sheet_1"]').click()
+		changeSheet("#sheet_1", $('a[href="#sheet_1"]'))
 	}
 })

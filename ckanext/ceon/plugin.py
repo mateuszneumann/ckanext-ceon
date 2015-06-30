@@ -186,7 +186,7 @@ def ceon_user_create(context, data_dict):
         if not has_folder:
             context = {'user': result['name'], 'ignore_auth': True}
             data = {'name': 'user_folder_' + result['name'],
-                    'title': 'Folder of user ' + result['display_name'],
+                    'title': result['display_name'],
                     'users': [{'name': result['name']}]}
             toolkit.get_action('organization_create')(context, data)
     return result
@@ -258,10 +258,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         create_tables()
 
     # IConfigurer
-    def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'ceon')
+    def update_config(self, config):
+        toolkit.add_template_directory(config, 'templates')
+        toolkit.add_public_directory(config, 'public')
+        toolkit.add_resource('fanstatic', 'ceon-resources')
 
     # ITemplateHelpers
     def get_helpers(self):

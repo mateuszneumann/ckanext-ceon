@@ -8,6 +8,15 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+entry_points = {
+    'ckan.plugins': [
+        'ceon = ckanext.ceon.plugin:CeonPlugin',
+    ],
+    'babel.extractors': [
+        'ckan = ckan.lib.extract:extract_ckan',
+    ],
+}
+
 setup(
     name='''ckanext-ceon''',
 
@@ -58,13 +67,18 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    install_requires=[],
+    install_requires=[
+        'lxml >= 3.4.4',
+    ],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     include_package_data=True,
     package_data={
+        'ckan': [
+            'i18n/*/LC_MESSAGES/*.mo',
+        ]
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -73,11 +87,28 @@ setup(
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     data_files=[],
 
+    message_extractors={
+        'ckanext': [
+            ('**.py', 'python', None),
+            ('**.js', 'javascript', None),
+            ('ceon/templates/**.html', 'ckan', None),
+            #('ceon/templates/base/**.html', 'ckan', None),
+            #('ceon/templates/home/**.html', 'ckan', None),
+            #('ceon/templates/macros/**.html', 'ckan', None),
+            #('ceon/templates/package/**.html', 'ckan', None),
+            #('ceon/templates/package/snippets/**.html', 'ckan', None),
+            #('ceon/templates/citation/snippets/**.html', 'ckan', None),
+            #('ceon/templates/doi/snippets/**.html', 'ckan', None),
+            #('ceon/templates/group/snippets/**.html', 'ckan', None),
+            #('ceon/templates/organization/**.html', 'ckan', None),
+            #('ceon/templates/organization/snippets/**.html', 'ckan', None),
+            #('ceon/templates/snippets/**.html', 'ckan', None),
+        ],
+    },
+
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    entry_points='''
-        [ckan.plugins]
-        ceon=ckanext.ceon.plugin:CeonPlugin
-    ''',
+    entry_points=entry_points,
+
 )

@@ -10,7 +10,7 @@
 	<header class="logo-ceon">
 		<div class="container">
 			<div class="media-image">
-    			<img src="/logo.png" alt="Ceon RepPOD" usemap="#ceonRepodMap"/>
+                <img src="{{ h.url_for_static('/logo.png') }}" alt="Ceon RepPOD" usemap="#ceonRepodMap"/>
           <map id="ceonRepodMap" name="ceonRepodMap">
             <area shape="poly" title="CeON" alt="CeON" title="" coords="153,89,153,20,150,11,144,5,135,0,17,0,9,4,5,10,0,17,0,70,2,77,4,82,10,84,10,89,15,89" href="http://ceon.pl" target="_blank" />
             <area shape="poly" alt="RePOD" title="RePOD" coords="135,0,143,3,147,7,151,13,154,19,154,89,945,89,952,83,953,6,944,1,935,0" href="{{ h.url('home') }}" target="" />

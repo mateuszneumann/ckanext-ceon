@@ -389,6 +389,10 @@ input[type=radio] {
   top: 0px;
 }
 
+input[type=checkbox] {
+  top: 4px;
+}
+
 .info-link, .info-link:hover {
 	  color: #aaaaaa;
 	  font-size: 11px;

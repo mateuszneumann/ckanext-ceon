@@ -1,0 +1,16 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('RepOD Terms of use') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('RepOD Terms of use'), controller='home', action='about' %}</li>
+{% endblock %}
+
+{% block primary %}
+  <article class="module">
+    <div class="module-content">
+        <h1 class="page-heading">{{ _('Regulamin korzystania z Repozytorium Otwartych Danych RepOD') }}</h1>
+        {% snippet 'home/snippets/terms_of_use_text.html' %}
+    </div>
+  </article>
+{% endblock %}

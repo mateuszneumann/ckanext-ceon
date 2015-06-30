@@ -91,7 +91,7 @@ a, .editor .editor-info-block a {
 
 .masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
 	color: white;
-	padding: 6px 15px 10px
+	padding: 6px 9px 10px
 }
 
 .masthead .nav > li > a > img {
@@ -99,7 +99,13 @@ a, .editor .editor-info-block a {
   	padding-right: 5px;
 }
 
+.navbar .nav {
+	margin: 0;
+ }
 
+.masthead .navigation {
+  	margin-right: 0px;
+}
 
 .masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
 	background-color: transparent;
@@ -165,7 +171,7 @@ body {
 
 .masthead .section.navigation {
 	float: right;
-	width: 53%;
+	width: 56%;
 }
 .masthead .site-search {
 	float: left;
@@ -197,7 +203,9 @@ body {
 }
 
 .round-item, .round-item img {
-	border-radius: 55px;
+	-moz-border-radius: 55px;
+ 	-webkit-border-radius: 55px;
+ 	border-radius: 55px;
   	height: 90px;
   	width: 90px;
 }
@@ -354,6 +362,10 @@ body {
 	margin-right: 0px;
 }
 
+.form-horizontal .info-block {
+  padding: 0px;
+}
+
 .js-collapse, .paragraph {display:none;}
 @media (max-width: 979px)
 .sheet {
@@ -371,5 +383,25 @@ a:hover, a:focus {
   color: #354677;
   text-decoration: underline;
   cursor: pointer;
+}
+
+input[type=radio] {
+  top: 0px;
+}
+
+.info-link, .info-link:hover {
+	  color: #aaaaaa;
+	  font-size: 11px;
+	  line-height: 1.3;
+	  text-decoration: underline;
+}
+
+.homepage .alert {
+	margin-bottom: 0px;
+	margin-top: 20px;
+}
+
+.form-horizontal .info-block a.tooltip-info, a.tooltip-info {
+	text-decoration: none;
 }
 

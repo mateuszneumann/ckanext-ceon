@@ -13,6 +13,8 @@
         <option value="{{ res_type }}" {% if res_type in data.get('res_type', []) %}selected="selected"{% endif %}>{{ res_type }}</option>
       {% endfor %}
       </select>
+      {% set type = _("For structured data, for example in tabular form, please choose “Dataset (Zbiór danych)”. For datasets containing files of different types, choose “Collection (Zestawienie)”. A more detailed description of all resource types can be found on pages 26-27 of the DataCite Metadata Schema for the Publication and Citation of Research Data (Version 3.1).") %}
+      {% snippet 'snippets/tooltip.html', text=type  %}
     </div>
   </div>
 
@@ -24,6 +26,8 @@
         <option value="{{ sci_discipline }}" {% if sci_discipline in data.get('sci_discipline', []) %}selected="selected"{% endif %}>{{ sci_discipline }}</option>
       {% endfor %}
       </select>
+      {% set area = _("Please choose an area of research that best describes the kind of research for which your dataset was created.") %}
+      {% snippet 'snippets/tooltip.html', text=area  %}
     </div>
   </div>
 
@@ -31,6 +35,8 @@
     <label class="control-label" for="field-oa_funder">{{ _("Funder") }}</label>
     <div class="controls">
       <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ data.get('oa_funder', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funders()|join('|') }}" data-module="funding-fields"/>
+      {% set funder = _("If the relevant research funder is not listed, please enter the name manually.") %}
+      {% snippet 'snippets/tooltip.html', text=funder  %}
     </div>
   </div>
 
@@ -38,6 +44,8 @@
     <label class="control-label" for="field-oa_funding_program">{{ _("Funding program") }}</label>
     <div class="controls">
       <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ data.get('oa_funding_program', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funding_programs()|join('|') }}" data-module="funding-fields"/>
+    {% set funding = _("If the relevant funding program is not listed, please enter its name manually.") %}
+      {% snippet 'snippets/tooltip.html', text=funding  %}
     </div>
   </div>
 
@@ -48,24 +56,28 @@
     <label class="control-label">{{ _("License for files") }}</label>
     <div class="controls control-ancestral" data-module="ancestral-fields">
         
-      <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" {% if ancestral_license %}checked="checked"{% endif %}>{{ _("Hereby I grant this license for all resources ") }}<br>
-      <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete" {% if not ancestral_license %}disabled="disabled"{% endif %}>
-      {% for license_desc, license_id in licenses|sort if license_desc  %}
-        <option value="{{ license_id }}" {% if ancestral_license|default('notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
-      {% endfor %}
-      {% for license_desc, license_id in licenses|sort if license_desc  %}
-        <span><b>{{ license_id }}</b></span>
-        <span><i>{{ license_desc }}</i></span>
-      {% endfor %}
-      </select>
-             <span class="info-block info-inline">
-              <i class="icon-info-sign"></i>
-                <a href="{% url_for 'help' %}" target="_blank">
-              {% trans %}
-                Legal notice</a>
-              {% endtrans %}
-              
-            </span>
+      <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" {% if ancestral_license %}checked="checked"{% endif %}>{{ _("Hereby I grant this license for all resources ") }}<br><br>
+      <div>
+        <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete" {% if not ancestral_license %}disabled="disabled"{% endif %}>
+          {% for license_desc, license_id in licenses|sort if license_desc  %}
+            <option value="{{ license_id }}" {% if ancestral_license|default('notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+          {% endfor %}
+          {% for license_desc, license_id in licenses|sort if license_desc  %}
+            <span><b>{{ license_id }}</b></span>
+            <span><i>{{ license_desc }}</i></span>
+          {% endfor %}
+        </select>
+        
+          {% set license = _("If you are releasing all the files in your dataset under the same legal conditions, please choose from the list provided here. If at least one file will be released under different conditions than the rest of the dataset, please check the option „I will choose a separate license for each file in this dataset”. License descriptions and additional information on legal issues can be found in the RepOD Legal guide.") %}
+          {% snippet 'snippets/tooltip.html', text=license  %}
+          
+          <a class="info-link" href="{% url_for 'help' %}" target="_blank">
+            {% trans %}
+              Legal notice
+            {% endtrans %}
+          </a>      
+        </span>
+      </div>
       
       <br>
       <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off" {% if not ancestral_license %}checked="checked"{% endif %}>{{ _("I will grant different licenses for different resources ") }}<br>

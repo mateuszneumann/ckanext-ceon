@@ -22,9 +22,10 @@
   {% import "macros/ceonform.html" as form %}
 
   {% set authors = h.ckanext_ceon_get_authors(data.id) %}
+  {% set authors_info = _("After you fill in the data for one author, a new field will appear for the next author.") %}
 
   <div data-module="authors-fields">
-    <ul id="authors-sortable">
+    <ul id="authors-sortable" class="tooltip-info" title="{{authors_info}}">
     {% for a in authors %}
       <li class="ui-state-default">
         <span class="icon-sortable"><i class="fa fa-arrows"></i></span>
@@ -71,9 +72,14 @@
   </div>
 
   {% import "macros/form.html" as form %}
-  {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Publisher'), value=data.publisher, error=errors.publisher, classes=['control-medium'], is_required=true) }}
-  {{ form.input('publication_year', label=_('Publication Year'), id='field-publication_year', placeholder=_('2012'), value=data.publication_year, error=errors.publication_year, classes=['control-medium'], is_required=true) }}
-  {{ form.input('rel_citation', label=_('Related publication'), id='field-rel_citation', placeholder=_('http://example.com/article-123'), value=data.rel_citation, error=errors.rel_citation, classes=['control-medium']) }}
+  {% set publisher_info = _("Please enter the name of the institution or organization that holds, archives, publishes, prints, distributes, releases, issues, or produces the data you are depositing. For research data this will typically be the scientific unit where the main author of the dataset is affiliated, e.g. University of Something or Institute for Some Kind of Research. When deciding upon the publisher you should consider that this name will be used for citation of your dataset.") %}
+  {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Publisher'), value=data.publisher, error=errors.publisher, classes=['control-medium'], is_required=true, attrs={"title":publisher_info, "class":"tooltip-info"}) }}
+
+  {% set year_info = _("Year when the data was made or is being made publicly available. For research data this may also be the year when the data was first made available to the research community. If the data underwent an embargo period (time between the creation of the dataset and making it publicly available), please provide the end date of the embargo. In complicated cases, when you are not sure which date should be given, please consider which date makes most sense for citation purposes.") %}
+  {{ form.input('publication_year', label=_('Publication Year'), id='field-publication_year', placeholder=_('2012'), value=data.publication_year, error=errors.publication_year, classes=['control-medium'], is_required=true, attrs={"title":year_info, "class":"tooltip-info"}) }}
+
+  {% set related_info = _("Please provide a link – including a DOI number if possible – to a research publication based on the data being deposited. Please choose here only one major publication. If you want to link the data to additional publications, you can enter them later into the „Related items” section on your datasets' webpage.") %}
+  {{ form.input('rel_citation', label=_('Related publication'), id='field-rel_citation', placeholder=_('http://example.com/article-123'), value=data.rel_citation, error=errors.rel_citation, classes=['control-medium'], attrs={"title":related_info, "class":"tooltip-info"}) }}
 
 {% endblock %}
 

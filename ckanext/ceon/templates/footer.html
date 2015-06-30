@@ -2,30 +2,29 @@
 
 {% block footer_content %}
     <div class="row">
-		<img id="ceon-tree" src="/drzewko.png"/>
+      <img id="ceon-tree" src="/drzewko.png"/>
 	<div class="span3" style="height: 100px;">
 	</div>
       <div class="span9 footer-links">
         {% block footer_nav %}
           <ul class="unstyled push-left span3">
-              {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
-              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('About repository') }}</a></li>
-              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='terms') }}">{{ _('RepOD Terms of Use') }}</a></li>
+            <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('About the repository') }}</a></li>
+            <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='terms') }}">{{ _('Terms of use') }}</a></li>
           </ul>
-	<ul class="unstyled push-left span3">
-              {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
-              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='legal') }}">{{ _('Legal guide') }}</a></li>
-              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='contact') }}">{{ _('Contact')}}</a></li>
+          <ul class="unstyled push-left span3">
+            <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='legal') }}">{{ _('Legal guide') }}</a></li>
+            <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='contact') }}">{{ _('Contact us')}}</a></li>
           </ul>
           <ul class="unstyled span3">
- 		<li><a href="http://ckan.org">CKAN</a></li>
-              <li><a href="{{ api_url }}">{{ _('CKAN API') }}</a></li>
+            {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
+            <li><a href="http://ckan.org">CKAN</a></li>
+            <li><a href="{{ api_url }}">{{ _('CKAN API') }}</a></li>
           </ul>
         {% endblock %}
       </div>
-	 <div class="footer-logotypes span9">
-		<div class="span6 unstyled"><a href="http://icm.edu.pl"><img style="height: 50px" src="/ICM.png"/></a></div>
- 		<div class="span3 unstyled"><a href="http://pon.edu.pl"><img style="height: 50px" src="/PON.png"/></a></div>
-	</div>
+      <div class="footer-logotypes span9">
+        <div class="span6 unstyled"><a href="http://icm.edu.pl"><img style="height: 50px" src="/ICM.png"/></a></div>
+        <div class="span3 unstyled"><a href="http://pon.edu.pl"><img style="height: 50px" src="/PON.png"/></a></div>
+      </div>
     </div>
-    {% endblock %}
+{% endblock %}

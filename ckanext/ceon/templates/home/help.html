@@ -7,8 +7,13 @@
 {% endblock %}
 
 {% block primary %}
+<article class="module">
+    <div class="module-content">
+          <h1 class="page-heading">{{ _('Help') }}</h1>
+          {% snippet 'home/snippets/help_text.html' %}
+    </div>
+  </article>
 
-{% snippet 'home/snippets/help_text.html' %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}

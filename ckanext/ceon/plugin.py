@@ -184,7 +184,7 @@ def ceon_user_create(context, data_dict):
             if group.name == 'user_folder' and group.is_organization:
                 has_folder = True
         if not has_folder:
-            context = {'user': result['name']}
+            context = {'user': result['name'], 'ignore_auth': True}
             data = {'name': 'user_folder_' + result['name'],
                     'title': result['display_name'],
                     'users': [{'name': result['name']}]}
@@ -213,6 +213,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
+    plugins.implements(plugins.IFacets, inherit=True)
+    
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict.pop('organization', None)
+        facets_dict.update({'dataset_type': _('Type of resources'),
+                            'vocab_sci_disciplines': _('Area of study')})
+        return facets_dict
+        
     
     def get_auth_functions(self):
         functions = {'package_delete': ceon_package_delete_function}

@@ -1,0 +1,13 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('RepOD Terms of Use') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('RepOD Terms of Use'), controller='ckanext.ceon.controllers:CeonController', action='terms' %}</li>
+{% endblock %}
+
+{% block primary %}
+<pre>TODO</pre>
+{% endblock %}
+
+{% block secondary %}{% endblock %}

@@ -242,6 +242,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   ])),
                   controller='ckanext.ceon.controllers:CitationController',
                   action='export_citation')
+        m.connect('terms',
+                  '/terms',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='terms')
+        m.connect('legal',
+                  '/legal',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='legal')
+        m.connect('contact',
+                  '/contact',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='contact')
         return m
     
     # IActions

@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _('Help') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{% link_for _('Help'), controller='home', action='help' %}</li>
+  <li class="active">{% link_for _('Help'), controller='ckanext.ceon.controllers:CeonController', action='help' %}</li>
 {% endblock %}
 
 {% block primary %}

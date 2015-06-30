@@ -10,12 +10,12 @@
           <ul class="unstyled push-left span3">
               {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
               <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('About repository') }}</a></li>
-              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('RepOD Terms of Use') }}</a></li>
+              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='terms') }}">{{ _('RepOD Terms of Use') }}</a></li>
           </ul>
 	<ul class="unstyled push-left span3">
               {% set api_url = 'http://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version) %}
-              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('Legal guide') }}</a></li>
-              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('Contact')}}</a></li>
+              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='legal') }}">{{ _('Legal guide') }}</a></li>
+              <li><a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='contact') }}">{{ _('Contact')}}</a></li>
           </ul>
           <ul class="unstyled span3">
  		<li><a href="http://ckan.org">CKAN</a></li>

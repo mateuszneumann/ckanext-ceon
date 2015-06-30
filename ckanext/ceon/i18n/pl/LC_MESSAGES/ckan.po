@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-30 12:17+0000\n"
+"POT-Creation-Date: 2015-06-30 14:44+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: pl <repod@pon.edu.pl>\n"
@@ -28,11 +28,11 @@ msgstr "Brak uprawnień do dodania członka do grupy %s"
 msgid "Group not found"
 msgstr "Nieznana grupa"
 
-#: ckanext/ceon/controllers.py:69
+#: ckanext/ceon/controllers.py:78
 msgid "Dataset not found"
 msgstr "Nieznany zbiór danych"
 
-#: ckanext/ceon/controllers.py:90
+#: ckanext/ceon/controllers.py:99
 #, python-format
 msgid "Unknown citation format (%s)"
 msgstr "Nieznany format cytowania (%s)"
@@ -52,11 +52,11 @@ msgstr "Typ zasobu"
 msgid "Area of study"
 msgstr "Obszar badań"
 
-#: ckanext/ceon/plugin.py:451 ckanext/ceon/plugin.py:491
+#: ckanext/ceon/plugin.py:463 ckanext/ceon/plugin.py:503
 msgid "DataCite DOI metadata updated"
 msgstr "Zaktualizowano metdane w DataCite DOI"
 
-#: ckanext/ceon/plugin.py:454 ckanext/ceon/plugin.py:494
+#: ckanext/ceon/plugin.py:466 ckanext/ceon/plugin.py:506
 msgid "DataCite DOI has been created"
 msgstr "Utworzono metdane w DataCite DOI"
 
@@ -143,14 +143,20 @@ msgid "About repository"
 msgstr "O repozytorium"
 
 #: ckanext/ceon/templates/footer.html:13
+#: ckanext/ceon/templates/home/terms.html:3
+#: ckanext/ceon/templates/home/terms.html:6
 msgid "RepOD Terms of Use"
 msgstr "Regulamin RepOD"
 
 #: ckanext/ceon/templates/footer.html:17
+#: ckanext/ceon/templates/home/legal.html:3
+#: ckanext/ceon/templates/home/legal.html:6
 msgid "Legal guide"
 msgstr "Poradnik prawny"
 
 #: ckanext/ceon/templates/footer.html:18
+#: ckanext/ceon/templates/home/contact.html:3
+#: ckanext/ceon/templates/home/contact.html:6
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -348,14 +354,14 @@ msgid ""
 "conducts research and wants to share data pertaining to their research "
 "project. You only need to remember that the person depositing data must "
 "have all intellectual property and related <strong>rights</strong> "
-"necessary for open sharing of the materials (<a href=\"#\">RepOD Legal "
-"Guide</a>).</p>"
+"necessary for open sharing of the materials (<a "
+"href=\"{legal_url}\">RepOD Legal Guide</a>).</p>"
 msgstr ""
 "<p>Dane może deponować <strong>każdy zarejestrowany użytkownik</strong>, "
 "który prowadzi działalność badawczą i chce udostępnić związane ze swoimi "
 "badaniami dane naukowe. Trzeba jedynie pamiętać o tym, że osoba "
 "deponująca dane musi być w posiadaniu praw własności intelektualnej i "
-"pokrewnych potrzebnych do ich udostępnienia (<a href=\"#\">Poradnik "
+"pokrewnych potrzebnych do ich udostępnienia (<a href=\"{legal_url}\">Poradnik "
 "prawny RepOD</a>).</p>"
 
 #: ckanext/ceon/templates/home/layout1.html:42
@@ -402,16 +408,17 @@ msgid ""
 "menu. Then enter the <strong>metadata</strong> (the information that "
 "describes your dataset) into the provided fields, according to the "
 "instructions next to the fields. Then <strong>add the prepared "
-"files</strong> (<a href=\"#\">How to prepare data for sharing?</a>). At "
-"this stage you should also fill in the metadata for individual files. You"
-" can interrupt these actions at any time, save the entered data by "
-"clicking <strong>“Save as draft”</strong>, and come back to finish it "
-"later. When the dataset is ready, click <strong>“Finish”</strong>."
+"files</strong> (<a href=\"{legal_url}\">How to prepare data for "
+"sharing?</a>). At this stage you should also fill in the metadata for "
+"individual files. You can interrupt these actions at any time, save the "
+"entered data by clicking <strong>“Save as draft”</strong>, and come back "
+"to finish it later. When the dataset is ready, click "
+"<strong>“Finish”</strong>."
 msgstr ""
 "Aby rozpocząć deponowanie wybieramy z menu funkcję „Utwórz zbiór danych”."
 " Następnie wprowadzamy <strong>metadane</strong> (informacje opisujące "
 "nasz zbiór danych), zgodnie z instrukcjami przy kolejnych polach, po czym"
-" po kolei <strong>dodajemy przygotowane pliki</strong> (<a href=\"#\">Jak"
+" po kolei <strong>dodajemy przygotowane pliki</strong> (<a href=\"legal_url\">Jak"
 " przygotować dane do udostępnienia?</a>). Na tym etapie wypełniamy "
 "dodatkowo pola metadanych dla pojedynczych plików. W każdej chwili możemy"
 " przerwać, zapisać wprowadzone już informacje klikając w „Zapisz kopię "
@@ -671,7 +678,8 @@ msgid ""
 "the necessary legal rights (including verbal consent of all co-authors). "
 "Please also note that it is the depositer who is responsible for proper "
 "anonymization of all personal and sensitive data. More information on "
-"legal issues can be found in the <a href=\"#\">RepOD Legal Guide</a>."
+"legal issues can be found in the <a href=\"{legal_url}\">RepOD Legal "
+"Guide</a>."
 msgstr ""
 "Dane badawcze możemy udostępniać na różnych zasadach. Zachęcamy do "
 "korzystania z otwartych licencji (CC0, CC-BY, CC-BY-SA), ale możliwe jest"
@@ -680,23 +688,22 @@ msgstr ""
 " mieć do nich odpowiednie prawa (w tym także ustną zgodę wszystkich "
 "współautorów), oraz że to my odpowiadamy za anonimizację danych osobowych"
 " i wrażliwych. Więcej informacji na ten temat można znaleźć w rozdziale "
-"<a href=\"#\">Poradnik prawny RepOD</a>."
+"<a href=\"{legal_url}\">Poradnik prawny RepOD</a>."
 
 #: ckanext/ceon/templates/home/layout1.html:101
-#, fuzzy
 msgid ""
 "<p>Using our services <strong>does not require registration</strong>. Any"
 " interested party can view, download and use the shared files. Any "
 "restrictions in using the data result only from the legal status of the "
 "files: the open licence granted by the depositer or the provisions of "
-"fair use (<a href=\"#\">RepOD Legal Guide</a>).</p> <p>Please note that "
-"<strong>regardless</strong> of the legal status of the data, <strong>good"
-" scientific practice</strong> requires that you state the name of the "
-"author(s) and the source whenever you use the data – even if it is shared"
-" under a CC0 licence. The only exception to this rule is when such "
-"attribution is technically impossible (e.g. automatic data mining). If "
-"you use the data in your own publication, you should <strong>formally "
-"cite</strong> both the <strong>dataset</strong> available from the "
+"fair use (<a href=\"{legal_url}\">RepOD Legal Guide</a>).</p> <p>Please "
+"note that <strong>regardless</strong> of the legal status of the data, "
+"<strong>good scientific practice</strong> requires that you state the "
+"name of the author(s) and the source whenever you use the data – even if "
+"it is shared under a CC0 licence. The only exception to this rule is when"
+" such attribution is technically impossible (e.g. automatic data mining)."
+" If you use the data in your own publication, you should <strong>formally"
+" cite</strong> both the <strong>dataset</strong> available from the "
 "repository and the related <strong>scientific publication</strong>, if it"
 " exists.</p> <p>Here is an example of a proper citation format for a "
 "dataset downloaded from RepOD: Kowalska, A., Wiśniewska, B. (2015) "
@@ -709,7 +716,7 @@ msgstr ""
 "każdy zainteresowany. Ewentualne ograniczenia w wykorzystywaniu danych są"
 " uzależnione jedynie od <strong>prawnego statusu</strong> danego pliku: "
 "udzielonej przez deponującego wolnej licencji lub udostępnienia na "
-"zasadach dozwolonego użytku (<a href=\"#\">Poradnik prawny "
+"zasadach dozwolonego użytku (<a href=\"{legal_url}\">Poradnik prawny "
 "RepOD</a>).</p> <p>Zwracamy uwagę, że <strong>niezależnie</strong> od "
 "statusu prawnego wykorzystywanych danych, <strong>dobry obyczaj "
 "naukowy</strong> nakazuje podanie autora(ów) i źródła danych "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-30 12:17+0000\n"
+"POT-Creation-Date: 2015-06-30 14:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,11 +26,11 @@ msgstr ""
 msgid "Group not found"
 msgstr ""
 
-#: ckanext/ceon/controllers.py:69
+#: ckanext/ceon/controllers.py:78
 msgid "Dataset not found"
 msgstr ""
 
-#: ckanext/ceon/controllers.py:90
+#: ckanext/ceon/controllers.py:99
 #, python-format
 msgid "Unknown citation format (%s)"
 msgstr ""
@@ -50,11 +50,11 @@ msgstr ""
 msgid "Area of study"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:451 ckanext/ceon/plugin.py:491
+#: ckanext/ceon/plugin.py:463 ckanext/ceon/plugin.py:503
 msgid "DataCite DOI metadata updated"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:454 ckanext/ceon/plugin.py:494
+#: ckanext/ceon/plugin.py:466 ckanext/ceon/plugin.py:506
 msgid "DataCite DOI has been created"
 msgstr ""
 
@@ -140,15 +140,18 @@ msgstr ""
 msgid "About repository"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:13
+#: ckanext/ceon/templates/footer.html:13 ckanext/ceon/templates/home/terms.html:3
+#: ckanext/ceon/templates/home/terms.html:6
 msgid "RepOD Terms of Use"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:17
+#: ckanext/ceon/templates/footer.html:17 ckanext/ceon/templates/home/legal.html:3
+#: ckanext/ceon/templates/home/legal.html:6
 msgid "Legal guide"
 msgstr ""
 
-#: ckanext/ceon/templates/footer.html:18
+#: ckanext/ceon/templates/footer.html:18 ckanext/ceon/templates/home/contact.html:3
+#: ckanext/ceon/templates/home/contact.html:6
 msgid "Contact"
 msgstr ""
 
@@ -314,7 +317,8 @@ msgid ""
 "conducts research and wants to share data pertaining to their research "
 "project. You only need to remember that the person depositing data must have "
 "all intellectual property and related <strong>rights</strong> necessary for "
-"open sharing of the materials (<a href=\"#\">RepOD Legal Guide</a>).</p>"
+"open sharing of the materials (<a href=\"{legal_url}\">RepOD Legal "
+"Guide</a>).</p>"
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:42
@@ -348,12 +352,12 @@ msgid ""
 "To start depositing data, select the “Create dataset” option from the menu. "
 "Then enter the <strong>metadata</strong> (the information that describes your"
 " dataset) into the provided fields, according to the instructions next to the"
-" fields. Then <strong>add the prepared files</strong> (<a href=\"#\">How to "
-"prepare data for sharing?</a>). At this stage you should also fill in the "
-"metadata for individual files. You can interrupt these actions at any time, "
-"save the entered data by clicking <strong>“Save as draft”</strong>, and come "
-"back to finish it later. When the dataset is ready, click "
-"<strong>“Finish”</strong>."
+" fields. Then <strong>add the prepared files</strong> (<a "
+"href=\"{legal_url}\">How to prepare data for sharing?</a>). At this stage you"
+" should also fill in the metadata for individual files. You can interrupt "
+"these actions at any time, save the entered data by clicking <strong>“Save as"
+" draft”</strong>, and come back to finish it later. When the dataset is "
+"ready, click <strong>“Finish”</strong>."
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:55
@@ -515,7 +519,7 @@ msgid ""
 "legal rights (including verbal consent of all co-authors). Please also note "
 "that it is the depositer who is responsible for proper anonymization of all "
 "personal and sensitive data. More information on legal issues can be found in"
-" the <a href=\"#\">RepOD Legal Guide</a>."
+" the <a href=\"{legal_url}\">RepOD Legal Guide</a>."
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:101
@@ -524,7 +528,7 @@ msgid ""
 "interested party can view, download and use the shared files. Any "
 "restrictions in using the data result only from the legal status of the "
 "files: the open licence granted by the depositer or the provisions of fair "
-"use (<a href=\"#\">RepOD Legal Guide</a>).</p> <p>Please note that "
+"use (<a href=\"{legal_url}\">RepOD Legal Guide</a>).</p> <p>Please note that "
 "<strong>regardless</strong> of the legal status of the data, <strong>good "
 "scientific practice</strong> requires that you state the name of the "
 "author(s) and the source whenever you use the data – even if it is shared "

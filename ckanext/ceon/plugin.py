@@ -409,8 +409,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         create_moderation_status(context['session'], 
                                  pkg_dict['id'], 
-                                 pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
-                                 pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+                                 'waitingForApproval', 
+                                 '')
         create_package_doi(pkg_dict)
     
     def _package_after_show(self, context, pkg_dict):
@@ -431,7 +431,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
         update_ancestral_license(context, pkg_dict, 
                 pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
-        update_moderation_status(context['session'], 
+        if not pkg_dict.get('state', 'active') == 'draft':
+            update_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')

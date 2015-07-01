@@ -18,6 +18,7 @@ ceon_package_moderation_table = Table('ceon_package_moderation', meta.metadata,
         Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
         Column('status', types.UnicodeText),
         Column('notes', types.UnicodeText),
+        Column('requested', types.Boolean, default=False),
         PrimaryKeyConstraint('package_id')
         )
 
@@ -73,14 +74,9 @@ def get_role(session, user_id):
     return None
 
 def create_moderation_status(session, package_id, status, notes):
-    ceon_package_moderation = CeonPackageModeration(package_id=package_id, status=status, notes=notes)
+    ceon_package_moderation = CeonPackageModeration(package_id=package_id, status=status, notes=notes, requested=False)
     session.add(ceon_package_moderation)
     session.commit()
-    if (status == 'waitingForApproval'):
-        adminRoles = session.query(CeonUserRole).filter(CeonUserRole.role == 'admin').all()
-        for adminRole in adminRoles:
-            user = session.query(User).filter(User.id == adminRole.user_id).first()
-            send_moderation_request(user, package_id)
     return ceon_package_moderation
     
 def update_moderation_status(session, package_id, status, notes):
@@ -89,25 +85,26 @@ def update_moderation_status(session, package_id, status, notes):
         previousStatus = orig_status.status
         orig_status.status = status
         orig_status.notes = orig_status.notes + '\n' + notes
-        session.merge(orig_status)
         package = session.query(Package).filter(Package.id == package_id).first()
         if (status == 'public'):
             package.private = False
         else:
             package.private = True
         session.merge(package)
-        session.commit()
-        if (status == 'waitingForApproval' and previousStatus != 'waitingForApproval'):
+        if (status == 'waitingForApproval' and not orig_status.requested):
             adminRoles = session.query(CeonUserRole).filter(CeonUserRole.role == 'admin').all()
             for adminRole in adminRoles:
                 user = session.query(User).filter(User.id == adminRole.user_id).first()
                 send_moderation_request(user, package_id)
+            orig_status.requested = True
         if (status == 'public' and previousStatus == 'waitingForApproval'):
             packageCreator = session.query(User).filter(User.id == package.creator_user_id).first()
             send_accepted_info(packageCreator, package_id)
         if (status == 'rejected' and previousStatus == 'waitingForApproval'):
             packageCreator = session.query(User).filter(User.id == package.creator_user_id).first()
             send_rejected_info(packageCreator, package_id, notes)
+        session.merge(orig_status)
+        session.commit()
     else:
         create_moderation_status(session, package_id, status, notes)
 

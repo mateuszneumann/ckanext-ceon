@@ -2,8 +2,10 @@
 
 {% block footer_content %}
     <div class="row">
-      <img id="ceon-tree" src="/drzewko.png"/>
+      
 	<div class="span3" style="height: 100px;">
+  <a href="http://www.depot.ceon.pl" target="_blank"><img id="ceon-link" src="{{ h.url_for_static('/repozytorium_ceon.png')}}" title="{{_('Repozytorium publikacji CEON')}}"/></a>
+      <img id="ceon-tree" src="{{ h.url_for_static('/drzewko.png') }}"/>
 	</div>
       <div class="span9 footer-links">
         {% block footer_nav %}

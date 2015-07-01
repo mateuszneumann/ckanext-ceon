@@ -4,6 +4,11 @@
 {%- block page -%}
 <div class="main-wrapper">
 	{{ super() }}
+	{% block flash %}
+            {% snippet 'snippets/IE_info.html' %}
+            {{ super() }}
+    {% endblock %}
 </div>
 
 {% endblock %}
+

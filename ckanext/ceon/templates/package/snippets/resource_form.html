@@ -40,10 +40,6 @@
     {% block basic_fields_format %}
       {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
       {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
-        <span class="info-block info-block-small">
-          <i class="icon-info-sign"></i>
-          {{ _('This will be guessed automatically. Leave blank if you wish') }}
-        </span>
       {% endcall %}
     {% endblock %}
 
@@ -59,20 +55,14 @@
               {% endfor %}
             </select>
             {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-            <span class="info-block info-inline">
-              <i class="icon-info-sign"></i>
-              {% trans %}
-                License definitions and additional information can be found
-                at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
-              {% endtrans %}
-              <p>
-              <i class="icon-info-sign"></i>
-                <a href="{% url_for 'help' %}" target="_blank">
-              {% trans %}
-                Legal notice</a>
-              {% endtrans %}
-              
-            </span>
+            {% set license = _("If you are releasing all the files in your dataset under the same legal conditions, please choose from the list provided here. If at least one file will be released under different conditions than the rest of the dataset, please check the option „I will choose a separate license for each file in this dataset”. License descriptions and additional information on legal issues can be found in the RepOD Legal guide.") %}
+          {% snippet 'snippets/tooltip.html', text=license  %}
+          
+          <a class="info-link" href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='legal') }}" target="_blank">
+            {% trans %}
+              Legal notice
+            {% endtrans %}
+          </a> 
           </div>
         </div>
       {% endif %}

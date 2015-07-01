@@ -409,3 +409,9 @@ input[type=checkbox] {
 	text-decoration: none;
 }
 
+.stages li.active:after {
+  border-color: rgba(140, 198, 138, 0);
+  border-top-color: #6F8CC8;
+  border-bottom-color: #6F8CC8;
+}
+

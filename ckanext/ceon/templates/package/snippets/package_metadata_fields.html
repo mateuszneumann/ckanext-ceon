@@ -71,12 +71,11 @@
           {% set license = _("If you are releasing all the files in your dataset under the same legal conditions, please choose from the list provided here. If at least one file will be released under different conditions than the rest of the dataset, please check the option „I will choose a separate license for each file in this dataset”. License descriptions and additional information on legal issues can be found in the RepOD Legal guide.") %}
           {% snippet 'snippets/tooltip.html', text=license  %}
           
-          <a class="info-link" href="{% url_for 'help' %}" target="_blank">
+          <a class="info-link" href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='legal') }}" target="_blank">
             {% trans %}
               Legal notice
             {% endtrans %}
-          </a>      
-        </span>
+          </a>  
       </div>
       
       <br>

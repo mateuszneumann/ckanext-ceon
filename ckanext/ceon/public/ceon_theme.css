@@ -158,6 +158,13 @@ body {
   left: 0;
 }
 
+#ceon-link {
+  position: absolute;
+  width: 140px;
+  bottom: 100px;
+  left: 20px;
+}
+
 .toolbar {
 	padding: 0;
 }
@@ -413,5 +420,9 @@ input[type=checkbox] {
   border-color: rgba(140, 198, 138, 0);
   border-top-color: #6F8CC8;
   border-bottom-color: #6F8CC8;
+}
+
+.ie-info-message {
+	display: none;
 }
 

@@ -14,7 +14,7 @@ from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.logic.action.get import package_show as ckan_package_show
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
-from ckanext.ceon.converters import convert_to_oa_tags
+from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses
 from ckanext.ceon.model import create_tables
@@ -353,8 +353,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'authors': self._authors_schema(),
             'publisher': [toolkit.get_validator('not_empty'),
                 toolkit.get_converter('convert_to_extras')],
-            'publication_year':
-            [toolkit.get_validator('natural_number_validator'),
+            'publication_year': [toolkit.get_validator('natural_number_validator'),
                 toolkit.get_converter('convert_to_extras')],
             'rel_citation': [toolkit.get_validator('ignore_empty'),
                 toolkit.get_converter('convert_to_extras')],
@@ -382,7 +381,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'id': [toolkit.get_validator('ignore_empty')],
                 'position': [toolkit.get_validator('not_empty')],
                 'firstname': [toolkit.get_validator('ignore_empty')],
-                'lastname': [toolkit.get_validator('ignore_empty')],
+                'lastname': [validate_lastname()],
                 'email': [toolkit.get_validator('ignore_empty')],
                 'affiliation': [toolkit.get_validator('ignore_empty')],
                 'state': [toolkit.get_validator('ignore')],
@@ -430,7 +429,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  'waitingForApproval', 
                                  '')
-        create_package_doi(pkg_dict)
+        #create_package_doi(pkg_dict)   # FIXME
     
     def _package_after_show(self, context, pkg_dict):
         # Load the DOI ready to display
@@ -467,10 +466,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             # almost every change in metadata is crucial, so let's skip that
             # check for a while.
             if package_doi.published:
-                update_package_doi(pkg_dict)
+                #update_package_doi(pkg_dict)   # FIXME
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
-                publish_package_doi(pkg_dict)
+                #publish_package_doi(pkg_dict)  # TODO
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 

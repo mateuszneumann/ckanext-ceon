@@ -30,6 +30,11 @@
       <li class="ui-state-default">
         <span class="icon-sortable"><i class="fa fa-arrows"></i></span>
         {% set prefix = 'authors__%d__' % loop.index0 %}
+        {% if 'authors' in errors %}
+          {% set author_error = errors['authors'][loop.index0] %}
+        {% else %}
+          {% set author_error = {} %}
+        {% endif %}
         {{ form.author(
           names=(prefix ~ 'firstname', prefix ~ 'lastname', prefix ~ 'email',
                  prefix ~ 'affiliation', prefix ~ 'position', prefix ~ 'id',
@@ -38,10 +43,13 @@
           label=_('Author'),
           values=(a.firstname, a.lastname, a.email, a.affiliation,
                   '%d' % (loop.index0), a.id, a.deleted),
+          error=author_error)
+        }}
+        {#
           error=errors[prefix ~ 'firstname'] or errors[prefix ~ 'lastname'] or
                 errors[prefix ~ 'email'] or errors[prefix ~ 'affiliation'] or
-                errors[prefix ~ 'position'] or errors[prefix ~ 'id'])
-        }}
+                errors[prefix ~ 'position'] or errors[prefix ~ 'id']
+        #}
       </li>
     {% endfor %}
 

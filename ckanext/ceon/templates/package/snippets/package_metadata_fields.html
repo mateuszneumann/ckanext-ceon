@@ -34,7 +34,11 @@
   <div class="control-group control-funding">
     <label class="control-label" for="field-oa_funder">{{ _("Funder") }}</label>
     <div class="controls">
-      <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ data.get('oa_funder', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funders()|join('|') }}" data-module="funding-fields"/>
+      {% set oa_funder = data.get('oa_funder', []) %}
+      {% if oa_funder is iterable and oa_funder is not string %}
+        {% set oa_funder = oa_funder[0] %}
+      {% endif %}
+      <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ oa_funder }}" data-select="{{ h.ckanext_ceon_oa_funders()|join('|') }}" data-module="funding-fields"/>
       {% set funder = _("If the relevant research funder is not listed, please enter the name manually.") %}
       {% snippet 'snippets/tooltip.html', text=funder  %}
     </div>
@@ -43,7 +47,11 @@
   <div class="control-group control-funding">
     <label class="control-label" for="field-oa_funding_program">{{ _("Funding program") }}</label>
     <div class="controls">
-      <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ data.get('oa_funding_program', [])[0] }}" data-select="{{ h.ckanext_ceon_oa_funding_programs()|join('|') }}" data-module="funding-fields"/>
+      {% set oa_funding_program = data.get('oa_funding_program', []) %}
+      {% if oa_funding_program is iterable and oa_funding_program is not string %}
+        {% set oa_funding_program = oa_funding_program[0] %}
+      {% endif %}
+      <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ oa_funding_program }}" data-select="{{ h.ckanext_ceon_oa_funding_programs()|join('|') }}" data-module="funding-fields"/>
     {% set funding = _("If the relevant funding program is not listed, please enter its name manually.") %}
       {% snippet 'snippets/tooltip.html', text=funding  %}
     </div>

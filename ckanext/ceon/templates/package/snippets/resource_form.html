@@ -106,7 +106,7 @@
     {% endblock %}
     {% if stage %}
       {% block previous_button %}
-        <button class="btn" name="save" value="go-dataset" type="submit">{{ _('Previous') }}</button>
+		<a class="btn" href="{% url_for controller='package', action='edit', id=pkg_name %}">{{ _('Previous') }}</a>
       {% endblock %}
       {% block draft_button %}
         <a class="btn btn-default" href="{{ h.url_for(controller='user', action='activity', id=c.userobj.name) }}" role="button">{{ _('Save as draft') }}</a>

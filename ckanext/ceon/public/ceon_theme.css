@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Myriad Pro";
+    src: url(MYRIADPRO-REGULAR.OTF);
+}
+
+body {
+	font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+}
+
 a, .editor .editor-info-block a {
 	color: #5a6fa3;
 }
@@ -12,6 +21,10 @@ a, .editor .editor-info-block a {
 
 .btn-group.open .btn-primary.dropdown-toggle {
   background-color: #546798;
+}
+
+.notifications > a > span {
+	padding: 4px 0px;
 }
 
 @media (max-width: 767px) {
@@ -301,7 +314,7 @@ body {
 	color: rgb(53, 70, 119);
     text-align: center;
     font-weight: bolder;
-    font-family: cursive;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
     padding-top: 4px;
     letter-spacing: 3px;
     margin: 0 0 5px 0;
@@ -331,13 +344,13 @@ body {
     color: #5a6fa3;;
     font-size: 22px;
     font-weight: bold;
-    font-family: serif;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
 }
 .stats .inner .stats-text .value {
 	text-align: center;
     display: block;
     font-weight: bold;
-    font-family: serif;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
     color: rgb(53, 70, 119);
     font-size: 30px;
     padding-top: 10px;

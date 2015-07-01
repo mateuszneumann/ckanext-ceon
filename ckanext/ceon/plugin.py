@@ -16,7 +16,7 @@ from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
-from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
@@ -184,7 +184,7 @@ def ceon_user_create(context, data_dict):
             if group.name == 'user_folder' and group.is_organization:
                 has_folder = True
         if not has_folder:
-            context = {'user': result['name']}
+            context = {'user': result['name'], 'ignore_auth': True}
             data = {'name': 'user_folder_' + result['name'],
                     'title': result['display_name'],
                     'users': [{'name': result['name']}]}
@@ -213,6 +213,14 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
+    plugins.implements(plugins.IFacets, inherit=True)
+    
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict.pop('organization', None)
+        facets_dict.update({'dataset_type': _('Type of resource'),
+                            'vocab_sci_disciplines': _('Area of study')})
+        return facets_dict
+        
     
     def get_auth_functions(self):
         functions = {'package_delete': ceon_package_delete_function}
@@ -234,6 +242,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   ])),
                   controller='ckanext.ceon.controllers:CitationController',
                   action='export_citation')
+        m.connect('terms',
+                  '/terms',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='terms')
+        m.connect('legal',
+                  '/legal',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='legal')
+        m.connect('contact',
+                  '/contact',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='contact')
         return m
     
     # IActions
@@ -485,3 +505,9 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 publish_resource_doi(pkg_dict, res_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return res_dict
+    
+    def before_index(self, pkg_dict):
+        if pkg_dict['license_id'] == PKG_LICENSE_ID:
+            license_ids = get_resources_licenses(_model.Session, pkg_dict)
+            pkg_dict['license_id'] = license_ids
+        return pkg_dict

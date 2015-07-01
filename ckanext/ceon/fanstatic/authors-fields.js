@@ -20,7 +20,8 @@ this.ckan.module('authors-fields', function (jQuery, _) {
       if (!jQuery('html').hasClass('ie7')) {
         jQuery.proxyAll(this, /_on/);
 
-        var delegated = this.options.fieldSelector + ':last input:first';
+        // delegated - lastname input field
+        var delegated = this.options.fieldSelector + ':last input:eq(1)';
         this.el.on('change', delegated, this._onChange);
         this.el.on('change', ':checkbox', this._onRemove);
 
@@ -81,7 +82,15 @@ this.ckan.module('authors-fields', function (jQuery, _) {
       input.val('').attr('id', increment).attr('name', increment);
 
       var label = field.find('label');
-      label.text(increment).attr('for', increment);
+      if (label.has('span.control-required')) {
+        var span = field.find('span.control-required');
+        span.attr('id', increment);
+        label.attr('for', increment);
+      }
+      else
+      {
+        label.text(increment).attr('for', increment);
+      }
 
       input_position.val(1 + position);
 

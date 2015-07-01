@@ -1,0 +1,13 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Legal guide') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('Legal guide'), controller='ckanext.ceon.controllers:CeonController', action='legal' %}</li>
+{% endblock %}
+
+{% block primary %}
+<pre>TODO</pre>
+{% endblock %}
+
+{% block secondary %}{% endblock %}

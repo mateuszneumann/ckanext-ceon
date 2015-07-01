@@ -61,10 +61,14 @@ def create_res_types():
     except toolkit.ObjectNotFound:
         data = {'name': 'res_types'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Dataset', u'Image', u'Audiovisual', u'Sound',
-                u'Software', u'Model', u'Service', u'Interactive resource',
-                u'Workflow', u'Collection', u'Event', u'Physical object',
-                u'Text', u'Other',):
+        for tag in (u'Collection - Zestawienie', u'Dataset - Zbiór danych',
+                u'Image - Obraz', u'Audiovisual - Audiowizualne',
+                u'Sound - Dźwięk', u'Text - Tekst',
+                u'Software - Oprogramowanie', u'Model - Model',
+                u'Service - Serwis',
+                u'Interactive resource - Zasób interaktywny',
+                u'Workflow - Przepływ pracy', u'Event - Wydarzenie',
+                u'Physical object - Obiekt fizyczny', u'Other - Inne',):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -97,7 +101,10 @@ def create_oa_funders():
     except toolkit.ObjectNotFound:
         data = {'name': 'oa_funders'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Funder 1', u'Funder 2'):
+        for tag in (u'National Science Centre Poland - Narodowe Centrum Nauki',
+                u'National Centre for Research and Development Poland - Narodowe Centrum Badań i Rozwoju',
+                u'Foundation for Polish Science - Fundacja na rzecz Nauki Polskiej',
+                u'European Commission - Komisja Europejska'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -110,7 +117,7 @@ def create_oa_funding_programs():
     except toolkit.ObjectNotFound:
         data = {'name': 'oa_funding_programs'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Funding Program 1', u'Funding Program 2', u'Funding Program 3'):
+        for tag in (u'EC-FP7', u'EC-H2020', u'EC-ERC'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -421,8 +428,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
         create_moderation_status(context['session'], 
                                  pkg_dict['id'], 
-                                 pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
-                                 pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
+                                 'waitingForApproval', 
+                                 '')
         create_package_doi(pkg_dict)
     
     def _package_after_show(self, context, pkg_dict):
@@ -443,7 +450,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             update_oa_tag(context, pkg_dict, 'oa_funding_programs', pkg_dict['oa_funding_program'])
         update_ancestral_license(context, pkg_dict, 
                 pkg_dict['ancestral_license'] if 'ancestral_license' in pkg_dict else None)
-        update_moderation_status(context['session'], 
+        if not pkg_dict.get('state', 'active') == 'draft':
+            update_moderation_status(context['session'], 
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')

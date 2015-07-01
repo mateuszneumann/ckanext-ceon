@@ -72,8 +72,11 @@
   </div>
 
   {% import "macros/form.html" as form %}
+  {#
   {% set publisher_info = _("Please enter the name of the institution or organization that holds, archives, publishes, prints, distributes, releases, issues, or produces the data you are depositing. For research data this will typically be the scientific unit where the main author of the dataset is affiliated, e.g. University of Something or Institute for Some Kind of Research. When deciding upon the publisher you should consider that this name will be used for citation of your dataset.") %}
   {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Publisher'), value=data.publisher, error=errors.publisher, classes=['control-medium'], is_required=true, attrs={"title":publisher_info, "class":"tooltip-info"}) }}
+  #}
+  <input type="hidden" id="field-publisher" name="publisher" value="RepOD" />
 
   {% set year_info = _("Year when the data was made or is being made publicly available. For research data this may also be the year when the data was first made available to the research community. If the data underwent an embargo period (time between the creation of the dataset and making it publicly available), please provide the end date of the embargo. In complicated cases, when you are not sure which date should be given, please consider which date makes most sense for citation purposes.") %}
   {{ form.input('publication_year', label=_('Publication Year'), id='field-publication_year', placeholder=_('2012'), value=data.publication_year, error=errors.publication_year, classes=['control-medium'], is_required=true, attrs={"title":year_info, "class":"tooltip-info"}) }}

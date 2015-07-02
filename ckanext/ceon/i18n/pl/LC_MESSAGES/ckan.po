@@ -1355,9 +1355,3 @@ msgstr "Stare hasło"
 #~ msgid " Legal notice</a> "
 #~ msgstr " Poradnik prawny RepOD</a> "
 
-#~ msgid "Settings"
-#~ msgstr "Ustawienia"
-
-#~ msgid "Old Password"
-#~ msgstr "Stare hasło"
-

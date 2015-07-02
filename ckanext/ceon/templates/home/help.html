@@ -3,12 +3,17 @@
 {% block subtitle %}{{ _('Help') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{% link_for _('Help'), controller='home', action='help' %}</li>
+  <li class="active">{% link_for _('Help'), controller='ckanext.ceon.controllers:CeonController', action='help' %}</li>
 {% endblock %}
 
 {% block primary %}
+<article class="module">
+    <div class="module-content">
+          <h1 class="page-heading">{{ _('Help') }}</h1>
+          {% snippet 'home/snippets/help_text.html' %}
+    </div>
+  </article>
 
-{% snippet 'home/snippets/help_text.html' %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}

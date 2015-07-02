@@ -1,0 +1,18 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Contact us') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('Contact us'), controller='ckanext.ceon.controllers:CeonController', action='contact' %}</li>
+{% endblock %}
+
+{% block primary %}
+  <article class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{{ _('Contact us') }}</h1>
+      {% snippet 'home/snippets/contact_text.html' %}
+    </div>
+  </article>
+{% endblock %}
+
+{% block secondary %}{% endblock %}

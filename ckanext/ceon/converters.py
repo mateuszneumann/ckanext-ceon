@@ -3,17 +3,18 @@
 
 from logging import getLogger
 
+from ckan.common import _
 import ckan.model as model
 import ckan.lib.navl.dictization_functions as df
 import ckan.logic.validators as validators
 import ckan.plugins.toolkit as toolkit
 
-from ckan.common import _
-
-from lib.metadata import tag_in_vocabulary
-
+from ckanext.ceon.lib.metadata import tag_in_vocabulary
 
 log = getLogger(__name__)
+
+missing = df.missing
+StopOnError = df.StopOnError
 
 
 def convert_to_oa_tags(vocab):
@@ -63,4 +64,26 @@ def convert_to_oa_tags(vocab):
 #                    tags.append(name)
 #        data[key] = tags
 #    return callable
+
+
+def validate_lastname():
+    def callable(key, data, errors, context):
+        deleted_key = tuple(list(key[:-1]) + ['deleted'])
+        deleted_value = data.get(deleted_key)
+        if deleted_value and deleted_value is not missing:
+            return
+        value = data.get(key)
+        all_fields_missing = True
+        if not value or value is missing:
+            for field in ('firstname', 'email', 'affiliation'):
+                check_key = tuple(list(key[:-1]) + [field])
+                check_value = data.get(check_key)
+                if check_value and not check_value is missing:
+                    log.debug(u'key "{}" IS PRESENT IN DATA'.format(check_key))
+                    all_fields_missing = False
+            if not all_fields_missing:
+                errors[key].append(_('Missing value'))
+                log.debug(u'errors are "{}"'.format(errors))
+                raise StopOnError
+    return callable
 

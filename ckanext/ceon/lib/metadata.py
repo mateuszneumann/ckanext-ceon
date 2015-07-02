@@ -3,6 +3,7 @@
 
 from logging import getLogger
 
+from ckan.common import _
 from ckan.model import Package, Resource, Session, Tag, Vocabulary
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
 
@@ -160,18 +161,22 @@ def _author_in_authors(session, package_id, author):
     return False
 
 def _author_create(session, package_id, author):
-    if 'firstname' in author or 'lastname' in author or 'email' in author or 'affiliation' in author: 
-        firstname = author['firstname'] if ('firstname' in author) else None
-        lastname = author['lastname'] if ('lastname' in author) else None
-        email = author['email'] if ('email' in author) else None
-        affiliation = author['affiliation'] if ('affiliation' in author) else None
-        position = author['position'] if ('position' in author) else None
-        ceon_author = CeonPackageAuthor(package_id=package_id,
-                firstname=firstname, lastname=lastname, email=email,
-                affiliation=affiliation, position=position)
-        session.add(ceon_author)
-        return ceon_author
-    return None
+    if 'lastname' not in author or not author['lastname']:
+        #raise logic.ValidationError(
+        #        {'authors': [_('Lastname not set for one of the authors')]})
+        # do not create author unless it has lastname defined
+        log.debug(u'Empty lastname for author {}.  Not creating.'.format(author))
+        return None
+    firstname = author['firstname'] if ('firstname' in author) else None
+    lastname = author['lastname'] if ('lastname' in author) else None
+    email = author['email'] if ('email' in author) else None
+    affiliation = author['affiliation'] if ('affiliation' in author) else None
+    position = author['position'] if ('position' in author) else None
+    ceon_author = CeonPackageAuthor(package_id=package_id,
+            firstname=firstname, lastname=lastname, email=email,
+            affiliation=affiliation, position=position)
+    session.add(ceon_author)
+    return ceon_author
 
 def _author_delete(session, package_id, author):
     orig_author = _author_find(session, author['id'])
@@ -179,7 +184,13 @@ def _author_delete(session, package_id, author):
         session.delete(orig_author)
 
 def _author_update(session, package_id, author):
-    log.debug(u'Updating author {} in package {}'.format(author, package_id))
+    if 'lastname' not in author or not author['lastname']:
+        #raise logic.ValidationError(
+        #        {'authors': [_('Lastname not set for one of the authors')]})
+        # do not update author unless it has lastname defined
+        log.debug(u'Empty lastname for author {}.  Not updating.'.format(author))
+        return None
+    #log.debug(u'Updating author {} in package {}'.format(author, package_id))
     orig_author = _author_find(session, author['id'])
     orig_author.firstname = author['firstname'] if ('firstname' in author) else None
     orig_author.lastname = author['lastname'] if ('lastname' in author) else None

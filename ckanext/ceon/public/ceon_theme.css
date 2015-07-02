@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Myriad Pro";
+    src: url(MYRIADPRO-REGULAR.OTF);
+}
+
+body {
+	font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+}
+
 a, .editor .editor-info-block a {
 	color: #5a6fa3;
 }
@@ -12,6 +21,10 @@ a, .editor .editor-info-block a {
 
 .btn-group.open .btn-primary.dropdown-toggle {
   background-color: #546798;
+}
+
+.notifications > a > span {
+	padding: 4px 0px;
 }
 
 @media (max-width: 767px) {
@@ -91,7 +104,7 @@ a, .editor .editor-info-block a {
 
 .masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
 	color: white;
-	padding: 6px 15px 10px
+	padding: 6px 9px 10px
 }
 
 .masthead .nav > li > a > img {
@@ -99,7 +112,13 @@ a, .editor .editor-info-block a {
   	padding-right: 5px;
 }
 
+.navbar .nav {
+	margin: 0;
+ }
 
+.masthead .navigation {
+  	margin-right: 0px;
+}
 
 .masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
 	background-color: transparent;
@@ -152,6 +171,13 @@ body {
   left: 0;
 }
 
+#ceon-link {
+  position: absolute;
+  width: 140px;
+  bottom: 100px;
+  left: 20px;
+}
+
 .toolbar {
 	padding: 0;
 }
@@ -165,7 +191,7 @@ body {
 
 .masthead .section.navigation {
 	float: right;
-	width: 53%;
+	width: 57%;
 }
 .masthead .site-search {
 	float: left;
@@ -197,7 +223,9 @@ body {
 }
 
 .round-item, .round-item img {
-	border-radius: 55px;
+	-moz-border-radius: 55px;
+ 	-webkit-border-radius: 55px;
+ 	border-radius: 55px;
   	height: 90px;
   	width: 90px;
 }
@@ -241,7 +269,7 @@ body {
 }
 
 .sheet {
-	padding-right: 20px;
+	padding: 0px 20px;
 }
 
 .sheet li {
@@ -286,7 +314,7 @@ body {
 	color: rgb(53, 70, 119);
     text-align: center;
     font-weight: bolder;
-    font-family: cursive;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
     padding-top: 4px;
     letter-spacing: 3px;
     margin: 0 0 5px 0;
@@ -316,13 +344,13 @@ body {
     color: #5a6fa3;;
     font-size: 22px;
     font-weight: bold;
-    font-family: serif;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
 }
 .stats .inner .stats-text .value {
 	text-align: center;
     display: block;
     font-weight: bold;
-    font-family: serif;
+    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
     color: rgb(53, 70, 119);
     font-size: 30px;
     padding-top: 10px;
@@ -354,6 +382,10 @@ body {
 	margin-right: 0px;
 }
 
+.form-horizontal .info-block {
+  padding: 0px;
+}
+
 .js-collapse, .paragraph {display:none;}
 @media (max-width: 979px)
 .sheet {
@@ -371,5 +403,39 @@ a:hover, a:focus {
   color: #354677;
   text-decoration: underline;
   cursor: pointer;
+}
+
+input[type=radio] {
+  top: 0px;
+}
+
+input[type=checkbox] {
+  top: 4px;
+}
+
+.info-link, .info-link:hover {
+	  color: #aaaaaa;
+	  font-size: 11px;
+	  line-height: 1.3;
+	  text-decoration: underline;
+}
+
+.homepage .alert {
+	margin-bottom: 0px;
+	margin-top: 20px;
+}
+
+.form-horizontal .info-block a.tooltip-info, a.tooltip-info {
+	text-decoration: none;
+}
+
+.stages li.active:after {
+  border-color: rgba(140, 198, 138, 0);
+  border-top-color: #6F8CC8;
+  border-bottom-color: #6F8CC8;
+}
+
+.ie-info-message {
+	display: none;
 }
 

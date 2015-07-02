@@ -14,7 +14,7 @@ from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.logic.action.get import package_show as ckan_package_show
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
-from ckanext.ceon.converters import convert_to_oa_tags
+from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses
 from ckanext.ceon.model import create_tables
@@ -61,10 +61,14 @@ def create_res_types():
     except toolkit.ObjectNotFound:
         data = {'name': 'res_types'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Dataset', u'Image', u'Audiovisual', u'Sound',
-                u'Software', u'Model', u'Service', u'Interactive resource',
-                u'Workflow', u'Collection', u'Event', u'Physical object',
-                u'Text', u'Other',):
+        for tag in (u'Collection - Zestawienie', u'Dataset - Zbiór danych',
+                u'Image - Obraz', u'Audiovisual - Audiowizualne',
+                u'Sound - Dźwięk', u'Text - Tekst',
+                u'Software - Oprogramowanie', u'Model - Model',
+                u'Service - Serwis',
+                u'Interactive resource - Zasób interaktywny',
+                u'Workflow - Przepływ pracy', u'Event - Wydarzenie',
+                u'Physical object - Obiekt fizyczny', u'Other - Inne',):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -97,7 +101,10 @@ def create_oa_funders():
     except toolkit.ObjectNotFound:
         data = {'name': 'oa_funders'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Funder 1', u'Funder 2'):
+        for tag in (u'National Science Centre Poland - Narodowe Centrum Nauki',
+                u'National Centre for Research and Development Poland - Narodowe Centrum Badań i Rozwoju',
+                u'Foundation for Polish Science - Fundacja na rzecz Nauki Polskiej',
+                u'European Commission - Komisja Europejska'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -110,7 +117,7 @@ def create_oa_funding_programs():
     except toolkit.ObjectNotFound:
         data = {'name': 'oa_funding_programs'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Funding Program 1', u'Funding Program 2', u'Funding Program 3'):
+        for tag in (u'EC-FP7', u'EC-H2020', u'EC-ERC'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -217,7 +224,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     
     def dataset_facets(self, facets_dict, package_type):
         facets_dict.pop('organization', None)
-        facets_dict.update({'dataset_type': _('Type of resources'),
+        facets_dict.update({'dataset_type': _('Type of resource'),
                             'vocab_sci_disciplines': _('Area of study')})
         return facets_dict
         
@@ -242,6 +249,18 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   ])),
                   controller='ckanext.ceon.controllers:CitationController',
                   action='export_citation')
+        m.connect('terms',
+                  '/terms',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='terms')
+        m.connect('legal',
+                  '/legal',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='legal')
+        m.connect('contact',
+                  '/contact',
+                    controller='ckanext.ceon.controllers:CeonController',
+                    action='contact')
         return m
     
     # IActions
@@ -334,8 +353,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'authors': self._authors_schema(),
             'publisher': [toolkit.get_validator('not_empty'),
                 toolkit.get_converter('convert_to_extras')],
-            'publication_year':
-            [toolkit.get_validator('natural_number_validator'),
+            'publication_year': [toolkit.get_validator('natural_number_validator'),
                 toolkit.get_converter('convert_to_extras')],
             'rel_citation': [toolkit.get_validator('ignore_empty'),
                 toolkit.get_converter('convert_to_extras')],
@@ -363,7 +381,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'id': [toolkit.get_validator('ignore_empty')],
                 'position': [toolkit.get_validator('not_empty')],
                 'firstname': [toolkit.get_validator('ignore_empty')],
-                'lastname': [toolkit.get_validator('ignore_empty')],
+                'lastname': [validate_lastname()],
                 'email': [toolkit.get_validator('ignore_empty')],
                 'affiliation': [toolkit.get_validator('ignore_empty')],
                 'state': [toolkit.get_validator('ignore')],

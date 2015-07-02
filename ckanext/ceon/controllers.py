@@ -53,6 +53,15 @@ class CeonController(base.BaseController):
             h.flash_error(e.error_summary)
         return self._render_template('group/member_new.html')
 
+    def terms(self):
+        return base.render('home/terms.html')
+
+    def legal(self):
+        return base.render('home/legal.html')
+
+    def contact(self):
+        return base.render('home/contact.html')
+
 
 class CitationController(base.BaseController):
     def export_citation(self, package_name, citation_format):

@@ -7,22 +7,43 @@
   {%- set extra_html = caller() if caller -%}
   {%- do classes.append('control-custom') -%}
 
+  {#
   {% call form.input_block(label_id, label or name, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
-    <div class="input-prepend" {{ form.attributes(attrs) }}>
-      <label for="{{ id }}-firstname" class="add-on">{{ _('Firstname') }}</label><input id="{{ id }}-firstname" type="text" name="{{ names[0] }}" value="{{ values[0] | empty_and_escape }}" placeholder="{{ placeholders[0] }}" />
-      <label for="{{ id }}-lastname" class="add-on">{{ _('Lastname') }}</label><input id="{{ id }}-lastname" type="text" name="{{ names[1] }}" value="{{ values[1] | empty_and_escape }}" placeholder="{{ placeholders[1] }}" />
-      <br/>
-      <label for="{{ id }}-email" class="add-on">{{ _('Email') }}</label><input id="{{ id }}-email" type="text" name="{{ names[2] }}" value="{{ values[2] | empty_and_escape }}" placeholder="{{ placeholders[2] }}" />
-      <label for="{{ id }}-affiliation" class="add-on">{{ _('Affiliation') }}</label><input id="{{ id }}-affiliation" type="text" name="{{ names[3] }}" value="{{ values[3] | empty_and_escape }}" placeholder="{{ placeholders[3] }}" />
-      {% if values[0] or values[1] or values[2] or values[3] or error %}
-        <label class="checkbox" for="{{ id }}-remove">
-          <input type="checkbox" id="{{ id }}-remove" name="{{ names[6] }}"{% if values[6] %} checked{% endif %} /> <span>{{ _('Remove') }}</span>
-        </label>
-      {% endif %}
-      <input id="{{ id }}-id" type="hidden" name="{{ names[5] }}" value="{{ values[5] }}" />
-      <input id="{{ id }}-position" type="hidden" name="{{ names[4] }}" value="{{ values[4] }}" />
+  #}
+  {% if 'lastname' in error %}
+    {% set lastname_error = error['lastname'] %}
+  {% else %}
+    {% set lastname_error = None %}
+  {% endif %}
+  <div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
+    <label class="control-label" for="{{ for }}">{{ label or _('Author') }}</label>
+    <div class="controls{{ " " ~ control_classes | join(' ') }}">
+      <div class="input-prepend" {{ form.attributes(attrs) }}>
+        <label for="{{ id }}-firstname" class="add-on">{{ _('Firstname') }}</label><input id="{{ id }}-firstname" type="text" name="{{ names[0] }}" value="{{ values[0] | empty_and_escape }}" placeholder="{{ placeholders[0] }}" />
+        <br/>
+        <label for="{{ id }}-lastname" class="add-on">
+          <span id="{{ id  }}-lastname-req" title="{{ _("This field is required") }}" class="control-required">*</span>
+          {{ _('Lastname') }}</label>
+        <input id="{{ id }}-lastname" type="text" name="{{ names[1] }}" value="{{ values[1] | empty_and_escape }}" placeholder="{{ placeholders[1] }}" />
+        {% if lastname_error and lastname_error is iterable %}<span class="error-block">{{ lastname_error|join(', ') }}</span>{% endif %}
+        <br/>
+        <label for="{{ id }}-email" class="add-on">{{ _('Email') }}</label><input id="{{ id }}-email" type="text" name="{{ names[2] }}" value="{{ values[2] | empty_and_escape }}" placeholder="{{ placeholders[2] }}" />
+        <br/>
+        <label for="{{ id }}-affiliation" class="add-on">{{ _('Affiliation') }}</label><input id="{{ id }}-affiliation" type="text" name="{{ names[3] }}" value="{{ values[3] | empty_and_escape }}" placeholder="{{ placeholders[3] }}" />
+        {% if values[0] or values[1] or values[2] or values[3] or error %}
+          <label class="checkbox" for="{{ id }}-remove">
+            <input type="checkbox" id="{{ id }}-remove" name="{{ names[6] }}"{% if values[6] %} checked{% endif %} /> <span>{{ _('Remove') }}</span>
+          </label>
+        {% endif %}
+        <input id="{{ id }}-id" type="hidden" name="{{ names[5] }}" value="{{ values[5] }}" />
+        <input id="{{ id }}-position" type="hidden" name="{{ names[4] }}" value="{{ values[4] }}" />
+      </div>
+      {{ extra_html }}
     </div>
+  </div>
+  {#
   {% endcall %}
+  #}
 {% endmacro %}
 
 {#

@@ -264,7 +264,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:7
 msgid "Who and how can share data?"
-msgstr ""
+msgstr "How to share research data?"
 
 #: ckanext/ceon/templates/home/layout1.html:8
 #: ckanext/ceon/templates/home/layout1.html:100
@@ -314,7 +314,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:33
 msgid "Who and how can share data in the Repository for Open Data?"
-msgstr ""
+msgstr "How to share data in the Repository for Open Data?"
 
 #: ckanext/ceon/templates/home/layout1.html:35
 msgid "Who can deposit data in RepOD?"
@@ -558,6 +558,23 @@ msgid ""
 "Research. <a "
 "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a></p>"
 msgstr ""
+"<p>Using our services <strong>does not require registration</strong>. Any"
+" interested party can view, download and use the shared files. Any "
+"restrictions in using the data result only from the legal status of the "
+"files: the open licence granted by the depositer or the provisions of "
+"fair use (<a href=\"{legal_url}\">RepOD Legal Guide</a>).</p> <p>Please "
+"note that <strong>regardless</strong> of the legal status of the data, "
+"<strong>good scientific practice</strong> requires that you state the "
+"name of the author(s) and the source whenever you use the data – even if "
+"it is shared under a CC0 licence. The only exception to this rule is when"
+" such attribution is technically impossible (e.g. automatic data mining)."
+" If you use the data in your own publication, you should <strong>formally"
+" cite</strong> both the <strong>dataset</strong> available from the "
+"repository and the related <strong>scientific publication</strong>, if it"
+" exists.</p> <p>Here is an example of a proper citation format for a "
+"dataset downloaded from RepOD:</p> <p>Kowalska, A., Wiśniewska, B. (2015) "
+"Results of measurements from 2002-2004. RepOD. <a "
+"href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a></p>"
 
 #: ckanext/ceon/templates/home/terms.html:3
 #: ckanext/ceon/templates/home/terms.html:6
@@ -620,27 +637,27 @@ msgstr ""
 #: ckanext/ceon/templates/home/snippets/stats.html:10
 #, fuzzy
 msgid "dataset"
-msgstr "Browse datasets"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
 #, fuzzy
 msgid "datasets"
-msgstr "Browse datasets"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
 #, fuzzy
 msgid "group"
-msgstr "Browse groups"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
 #, fuzzy
 msgid "groups"
-msgstr "Browse groups"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 #, fuzzy
 msgid "related item"
-msgstr "Create dataset"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 msgid "related items"
@@ -648,11 +665,11 @@ msgstr ""
 
 #: ckanext/ceon/templates/macros/ceonform.html:12
 msgid "Firstname"
-msgstr ""
+msgstr "First name"
 
 #: ckanext/ceon/templates/macros/ceonform.html:13
 msgid "Lastname"
-msgstr ""
+msgstr "Last name"
 
 #: ckanext/ceon/templates/macros/ceonform.html:15
 msgid "Email"
@@ -788,7 +805,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:8
 msgid "eg. A descriptive title"
-msgstr ""
+msgstr "A descriptive title for the dataset"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:25
 msgid ""
@@ -824,7 +841,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:79
 msgid "2012"
-msgstr ""
+msgstr "2015"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:81
 msgid ""
@@ -861,7 +878,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
 msgid "eg. Some useful notes about moderation"
-msgstr ""
+msgstr "Some useful notes about moderation"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:124
 msgid "State"
@@ -883,7 +900,11 @@ msgid ""
 " “Collection (Zestawienie)”. A more detailed description of all resource "
 "types can be found on pages 26-27 of the DataCite Metadata Schema for the"
 " Publication and Citation of Research Data (Version 3.1)."
-msgstr ""
+msgstr "For structured data, for example in tabular form, please choose “Dataset "
+"- Zbiór danych”. For datasets containing files of different types, choose"
+" “Collection - Zestawienie”. A more detailed description of all resource "
+"types can be found on pages 26-27 of the DataCite Metadata Schema for the"
+" Publication and Citation of Research Data (Version 3.1)."
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:29
 msgid ""
@@ -901,11 +922,12 @@ msgstr ""
 msgid ""
 "If the relevant funding program is not listed, please enter its name "
 "manually."
-msgstr ""
+msgstr "If the relevant funding program is not listed, you may enter the name "
+"manually."
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:59
 msgid "Hereby I grant this license for all resources "
-msgstr "Hereby I grant the following license for all files in this dataset:"
+msgstr "I grant the following license for all files in this dataset:"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:71
 msgid ""
@@ -919,7 +941,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:75
 msgid " Legal notice "
-msgstr ""
+msgstr " RepOD Legal guide "
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:83
 msgid "I will grant different licenses for different resources "
@@ -939,7 +961,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:33
 msgid "eg. January 2011 Gold Prices"
-msgstr "eg. Results of interesting measurements"
+msgstr "Results of some kind of measurements"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:37
 msgid "Description"
@@ -965,7 +987,7 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:71
 msgid " Legal notice</a> "
-msgstr ""
+msgstr " RepOD Legal guide</a> "
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:88
 msgid "Last Modified"

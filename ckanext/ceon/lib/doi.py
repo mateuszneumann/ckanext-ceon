@@ -155,9 +155,10 @@ class MetadataDataCiteAPI(DataCiteAPI):
         if oa_funder:
             e_contributors = etree.SubElement(metadata, 'contributors')
             if oa_funding_program and oa_grant_number:
-                project_info = 'info:eu-repo/grantAgreement/{0}/{1}/{2}///'
-                project_info = project_info.format(oa_funder,
-                        oa_funding_program, oa_grant_number)
+                oa_funding_id = oa_funding_program.replace('-', '/')
+                project_info = 'info:eu-repo/grantAgreement/{0}/{1}///'
+                project_info = project_info.format(oa_funding_id,
+                        oa_grant_number)
                 e_contributor = etree.Element('contributor',
                         contributorType='Funder')
                 etree.SubElement(e_contributor,

@@ -502,15 +502,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             res_dict['created'] = orig_res_dict['created']
             res_dict['last_modified'] = orig_res_dict['last_modified']
-            resource_doi = get_resource_doi(res_dict['id'])
-            if not resource_doi:
-                resource_doi = create_resource_doi(pkg_dict, res_dict)
-            if resource_doi.published:
-                update_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI metadata updated'))
-            else:
-                publish_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI has been created'))
+            if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+                resource_doi = get_resource_doi(res_dict['id'])
+                if not resource_doi:
+                    resource_doi = create_resource_doi(pkg_dict, res_dict)
+                if resource_doi.published:
+                    update_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI metadata updated'))
+                else:
+                    publish_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI has been created'))
         return res_dict
     
     def before_index(self, pkg_dict):

@@ -394,7 +394,7 @@ def create_package_doi(pkg_dict):
     package_doi = CeonPackageDOI(package_id=pkg_dict['id'], identifier=identifier)
     Session.add(package_doi)
     Session.commit()
-    log.debug(u"Created DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Created DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
     return package_doi
 
 def create_resource_doi(pkg_dict, res_dict):
@@ -413,7 +413,7 @@ def create_resource_doi(pkg_dict, res_dict):
     resource_doi = CeonResourceDOI(resource_id=resource_id, identifier=identifier)
     Session.add(resource_doi)
     Session.commit()
-    log.debug(u"Created DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Created DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
     return resource_doi
 
 def update_package_doi(pkg_dict):
@@ -423,7 +423,7 @@ def update_package_doi(pkg_dict):
         package_doi = create_package_doi(pkg_dict)
     metadata = MetadataDataCiteAPI()
     metadata.upsert(package_doi.identifier, pkg_dict)
-    log.debug(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def update_resource_doi(pkg_dict, res_dict):
     _validate_package(pkg_dict)
@@ -433,9 +433,10 @@ def update_resource_doi(pkg_dict, res_dict):
         resource_doi = create_resource_doi(pkg_dict, res_dict)
     metadata = MetadataDataCiteAPI()
     metadata.upsert(resource_doi.identifier, pkg_dict, res_dict)
-    log.debug(u"Updated DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Updated DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
 def publish_package_doi(pkg_dict):
+    log.debug(u"Publishing DOI for package {}".format(pkg_dict['id']))
     _validate_package(pkg_dict)
     package_doi = CeonPackageDOI.get(pkg_dict['id'])
     metadata = MetadataDataCiteAPI()
@@ -449,9 +450,10 @@ def publish_package_doi(pkg_dict):
         query = query.filter_by(package_id=pkg_dict['id'], identifier=package_doi.identifier)
         num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def publish_resource_doi(pkg_dict, res_dict):
+    log.debug(u"Publishing DOI for resource {} in package {}".format(res_dict['id'], pkg_dict['id']))
     _validate_package(pkg_dict)
     _validate_resource(res_dict)
     resource_doi = CeonResourceDOI.get(res_dict['id'])
@@ -467,7 +469,7 @@ def publish_resource_doi(pkg_dict, res_dict):
         query = query.filter_by(resource_id=res_dict['id'], identifier=resource_doi.identifier)
         num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
 
 # "Private" functions

@@ -1274,3 +1274,11 @@ msgstr "Ten zbiór danych jest zgodny z Definicją Otwartości (Open Definition)
 msgid "Keywords"
 msgstr "Słowa kluczowe"
 
+#: ckan/templates/header.html:37
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: ckan/templates/user/edit_user_form.html:27
+msgid "Old Password"
+msgstr "Stare hasło"
+

@@ -429,7 +429,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  'waitingForApproval', 
                                  '')
-        #create_package_doi(pkg_dict)   # FIXME
+        create_package_doi(pkg_dict)
     
     def _package_after_show(self, context, pkg_dict):
         # Load the DOI ready to display
@@ -466,10 +466,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             # almost every change in metadata is crucial, so let's skip that
             # check for a while.
             if package_doi.published:
-                #update_package_doi(pkg_dict)   # FIXME
+                update_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
-                #publish_package_doi(pkg_dict)  # TODO
+                publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 

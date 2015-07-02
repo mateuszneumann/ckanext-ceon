@@ -98,12 +98,15 @@ class MetadataDataCiteAPI(DataCiteAPI):
         subject.sort()
         description = pkg_dict.get('notes', '').encode('unicode-escape')
         oa_funder = _get_first_elem(pkg_dict, 'oa_funder')
-        oa_funder = oa_funder[0:oa_funder.find('-')].strip()
+        if oa_funder:
+            oa_funder = oa_funder[0:oa_funder.find('-')].strip()
         oa_funding_program = _get_first_elem(pkg_dict, 'oa_funding_program')
         res_type = _get_first_elem(pkg_dict, 'res_type')
-        res_type = res_type[0:res_type.find('-')].strip()
+        if res_type:
+            res_type = res_type[0:res_type.find('-')].strip()
         sci_discipline = _get_first_elem(pkg_dict, 'sci_discipline')
-        sci_discipline = sci_discipline[0:sci_discipline.find('-')].strip()
+        if sci_discipline:
+            sci_discipline = sci_discipline[0:sci_discipline.find('-')].strip()
         oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
         rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
         version = None

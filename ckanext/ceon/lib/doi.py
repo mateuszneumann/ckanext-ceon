@@ -48,7 +48,7 @@ class DataCiteAPI(object):
             method = 'get'
         # Add authorisation to request
         kwargs['auth'] = (account_name, account_password)
-        log.info("Calling %s:%s - %s", endpoint, method, kwargs)
+        log.info("Calling %s:%s", endpoint, method)
 
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)

@@ -115,9 +115,12 @@ def update_ancestral_license(context, pkg_dict, license_id):
     for resource in package.resources:
         res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
         if res_license:
-            session.delete(res_license)
-        new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
-        session.add(new_res_license)
+            #session.delete(res_license)
+            res_license.license_id = license_id
+            session.merge(res_license)
+        else:
+            new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
+            session.add(new_res_license)
 
 def update_res_license(context, res_dict, license_id):
     session = context['session']

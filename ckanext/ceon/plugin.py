@@ -410,8 +410,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
-        #elif 'package_id' in data:
-        #    self._resource_update(context, data)
+#        elif 'package_id' in data:
+#            self._resource_update(context, data)
 
     def before_update(self, context, current, resource):
         self._resource_update(context, resource)
@@ -454,7 +454,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
-        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+        if context.get('defer_commit', False) or (not context.get('allow_state_change', False) and not context.get('allow_partial_update', False)):
+            # that is not a real update
+            return pkg_dict
+        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False) and pkg_dict.get('moderationStatus', 'private') == 'public':
             orig_pkg_dict = toolkit.get_action('package_show')(context,
                     {'id': pkg_dict['id']})
             pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
@@ -469,6 +472,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 update_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
+                for res_dict in orig_pkg_dict.get('resources', []):
+                    publish_resource_doi(pkg_dict, res_dict)
                 publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
@@ -496,10 +501,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if not res_dict.get('clear_upload', ''):
             pkg_dict = toolkit.get_action('package_show')(context,
                 {'id': res_dict['package_id']})
-            log.debug(u'PKG_DICT: {}'.format(pkg_dict))
             orig_res_dict = toolkit.get_action('resource_show')(context,
                     {'id': res_dict['id']})
-            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             res_dict['created'] = orig_res_dict['created']
             res_dict['last_modified'] = orig_res_dict['last_modified']
             if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):

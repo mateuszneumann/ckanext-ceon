@@ -230,7 +230,9 @@ def ceon_user_folders(user_id):
 
 @logic.auth_allow_anonymous_access
 def ceon_package_show(context, data_dict):
-    context['ignore_auth'] = True
+    pkg = _model.Package.get(data_dict['id'])
+    if pkg and pkg.state == 'deleted':
+        context['ignore_auth'] = True
     result = ckan_package_show(context, data_dict)
     return result
 

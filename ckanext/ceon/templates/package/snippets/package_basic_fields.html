@@ -99,7 +99,7 @@
       {% if data.owner_org %}
       <input type="hidden" name="owner_org" value="{{ data.owner_org }}" />
       {% else %}
-        {% set organizations_available = h.organizations_available('create_dataset') %}
+        {% set organizations_available = h.ckanext_ceon_user_folders(c.userobj.id) %}
 
         <input type="hidden" name="owner_org" value="{{ organizations_available[0].id }}" />
       {% endif %}

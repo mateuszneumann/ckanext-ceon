@@ -198,6 +198,36 @@ def ceon_user_create(context, data_dict):
             toolkit.get_action('organization_create')(context, data)
     return result
 
+def ceon_user_folders(user_id):
+
+    roles = ['admin', 'editor']
+
+    if not user_id:
+        return []
+
+    q = _model.Session.query(_model.Member) \
+        .filter(_model.Member.table_name == 'user') \
+        .filter(_model.Member.capacity.in_(roles)) \
+        .filter(_model.Member.table_id == user_id) \
+        .filter(_model.Member.state == 'active')
+
+    group_ids = []
+    for row in q.all():
+        group_ids.append(row.group_id)
+
+    if not group_ids:
+        return []
+
+    orgs_q = _model.Session.query(_model.Group) \
+        .filter(_model.Group.is_organization == True) \
+        .filter(_model.Group.state == 'active') \
+        .filter(_model.Group.id.in_(group_ids))
+
+    #orgs_list = model_dictize.group_list_dictize(orgs_q.all(), context = [])
+    #return orgs_list
+    orgs = orgs_q.all()
+    return orgs
+
 @logic.auth_allow_anonymous_access
 def ceon_package_show(context, data_dict):
     context['ignore_auth'] = True
@@ -297,6 +327,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_get_moderation_notes': moderationNotes,
                 'ckanext_ceon_get_user_role': userRole,
                 'ckanext_ceon_not_group_member': not_group_member,
+                'ckanext_ceon_user_folders': ceon_user_folders,
                 'now': datetime.now
                 }
 

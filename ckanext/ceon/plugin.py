@@ -198,9 +198,41 @@ def ceon_user_create(context, data_dict):
             toolkit.get_action('organization_create')(context, data)
     return result
 
+def ceon_user_folders(user_id):
+
+    roles = ['admin', 'editor']
+
+    if not user_id:
+        return []
+
+    q = _model.Session.query(_model.Member) \
+        .filter(_model.Member.table_name == 'user') \
+        .filter(_model.Member.capacity.in_(roles)) \
+        .filter(_model.Member.table_id == user_id) \
+        .filter(_model.Member.state == 'active')
+
+    group_ids = []
+    for row in q.all():
+        group_ids.append(row.group_id)
+
+    if not group_ids:
+        return []
+
+    orgs_q = _model.Session.query(_model.Group) \
+        .filter(_model.Group.is_organization == True) \
+        .filter(_model.Group.state == 'active') \
+        .filter(_model.Group.id.in_(group_ids))
+
+    #orgs_list = model_dictize.group_list_dictize(orgs_q.all(), context = [])
+    #return orgs_list
+    orgs = orgs_q.all()
+    return orgs
+
 @logic.auth_allow_anonymous_access
 def ceon_package_show(context, data_dict):
-    context['ignore_auth'] = True
+    pkg = _model.Package.get(data_dict['id'])
+    if pkg and pkg.state == 'deleted':
+        context['ignore_auth'] = True
     result = ckan_package_show(context, data_dict)
     return result
 
@@ -297,6 +329,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_get_moderation_notes': moderationNotes,
                 'ckanext_ceon_get_user_role': userRole,
                 'ckanext_ceon_not_group_member': not_group_member,
+                'ckanext_ceon_user_folders': ceon_user_folders,
                 'now': datetime.now
                 }
 
@@ -410,8 +443,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
-        #elif 'package_id' in data:
-        #    self._resource_update(context, data)
+#        elif 'package_id' in data:
+#            self._resource_update(context, data)
 
     def before_update(self, context, current, resource):
         self._resource_update(context, resource)
@@ -429,7 +462,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  'waitingForApproval', 
                                  '')
-        #create_package_doi(pkg_dict)   # FIXME
+        create_package_doi(pkg_dict)
     
     def _package_after_show(self, context, pkg_dict):
         # Load the DOI ready to display
@@ -454,7 +487,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
-        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+        if context.get('defer_commit', False) or (not context.get('allow_state_change', False) and not context.get('allow_partial_update', False)):
+            # that is not a real update
+            return pkg_dict
+        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False) and pkg_dict.get('moderationStatus', 'private') == 'public':
             orig_pkg_dict = toolkit.get_action('package_show')(context,
                     {'id': pkg_dict['id']})
             pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
@@ -466,10 +502,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             # almost every change in metadata is crucial, so let's skip that
             # check for a while.
             if package_doi.published:
-                #update_package_doi(pkg_dict)   # FIXME
+                update_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
-                #publish_package_doi(pkg_dict)  # TODO
+                for res_dict in orig_pkg_dict.get('resources', []):
+                    publish_resource_doi(pkg_dict, res_dict)
+                publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 
@@ -496,21 +534,20 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if not res_dict.get('clear_upload', ''):
             pkg_dict = toolkit.get_action('package_show')(context,
                 {'id': res_dict['package_id']})
-            log.debug(u'PKG_DICT: {}'.format(pkg_dict))
             orig_res_dict = toolkit.get_action('resource_show')(context,
                     {'id': res_dict['id']})
-            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             res_dict['created'] = orig_res_dict['created']
             res_dict['last_modified'] = orig_res_dict['last_modified']
-            resource_doi = get_resource_doi(res_dict['id'])
-            if not resource_doi:
-                resource_doi = create_resource_doi(pkg_dict, res_dict)
-            if resource_doi.published:
-                update_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI metadata updated'))
-            else:
-                publish_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI has been created'))
+            if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+                resource_doi = get_resource_doi(res_dict['id'])
+                if not resource_doi:
+                    resource_doi = create_resource_doi(pkg_dict, res_dict)
+                if resource_doi.published:
+                    update_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI metadata updated'))
+                else:
+                    publish_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI has been created'))
         return res_dict
     
     def before_index(self, pkg_dict):

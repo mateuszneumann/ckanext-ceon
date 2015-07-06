@@ -27,8 +27,8 @@ a, .editor .editor-info-block a {
   background-color: #546798;
 }
 
-.notifications > a > span {
-	padding: 4px 0px;
+.account-masthead .account .notifications a > span {
+  padding: 5px;
 }
 
 @media (max-width: 767px) {
@@ -386,6 +386,10 @@ body {
 	margin-right: 0px;
 }
 
+.control-ancestral {
+	padding-top: 5px;
+}
+
 .form-horizontal .info-block {
   padding: 0px;
 }
@@ -410,7 +414,8 @@ a:hover, a:focus {
 }
 
 input[type=radio] {
-  top: 0px;
+    top: -1px;
+  	margin-right: 5px;
 }
 
 input[type=checkbox] {

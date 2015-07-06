@@ -7,6 +7,10 @@ body {
 	font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
 }
 
+.btn {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 a, .editor .editor-info-block a {
 	color: #5a6fa3;
 }

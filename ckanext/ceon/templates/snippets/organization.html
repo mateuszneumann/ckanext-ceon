@@ -1,5 +1,13 @@
 {% ckan_extends %}
 
+{% block image %}
+	<div class="image">
+        <a href="{{ url }}">
+            <img src="{{ organization.image_display_url or h.url_for_static('/placeholder-organization.png') }}" alt="{{ organization.name }}" class="media-image" width="200" alt="{{ organization.name }}" />
+        </a>
+    </div>
+{% endblock %}
+
 {% block heading %}
   <h1 class="heading">{{ organization.display_name }}
     {% if organization.state == 'deleted' %}[{{ _('Deleted') }}]{% endif %}

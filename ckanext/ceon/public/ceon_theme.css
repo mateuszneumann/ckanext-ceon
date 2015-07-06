@@ -108,7 +108,8 @@ a, .editor .editor-info-block a {
 
 .masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
 	color: white;
-	padding: 6px 9px 10px
+	padding: 6px 9px 10px;
+	font-size: 90%;
 }
 
 .masthead .nav > li > a > img {

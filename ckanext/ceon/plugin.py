@@ -12,6 +12,8 @@ import ckan.logic as logic
 from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.logic.action.get import package_show as ckan_package_show
+from ckan.logic.action.get import organization_show as ckan_organization_show
+from ckan.logic.action.get import organization_list_for_user as ckan_organization_list_for_user
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
@@ -242,6 +244,14 @@ def ceon_package_delete_function(context, data_dict):
         return {'success': True}
     return {'success': False}
 
+def ceon_organization_show(context, data_dict):
+    data_dict['include_datasets'] = True
+    return ckan_organization_show(context, data_dict)
+
+def ceon_organization_list_for_user(context, data_dict):
+    data_dict['include_datasets'] = True
+    return ckan_organization_list_for_user(context, data_dict)
+
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -297,7 +307,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     
     # IActions
     def get_actions(self):
-        actions = {'user_create': ceon_user_create, 'package_show': ceon_package_show}
+        actions = {'user_create': ceon_user_create, 
+                   'package_show': ceon_package_show,
+                   'organization_show': ceon_organization_show,
+                   'organization_list_for_user': ceon_organization_list_for_user}
         return actions
     
     # IConfigurable

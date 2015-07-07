@@ -98,14 +98,14 @@ class MetadataDataCiteAPI(DataCiteAPI):
         subject.sort()
         description = pkg_dict.get('notes', '').encode('unicode-escape')
         oa_funder = _get_first_elem(pkg_dict, 'oa_funder')
-        if oa_funder:
+        if oa_funder and '-' in oa_funder:
             oa_funder = oa_funder[0:oa_funder.find('-')].strip()
         oa_funding_program = _get_first_elem(pkg_dict, 'oa_funding_program')
         res_type = _get_first_elem(pkg_dict, 'res_type')
-        if res_type:
+        if res_type and '-' in res_type:
             res_type = res_type[0:res_type.find('-')].strip()
         sci_discipline = _get_first_elem(pkg_dict, 'sci_discipline')
-        if sci_discipline:
+        if sci_discipline and '-' in sci_discipline:
             sci_discipline = sci_discipline[0:sci_discipline.find('-')].strip()
         oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
         rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
@@ -216,8 +216,12 @@ class MetadataDataCiteAPI(DataCiteAPI):
         if license:
             license_url = license.url
             license_title = license.title.encode('unicode-escape')
-        file_format = res_dict.get('format', '').encode('unicode-escape')
-        file_size = res_dict.get('size', '').encode('unicode-escape')
+        file_format = res_dict.get('format', '')
+        if file_format:
+            file_format = file_format.encode('unicode-escape')
+        file_size = res_dict.get('size', '')
+        if file_size:
+            file_size = file_size.encode('unicode-escape')
         date_available = parser.parse(res_dict.get('created')).strftime('%Y-%m-%d') if 'created' in res_dict else None
         if 'last_modified' in res_dict and res_dict['last_modified']:
             date_updated = parser.parse(res_dict.get('last_modified')).strftime('%Y-%m-%d')

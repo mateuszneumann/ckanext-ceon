@@ -16,7 +16,7 @@ from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
-from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses, update_resource_url, remove_locales_from_url
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
@@ -430,7 +430,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'type' in data:
             self._package_after_create(context, data)
         elif 'package_id' in data:
-            self._resource_create(context, data)
+            self._resource_after_create(context, data)
 
     def after_show(self, context, data):
         if 'type' in data:
@@ -511,7 +511,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 
-    def _resource_before_show(self,res_dict):
+    def _resource_before_show(self, res_dict):
+        # Update URL so it does not have a locales part
+        if res_dict.get('url_type') == 'upload' and 'url' in res_dict:
+            res_dict['url'] = remove_locales_from_url(res_dict['url'])
         # Load the DOI ready to display
         res_doi = get_resource_doi(res_dict['id'])
         if res_doi:
@@ -519,10 +522,13 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             res_dict['doi_status'] = True if res_doi.published else False
             res_dict['domain'] = get_site_url().replace('http://', '')
 
-    def _resource_create(self, context, res_dict):
+    def _resource_after_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
+        if 'url' in res_dict and res_dict['url'] and 'url_type' in res_dict and 'upload' == res_dict['url_type']:
+            res_dict = update_resource_url(context, res_dict)
+            log.debug(u"MODIFIED URL in resource {}".format(res_dict))
         pkg_dict = toolkit.get_action('package_show')(context,
             {'id': res_dict['package_id']})
         create_resource_doi(pkg_dict, res_dict)

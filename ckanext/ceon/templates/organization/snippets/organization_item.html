@@ -13,3 +13,13 @@
     <span>{{ _('View {organization_name}').format(organization_name=organization.display_name) }}</span>
   </a>
 {% endblock %}
+
+  {% block datasets %}
+    {% if organization.package_count %}
+      <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', (organization.package_count)).format(num=(organization.package_count)) }}</strong>
+    {% elif organization.packages %}
+      <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', (organization.packages|count)).format(num=(organization.packages|count)) }}</strong>
+    {% else %}
+      <span class="count">{{ _('0 Datasets') }}</span>
+    {% endif %}
+  {% endblock %}

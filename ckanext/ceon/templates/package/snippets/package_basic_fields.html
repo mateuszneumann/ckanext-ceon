@@ -8,6 +8,18 @@
   {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}, is_required=true) }}
 {% endblock %}
 
+
+{% block package_basic_fields_url %}
+  {% set prefix = h.url_for(controller='package', action='read', id='') %}
+  {% set prefix = prefix|replace(['/', c.language, '/']|join(''), "/") %}
+  {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+  {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+  {% set domain = domain|replace(['/', c.language, '/']|join(''), "/") %}
+  {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+
+  {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs, is_required=true) }}
+{% endblock %}
+
  
 {% block package_basic_fields_custom %}
   {{ super() }}

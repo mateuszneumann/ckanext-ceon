@@ -18,7 +18,7 @@ from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
 from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_package_doi, create_resource_doi, publish_package_doi, publish_resource_doi, update_package_doi, update_resource_doi
-from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses
+from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses, update_resource_url, remove_locales_from_url
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
@@ -443,7 +443,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if 'type' in data:
             self._package_after_create(context, data)
         elif 'package_id' in data:
-            self._resource_create(context, data)
+            self._resource_after_create(context, data)
 
     def after_show(self, context, data):
         if 'type' in data:
@@ -456,8 +456,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def after_update(self, context, data):
         if 'type' in data:
             self._package_after_update(context, data)
-        #elif 'package_id' in data:
-        #    self._resource_update(context, data)
+#        elif 'package_id' in data:
+#            self._resource_update(context, data)
 
     def before_update(self, context, current, resource):
         self._resource_update(context, resource)
@@ -500,7 +500,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                                  pkg_dict['id'], 
                                  pkg_dict['moderationStatus'] if 'moderationStatus' in pkg_dict else 'private', 
                                  pkg_dict['moderationNotes'] if 'moderationNotes' in pkg_dict else '')
-        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+        if context.get('defer_commit', False) or (not context.get('allow_state_change', False) and not context.get('allow_partial_update', False)):
+            # that is not a real update
+            return pkg_dict
+        if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False) and pkg_dict.get('moderationStatus', 'private') == 'public':
             orig_pkg_dict = toolkit.get_action('package_show')(context,
                     {'id': pkg_dict['id']})
             pkg_dict['metadata_created'] = orig_pkg_dict['metadata_created']
@@ -515,11 +518,16 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 update_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI metadata updated'))
             else:
+                for res_dict in orig_pkg_dict.get('resources', []):
+                    publish_resource_doi(pkg_dict, res_dict)
                 publish_package_doi(pkg_dict)
                 h.flash_success(_('DataCite DOI has been created'))
         return pkg_dict
 
-    def _resource_before_show(self,res_dict):
+    def _resource_before_show(self, res_dict):
+        # Update URL so it does not have a locales part
+        if res_dict.get('url_type') == 'upload' and 'url' in res_dict:
+            res_dict['url'] = remove_locales_from_url(res_dict['url'])
         # Load the DOI ready to display
         res_doi = get_resource_doi(res_dict['id'])
         if res_doi:
@@ -527,10 +535,13 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             res_dict['doi_status'] = True if res_doi.published else False
             res_dict['domain'] = get_site_url().replace('http://', '')
 
-    def _resource_create(self, context, res_dict):
+    def _resource_after_create(self, context, res_dict):
         log.debug(u"Creating resource {}".format(res_dict))
         if 'license_id' in res_dict:
             update_res_license(context, res_dict, res_dict['license_id'])
+        if 'url' in res_dict and res_dict['url'] and 'url_type' in res_dict and 'upload' == res_dict['url_type']:
+            res_dict = update_resource_url(context, res_dict)
+            log.debug(u"MODIFIED URL in resource {}".format(res_dict))
         pkg_dict = toolkit.get_action('package_show')(context,
             {'id': res_dict['package_id']})
         create_resource_doi(pkg_dict, res_dict)
@@ -542,21 +553,20 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if not res_dict.get('clear_upload', ''):
             pkg_dict = toolkit.get_action('package_show')(context,
                 {'id': res_dict['package_id']})
-            log.debug(u'PKG_DICT: {}'.format(pkg_dict))
             orig_res_dict = toolkit.get_action('resource_show')(context,
                     {'id': res_dict['id']})
-            log.debug(u'ORIG_RES_DICT: {}'.format(orig_res_dict))
             res_dict['created'] = orig_res_dict['created']
             res_dict['last_modified'] = orig_res_dict['last_modified']
-            resource_doi = get_resource_doi(res_dict['id'])
-            if not resource_doi:
-                resource_doi = create_resource_doi(pkg_dict, res_dict)
-            if resource_doi.published:
-                update_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI metadata updated'))
-            else:
-                publish_resource_doi(pkg_dict, res_dict)
-                h.flash_success(_('DataCite DOI has been created'))
+            if pkg_dict.get('state', 'active') == 'active' and not pkg_dict.get('private', False):
+                resource_doi = get_resource_doi(res_dict['id'])
+                if not resource_doi:
+                    resource_doi = create_resource_doi(pkg_dict, res_dict)
+                if resource_doi.published:
+                    update_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI metadata updated'))
+                else:
+                    publish_resource_doi(pkg_dict, res_dict)
+                    h.flash_success(_('DataCite DOI has been created'))
         return res_dict
     
     def before_index(self, pkg_dict):

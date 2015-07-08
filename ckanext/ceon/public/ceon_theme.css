@@ -1,10 +1,14 @@
 @font-face {
-    font-family: "Myriad Pro";
-    src: url(MYRIADPRO-REGULAR.OTF);
+    font-family: "Lucida";
+    src: url(Lucida.ttf);
 }
 
 body {
-	font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+	font-family: "Lucida", Arial, "Lucida Sans", sans-serif;
+}
+
+.btn {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a, .editor .editor-info-block a {
@@ -23,8 +27,8 @@ a, .editor .editor-info-block a {
   background-color: #546798;
 }
 
-.notifications > a > span {
-	padding: 4px 0px;
+.account-masthead .account .notifications a > span {
+  padding: 5px;
 }
 
 @media (max-width: 767px) {
@@ -104,7 +108,8 @@ a, .editor .editor-info-block a {
 
 .masthead .nav > li > a, .masthead .nav > li > a:focus, .masthead .nav > li > a:hover, .masthead .nav > .active > a, .masthead .nav > .active > a:hover, .masthead .nav > .active > a:focus {
 	color: white;
-	padding: 6px 9px 10px
+	padding: 6px 9px 10px;
+	font-size: 90%;
 }
 
 .masthead .nav > li > a > img {
@@ -314,7 +319,7 @@ body {
 	color: rgb(53, 70, 119);
     text-align: center;
     font-weight: bolder;
-    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+    font-family: "Lucida", Arial, "Lucida Sans", sans-serif;
     padding-top: 4px;
     letter-spacing: 3px;
     margin: 0 0 5px 0;
@@ -344,13 +349,13 @@ body {
     color: #5a6fa3;;
     font-size: 22px;
     font-weight: bold;
-    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+    font-family: "Lucida", Arial, "Lucida Sans", sans-serif;
 }
 .stats .inner .stats-text .value {
 	text-align: center;
     display: block;
     font-weight: bold;
-    font-family: "Myriad Pro", Arial, "Lucida Sans", sans-serif;
+    font-family: "Lucida", Arial, "Lucida Sans", sans-serif;
     color: rgb(53, 70, 119);
     font-size: 30px;
     padding-top: 10px;
@@ -382,6 +387,10 @@ body {
 	margin-right: 0px;
 }
 
+.control-ancestral {
+	padding-top: 5px;
+}
+
 .form-horizontal .info-block {
   padding: 0px;
 }
@@ -406,7 +415,8 @@ a:hover, a:focus {
 }
 
 input[type=radio] {
-  top: 0px;
+    top: -1px;
+  	margin-right: 5px;
 }
 
 input[type=checkbox] {

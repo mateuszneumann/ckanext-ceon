@@ -48,7 +48,7 @@ class DataCiteAPI(object):
             method = 'get'
         # Add authorisation to request
         kwargs['auth'] = (account_name, account_password)
-        log.info("Calling %s:%s - %s", endpoint, method, kwargs)
+        log.info("Calling %s:%s", endpoint, method)
 
         # Perform the request
         r = getattr(requests, method)(endpoint, **kwargs)
@@ -98,9 +98,15 @@ class MetadataDataCiteAPI(DataCiteAPI):
         subject.sort()
         description = pkg_dict.get('notes', '').encode('unicode-escape')
         oa_funder = _get_first_elem(pkg_dict, 'oa_funder')
+        if oa_funder and '-' in oa_funder:
+            oa_funder = oa_funder[0:oa_funder.find('-')].strip()
         oa_funding_program = _get_first_elem(pkg_dict, 'oa_funding_program')
         res_type = _get_first_elem(pkg_dict, 'res_type')
+        if res_type and '-' in res_type:
+            res_type = res_type[0:res_type.find('-')].strip()
         sci_discipline = _get_first_elem(pkg_dict, 'sci_discipline')
+        if sci_discipline and '-' in sci_discipline:
+            sci_discipline = sci_discipline[0:sci_discipline.find('-')].strip()
         oa_grant_number = pkg_dict.get('oa_grant_number', '').encode('unicode-escape')
         rel_citation = pkg_dict.get('rel_citation', '').encode('unicode-escape')
         version = None
@@ -155,9 +161,10 @@ class MetadataDataCiteAPI(DataCiteAPI):
         if oa_funder:
             e_contributors = etree.SubElement(metadata, 'contributors')
             if oa_funding_program and oa_grant_number:
-                project_info = 'info:eu-repo/grantAgreement/{0}/{1}/{2}///'
-                project_info = project_info.format(oa_funder,
-                        oa_funding_program, oa_grant_number)
+                oa_funding_id = oa_funding_program.replace('-', '/')
+                project_info = 'info:eu-repo/grantAgreement/{0}/{1}///'
+                project_info = project_info.format(oa_funding_id,
+                        oa_grant_number)
                 e_contributor = etree.Element('contributor',
                         contributorType='Funder')
                 etree.SubElement(e_contributor,
@@ -209,8 +216,12 @@ class MetadataDataCiteAPI(DataCiteAPI):
         if license:
             license_url = license.url
             license_title = license.title.encode('unicode-escape')
-        file_format = res_dict.get('format', '').encode('unicode-escape')
-        file_size = res_dict.get('size', '').encode('unicode-escape')
+        file_format = res_dict.get('format', '')
+        if file_format:
+            file_format = file_format.encode('unicode-escape')
+        file_size = res_dict.get('size', '')
+        if file_size:
+            file_size = file_size.encode('unicode-escape')
         date_available = parser.parse(res_dict.get('created')).strftime('%Y-%m-%d') if 'created' in res_dict else None
         if 'last_modified' in res_dict and res_dict['last_modified']:
             date_updated = parser.parse(res_dict.get('last_modified')).strftime('%Y-%m-%d')
@@ -390,7 +401,7 @@ def create_package_doi(pkg_dict):
     package_doi = CeonPackageDOI(package_id=pkg_dict['id'], identifier=identifier)
     Session.add(package_doi)
     Session.commit()
-    log.debug(u"Created DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Created DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
     return package_doi
 
 def create_resource_doi(pkg_dict, res_dict):
@@ -409,7 +420,7 @@ def create_resource_doi(pkg_dict, res_dict):
     resource_doi = CeonResourceDOI(resource_id=resource_id, identifier=identifier)
     Session.add(resource_doi)
     Session.commit()
-    log.debug(u"Created DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Created DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
     return resource_doi
 
 def update_package_doi(pkg_dict):
@@ -419,7 +430,7 @@ def update_package_doi(pkg_dict):
         package_doi = create_package_doi(pkg_dict)
     metadata = MetadataDataCiteAPI()
     metadata.upsert(package_doi.identifier, pkg_dict)
-    log.debug(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Updated DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def update_resource_doi(pkg_dict, res_dict):
     _validate_package(pkg_dict)
@@ -429,9 +440,10 @@ def update_resource_doi(pkg_dict, res_dict):
         resource_doi = create_resource_doi(pkg_dict, res_dict)
     metadata = MetadataDataCiteAPI()
     metadata.upsert(resource_doi.identifier, pkg_dict, res_dict)
-    log.debug(u"Updated DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Updated DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
 def publish_package_doi(pkg_dict):
+    log.debug(u"Publishing DOI for package {}".format(pkg_dict['id']))
     _validate_package(pkg_dict)
     package_doi = CeonPackageDOI.get(pkg_dict['id'])
     metadata = MetadataDataCiteAPI()
@@ -445,9 +457,10 @@ def publish_package_doi(pkg_dict):
         query = query.filter_by(package_id=pkg_dict['id'], identifier=package_doi.identifier)
         num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
+    log.info(u"Published DOI {} for package {}".format(package_doi.identifier, pkg_dict['id']))
 
 def publish_resource_doi(pkg_dict, res_dict):
+    log.debug(u"Publishing DOI for resource {} in package {}".format(res_dict['id'], pkg_dict['id']))
     _validate_package(pkg_dict)
     _validate_resource(res_dict)
     resource_doi = CeonResourceDOI.get(res_dict['id'])
@@ -463,7 +476,7 @@ def publish_resource_doi(pkg_dict, res_dict):
         query = query.filter_by(resource_id=res_dict['id'], identifier=resource_doi.identifier)
         num_affected = query.update({"published": datetime.now()})
         assert num_affected == 1, 'Updating local DOI failed'
-    log.debug(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
+    log.info(u"Published DOI {} for resource {}".format(resource_doi.identifier, res_dict['id']))
 
 
 # "Private" functions

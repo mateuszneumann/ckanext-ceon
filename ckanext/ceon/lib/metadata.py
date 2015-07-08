@@ -4,6 +4,7 @@
 from logging import getLogger
 
 from ckan.common import _
+from ckan.lib.i18n import get_available_locales
 from ckan.model import Package, Resource, Session, Tag, Vocabulary
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
 
@@ -115,9 +116,12 @@ def update_ancestral_license(context, pkg_dict, license_id):
     for resource in package.resources:
         res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
         if res_license:
-            session.delete(res_license)
-        new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
-        session.add(new_res_license)
+            #session.delete(res_license)
+            res_license.license_id = license_id
+            session.merge(res_license)
+        else:
+            new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
+            session.add(new_res_license)
 
 def update_res_license(context, res_dict, license_id):
     session = context['session']
@@ -149,6 +153,36 @@ def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
         package.add_tag(tag)
     else:
         raise Exception(u'Tag "{}" not found within vocabulary "{}"'.format(tag_value, vocabulary_name))
+
+def remove_locales_from_url(url):
+    if not url:
+        return
+    for l in get_available_locales():
+        l1 = "/{}/".format(l)
+        if l1 in url:
+            return url.replace(l1, "/")
+    return url
+
+def update_resource_url(context, res_dict):
+    if not 'url' in res_dict or not res_dict['url']:
+        return res_dict
+    if not 'url_type' in res_dict or 'upload' != res_dict['url_type']:
+        return res_dict
+    log.debug(u"Updating resource {} url {}".format(res_dict['id'], res_dict['url']))
+    res_url = remove_locales_from_url(res_dict['url'])
+    log.debug(u"new url {}".format(res_url))
+    if res_dict['url'] != res_url:
+        log.debug(u"here 1")
+        res_dict['url'] = res_url
+        session = context['session']
+        res = Resource.get(res_dict['id'])
+        log.debug(u"here 2 {}".format(res))
+        if not res:
+            raise Exception(u'Resource "{}" not found'.format(res_dict['id']))
+        res.url = res_url
+        session.merge(res)
+        log.debug(u"here 3 {}".format(res))
+    return res_dict
 
 def _author_in_authors(session, package_id, author):
     orig_authors = get_authors(session, package_id)

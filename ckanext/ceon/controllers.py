@@ -126,7 +126,7 @@ class CitationController(base.BaseController):
                     authors = "\n".join(" ".join(["AU  -", a.lastname, a.firstname[0]]) for a in orig_authors),
                     year = pkg_dict['publication_year'],
                     publisher = pkg_dict['publisher'],
-                    tags = "\n".join(" ".join(["KW  -", t['name']]) for t in pkg_dict['tags']),
+                    tags = "\n".join(" ".join(["KW  -", t['name']]) for t in (pkg_dict['tags'] if 'tags' in pkg_dict else [])),
                     url = get_package_link(pkg_dict['name']),
                     )
         if (pkg_doi):

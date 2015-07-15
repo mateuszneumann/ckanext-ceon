@@ -22,6 +22,11 @@ from ckanext.ceon.lib.metadata import create_authors, get_authors, update_author
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
+import pylons
+from ckan.logic import get_action
+from pylons import config
+
+
 log = getLogger(__name__)
 
 
@@ -128,7 +133,8 @@ def res_types():
     try:
         tag_list = toolkit.get_action('tag_list')
         res_types = tag_list(data_dict={'vocabulary_id': 'res_types'})
-        return res_types
+        res_types_translated = translate_data_dict(res_types)
+        return res_types_translated
     except toolkit.ObjectNotFound:
         return None
 
@@ -251,6 +257,41 @@ def ceon_organization_show(context, data_dict):
 def ceon_organization_list_for_user(context, data_dict):
     data_dict['include_datasets'] = True
     return ckan_organization_list_for_user(context, data_dict)
+
+def translate_data_dict(data_dict):
+
+    desired_lang_code = pylons.request.environ['CKAN_LANG']
+    fallback_lang_code = pylons.config.get('ckan.locale_default', 'en')
+
+    translations = get_action('term_translation_show')(
+            {'model': _model},
+            {'terms': data_dict,
+                'lang_codes': (desired_lang_code, fallback_lang_code)})
+
+
+    desired_translations = {}
+    fallback_translations = {}
+    for translation in translations:
+        if translation['lang_code'] == desired_lang_code:
+            desired_translations[translation['term']] = (
+                    translation['term_translation'])
+        else:
+            assert translation['lang_code'] == fallback_lang_code
+            fallback_translations[translation['term']] = (
+                    translation['term_translation'])
+
+    translations_dict = []
+    for term in data_dict:
+        if term in desired_translations:
+            translations_dict.append(desired_translations[term])
+        elif term in fallback_translations:
+            translations_dict.append(fallback_translations[term])
+        else:
+            translations_dict.append(term)    
+    
+    # Make a copy of the flattened data dict with all the terms replaced by
+    # their translations, where available.
+    return translations_dict
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)

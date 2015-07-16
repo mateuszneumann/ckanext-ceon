@@ -292,8 +292,6 @@ def translate_data_dict(data_dict):
         else:
             translations_dict[term] = term    
     
-    # Make a copy of the flattened data dict with all the terms replaced by
-    # their translations, where available.
     return translations_dict
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):

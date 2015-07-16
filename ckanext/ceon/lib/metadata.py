@@ -5,6 +5,7 @@ from logging import getLogger
 
 from ckan.common import _
 from ckan.lib.i18n import get_available_locales
+from ckan.logic import ValidationError
 from ckan.model import Package, Resource, Session, Tag, Vocabulary
 from ckanext.ceon.model import CeonPackageAuthor, CeonPackageDOI, CeonResourceDOI, CeonResourceLicense
 
@@ -53,9 +54,13 @@ def get_authors(session, package_id):
     return []
 
 def create_authors(session, package_id, authors):
+    created = False
     for author in authors:
-        _author_create(session, package_id, author)
-    
+        if _author_create(session, package_id, author):
+            created = True
+    if not created:
+        raise ValidationError({'authors': [_('Lastname not set for one of the authors')]})
+
 def update_authors(context, pkg_dict, authors):
     session = context['session']
     package_id = pkg_dict['id']
@@ -130,12 +135,15 @@ def update_res_license(context, res_dict, license_id):
     resource = Resource.get(res_dict['id'])
     res_license = session.query(CeonResourceLicense).filter(CeonResourceLicense.resource_id == resource.id).first()
     if res_license:
-        log.debug(u'Deleting license res_license: {}'.format(res_license))
-        session.delete(res_license)
-    new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
-    session.merge(new_res_license)
-    log.debug(u'Created license res_license: {}'.format(new_res_license))
-    return new_res_license
+        res_license.license_id = license_id
+        log.debug(u'Updated license res_license: {}'.format(res_license))
+        session.merge(res_license)
+        return res_license
+    else:
+        new_res_license = CeonResourceLicense(resource_id = resource.id, license_id = license_id)
+        session.merge(new_res_license)
+        log.debug(u'Created license res_license: {}'.format(new_res_license))
+        return new_res_license
 
 def update_oa_tag(context, pkg_dict, vocabulary_name, tag_value):
     if not isinstance(tag_value, basestring):
@@ -195,6 +203,7 @@ def _author_in_authors(session, package_id, author):
     return False
 
 def _author_create(session, package_id, author):
+    log.debug(u'Creating author {}.'.format(author))
     if 'lastname' not in author or not author['lastname']:
         #raise logic.ValidationError(
         #        {'authors': [_('Lastname not set for one of the authors')]})
@@ -210,14 +219,18 @@ def _author_create(session, package_id, author):
             firstname=firstname, lastname=lastname, email=email,
             affiliation=affiliation, position=position)
     session.add(ceon_author)
+    log.debug(u'Created author {}.'.format(ceon_author))
     return ceon_author
 
 def _author_delete(session, package_id, author):
+    log.debug(u'Deleting author {}.'.format(author))
     orig_author = _author_find(session, author['id'])
     if orig_author:
         session.delete(orig_author)
+    	log.debug(u'Deleted author {}.'.format(orig_author))
 
 def _author_update(session, package_id, author):
+    log.debug(u'Updating author {}.'.format(author))
     if 'lastname' not in author or not author['lastname']:
         #raise logic.ValidationError(
         #        {'authors': [_('Lastname not set for one of the authors')]})
@@ -232,7 +245,10 @@ def _author_update(session, package_id, author):
     orig_author.affiliation = author['affiliation'] if ('affiliation' in author) else None
     if 'position' in author:
         orig_author.position = author['position']
+    if not orig_author.lastname:
+        raise ValidationError({'authors': [_('Lastname not set for one of the authors')]})
     author = session.merge(orig_author)
+    log.debug(u'Updated author {}.'.format(author))
     return author
 
 def _author_find(session, author_id):

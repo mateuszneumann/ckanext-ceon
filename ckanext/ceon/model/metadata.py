@@ -15,7 +15,7 @@ log = getLogger(__name__)
 
 ceon_package_author_table = Table('ceon_package_author', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-        Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
+        Column('package_id', types.UnicodeText, ForeignKey('package.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=False),
         Column('firstname', types.UnicodeText),
         Column('lastname', types.UnicodeText),
         Column('email', types.UnicodeText),

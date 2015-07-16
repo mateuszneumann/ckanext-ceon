@@ -79,7 +79,7 @@ def validate_lastname():
                 check_key = tuple(list(key[:-1]) + [field])
                 check_value = data.get(check_key)
                 if check_value and not check_value is missing:
-                    log.debug(u'key "{}" IS PRESENT IN DATA'.format(check_key))
+                    log.debug(u'key "{}" is present in data'.format(check_key))
                     all_fields_missing = False
             if not all_fields_missing:
                 errors[key].append(_('Missing value'))

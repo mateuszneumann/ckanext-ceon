@@ -33,9 +33,16 @@ this.ckan.module('funding-fields', function (jQuery, _) {
      */
     initialize: function () {
       jQuery.proxyAll(this, /_on/, /format/);
-      var choices = this.el.attr('data-select').split('|');
+      var choices = this.el.attr('data-select-keys').split('|');
+      var values = this.el.attr('data-select').split('|');
+      var options = new Map();
+      var options2 = new Map();
+      for (var i = 0; i < choices.length; i++) {
+    	  options.set(choices[i], values[i])
+    	  options2.set(values[i], choices[i])
+      }
       var selected = this.el.val();
-      this.setupAutoComplete(selected, choices);
+      this.setupAutoComplete(selected, values, options, options2);
       this.el.val(selected);
     },
 
@@ -43,14 +50,14 @@ this.ckan.module('funding-fields', function (jQuery, _) {
      *
      * Returns nothing.
      */
-    setupAutoComplete: function (selected, choices) {
+    setupAutoComplete: function (selected, choices, options, options2) {
       var settings = {
         width: 'resolve',
         placeholder: " ",
         initSelection: function (element, callback) {
           var value = $(element).val();
           if (value)
-              callback({ id: value, text: value });
+              callback({ id: value, text: options.get(value) });
         },
 
         query: function (query) {
@@ -68,8 +75,8 @@ this.ckan.module('funding-fields', function (jQuery, _) {
           }
           // map to {id: '', text: ''}
           var data = {};
-          data.results = $.map(items, function (item) {
-            return { id: item, text: item };
+          data.results = $.map(items, function (item, index) {
+            return { id: options2.get(item), text: item };
           })
           query.callback(data);                 
         },

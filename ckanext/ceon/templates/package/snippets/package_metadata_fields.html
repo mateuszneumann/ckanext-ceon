@@ -9,8 +9,8 @@
     <label class="control-label" for="field-res_type">{{ _("Type of resource") }}</label>
     <div class="controls">
       <select id="field-res_type" name="res_type" data-module="autocomplete">
-      {% for res_type in h.ckanext_ceon_res_types()  %}
-        <option value="{{ res_type }}" {% if res_type in data.get('res_type', []) %}selected="selected"{% endif %}>{{ res_type }}</option>
+      {% for (key, value) in h.ckanext_ceon_res_types().iteritems()  %}
+        <option value="{{ key }}" {% if key in data.get('res_type', []) %}selected="selected"{% endif %}>{{ value }}</option>
       {% endfor %}
       </select>
       {% set type = _("For structured data, for example in tabular form, please choose “Dataset (Zbiór danych)”. For datasets containing files of different types, choose “Collection (Zestawienie)”. A more detailed description of all resource types can be found on pages 26-27 of the DataCite Metadata Schema for the Publication and Citation of Research Data (Version 3.1).") %}
@@ -22,8 +22,8 @@
     <label class="control-label" for="field-sci_discipline">{{ _("Area of study") }}</label>
     <div class="controls">
       <select id="field-sci_discipline" name="sci_discipline" data-module="autocomplete">
-      {% for sci_discipline in h.ckanext_ceon_sci_disciplines()  %}
-        <option value="{{ sci_discipline }}" {% if sci_discipline in data.get('sci_discipline', []) %}selected="selected"{% endif %}>{{ sci_discipline }}</option>
+      {% for (key, value) in h.ckanext_ceon_sci_disciplines().iteritems()  %}
+        <option value="{{ key }}" {% if key in data.get('sci_discipline', []) %}selected="selected"{% endif %}>{{ value }}</option>
       {% endfor %}
       </select>
       {% set area = _("Please choose an area of research that best describes the kind of research for which your dataset was created.") %}
@@ -38,7 +38,7 @@
       {% if oa_funder is iterable and oa_funder is not string %}
         {% set oa_funder = oa_funder[0] %}
       {% endif %}
-      <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ oa_funder }}" data-select="{{ h.ckanext_ceon_oa_funders()|join('|') }}" data-module="funding-fields"/>
+      <input type='hidden' id="field-oa_funder" name="oa_funder" value="{{ oa_funder }}" data-select="{{ h.ckanext_ceon_oa_funders().itervalues()|join('|') }}" data-select-keys="{{ h.ckanext_ceon_oa_funders().iterkeys()|join('|') }}" data-module="funding-fields"/>
       {% set funder = _("If the relevant research funder is not listed, please enter the name manually.") %}
       {% snippet 'snippets/tooltip.html', text=funder  %}
     </div>
@@ -51,7 +51,7 @@
       {% if oa_funding_program is iterable and oa_funding_program is not string %}
         {% set oa_funding_program = oa_funding_program[0] %}
       {% endif %}
-      <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ oa_funding_program }}" data-select="{{ h.ckanext_ceon_oa_funding_programs()|join('|') }}" data-module="funding-fields"/>
+      <input type='hidden' id="field-oa_funding_program" name="oa_funding_program" value="{{ oa_funding_program }}" data-select="{{ h.ckanext_ceon_oa_funding_programs().itervalues()|join('|') }}" data-select-keys="{{ h.ckanext_ceon_oa_funding_programs().iterkeys()|join('|') }}" data-module="funding-fields"/>
     {% set funding = _("If the relevant funding program is not listed, please enter its name manually.") %}
       {% snippet 'snippets/tooltip.html', text=funding  %}
     </div>

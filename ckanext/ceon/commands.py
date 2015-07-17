@@ -119,7 +119,6 @@ class PiwikTrackingUpdate(CkanCommand):
 
         log.info(u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent))
         print(u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent))
-        #print u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent)
         model.update_package_stats(package_name, total, recent)
 
         # and now update resources stats
@@ -137,6 +136,13 @@ class PiwikTrackingUpdate(CkanCommand):
             if r_visits.status_code == 200:
                 if r_visits.json():
                     visits = r_visits.json()[0]['nb_visits']
+            url = '/pl/dataset/' + package_name + '/resource/' + res['id']
+            param['pageUrl'] = url
+            r_visits = requests.get(piwik_url, params=param)
+            if r_visits.status_code == 200:
+                if r_visits.json():
+                    visits_pl = r_visits.json()[0]['nb_visits']
+                    visits = visits + visits_pl
             down_url = down_re.match(res['url'])
             if down_url:
                 url = down_url.group(1) + '/' + down_url.group(2)
@@ -149,8 +155,14 @@ class PiwikTrackingUpdate(CkanCommand):
                 if r_downloads.status_code == 200:
                     if r_downloads.json():
                         downloads = r_downloads.json()[0]['nb_hits']
+                url = down_url.group(1) + '//' + down_url.group(2)
+                param['downloadUrl'] = url
+                r_downloads = requests.get(piwik_url, params=param)
+                if r_downloads.status_code == 200:
+                    if r_downloads.json():
+                        downloads_2 = r_downloads.json()[0]['nb_hits']
+                        downloads = downloads + downloads_2
             log.info(u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads))
             print(u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads))
-            #print u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads)
             model.update_resource_stats(res['id'], visits, downloads)
 

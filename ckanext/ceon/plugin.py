@@ -262,16 +262,14 @@ def ceon_organization_list_for_user(context, data_dict):
     return ckan_organization_list_for_user(context, data_dict)
 
 def translate_data_dict(data_dict):
-
     desired_lang_code = pylons.request.environ['CKAN_LANG']
     fallback_lang_code = pylons.config.get('ckan.locale_default', 'en')
-
+    log.debug(u"Desired lang code = {}".format(desired_lang_code))
+    log.debug(u"Fallback lang code {}".format(fallback_lang_code))
     translations = get_action('term_translation_show')(
             {'model': _model},
             {'terms': data_dict,
                 'lang_codes': (desired_lang_code, fallback_lang_code)})
-
-
     desired_translations = {}
     fallback_translations = {}
     for translation in translations:
@@ -282,7 +280,6 @@ def translate_data_dict(data_dict):
             assert translation['lang_code'] == fallback_lang_code
             fallback_translations[translation['term']] = (
                     translation['term_translation'])
-
     translations_dict = {}
     for term in data_dict:
         if term in desired_translations:
@@ -291,7 +288,7 @@ def translate_data_dict(data_dict):
             translations_dict[term] = fallback_translations[term]
         else:
             translations_dict[term] = term    
-    
+    log.debug(u"Translations = {}".format(translations_dict))
     return translations_dict
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):

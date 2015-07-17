@@ -22,6 +22,11 @@ from ckanext.ceon.lib.metadata import create_authors, get_authors, update_author
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
 
+import pylons
+from ckan.logic import get_action
+from pylons import config
+
+
 log = getLogger(__name__)
 
 
@@ -63,14 +68,14 @@ def create_res_types():
     except toolkit.ObjectNotFound:
         data = {'name': 'res_types'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Collection - Zestawienie', u'Dataset - Zbiór danych',
-                u'Image - Obraz', u'Audiovisual - Audiowizualne',
-                u'Sound - Dźwięk', u'Text - Tekst',
-                u'Software - Oprogramowanie', u'Model - Model',
-                u'Service - Serwis',
-                u'Interactive resource - Zasób interaktywny',
-                u'Workflow - Przepływ pracy', u'Event - Wydarzenie',
-                u'Physical object - Obiekt fizyczny', u'Other - Inne',):
+        for tag in (u'Collection', u'Dataset',
+                u'Image', u'Audiovisual',
+                u'Sound', u'Text',
+                u'Software', u'Model',
+                u'Service',
+                u'Interactive resource',
+                u'Workflow', u'Event',
+                u'Physical object', u'Other',):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -83,14 +88,14 @@ def create_sci_disciplines():
     except toolkit.ObjectNotFound:
         data = {'name': 'sci_disciplines'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'Humanities - Nauki humanistyczne',
-                u'Social sciences - Nauki społeczne',
-                u'Physical and mathematical sciences - Nauki ścisłe',
-                u'Biological and earth sciences - Nauki przyrodnicze',
-                u'Technological sciences - Nauki techniczne',
-                u'Agricultural forestry and veterinary sciences - Nauki rolne leśne i weterynaryjne',
-                u'Medical health and sport sciences - Nauki medyczne o zdrowiu i o kulturze fizycznej',
-                u'Arts - Sztuka',):
+        for tag in (u'Humanities',
+                u'Social sciences',
+                u'Physical and mathematical sciences',
+                u'Biological and earth sciences',
+                u'Technological sciences',
+                u'Agricultural forestry and veterinary sciences',
+                u'Medical health and sport sciences',
+                u'Arts',):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -103,10 +108,10 @@ def create_oa_funders():
     except toolkit.ObjectNotFound:
         data = {'name': 'oa_funders'}
         vocab = toolkit.get_action('vocabulary_create')(context, data)
-        for tag in (u'National Science Centre Poland - Narodowe Centrum Nauki',
-                u'National Centre for Research and Development Poland - Narodowe Centrum Badań i Rozwoju',
-                u'Foundation for Polish Science - Fundacja na rzecz Nauki Polskiej',
-                u'European Commission - Komisja Europejska'):
+        for tag in (u'National Science Centre Poland',
+                u'National Centre for Research and Development Poland',
+                u'Foundation for Polish Science',
+                u'European Commission'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             toolkit.get_action('tag_create')(context, data)
 
@@ -128,7 +133,8 @@ def res_types():
     try:
         tag_list = toolkit.get_action('tag_list')
         res_types = tag_list(data_dict={'vocabulary_id': 'res_types'})
-        return res_types
+        res_types_translated = translate_data_dict(res_types)
+        return res_types_translated
     except toolkit.ObjectNotFound:
         return None
 
@@ -137,7 +143,8 @@ def sci_disciplines():
     try:
         tag_list = toolkit.get_action('tag_list')
         sci_disciplines = tag_list(data_dict={'vocabulary_id': 'sci_disciplines'})
-        return sci_disciplines
+        sci_disciplines_translated = translate_data_dict(sci_disciplines)
+        return sci_disciplines_translated
     except toolkit.ObjectNotFound:
         return None
 
@@ -146,7 +153,8 @@ def oa_funders():
     try:
         tag_list = toolkit.get_action('tag_list')
         oa_funders = tag_list(data_dict={'vocabulary_id': 'oa_funders'})
-        return oa_funders
+        oa_funders_translated = translate_data_dict(oa_funders)
+        return oa_funders_translated
     except toolkit.ObjectNotFound:
         return None
 
@@ -155,7 +163,8 @@ def oa_funding_programs():
     try:
         tag_list = toolkit.get_action('tag_list')
         oa_funding_programs = tag_list(data_dict={'vocabulary_id': 'oa_funding_programs'})
-        return oa_funding_programs
+        oa_funding_programs_translated = translate_data_dict(oa_funding_programs)
+        return oa_funding_programs_translated
     except toolkit.ObjectNotFound:
         return None
 
@@ -251,6 +260,39 @@ def ceon_organization_show(context, data_dict):
 def ceon_organization_list_for_user(context, data_dict):
     data_dict['include_datasets'] = True
     return ckan_organization_list_for_user(context, data_dict)
+
+def translate_data_dict(data_dict):
+
+    desired_lang_code = pylons.request.environ['CKAN_LANG']
+    fallback_lang_code = pylons.config.get('ckan.locale_default', 'en')
+
+    translations = get_action('term_translation_show')(
+            {'model': _model},
+            {'terms': data_dict,
+                'lang_codes': (desired_lang_code, fallback_lang_code)})
+
+
+    desired_translations = {}
+    fallback_translations = {}
+    for translation in translations:
+        if translation['lang_code'] == desired_lang_code:
+            desired_translations[translation['term']] = (
+                    translation['term_translation'])
+        else:
+            assert translation['lang_code'] == fallback_lang_code
+            fallback_translations[translation['term']] = (
+                    translation['term_translation'])
+
+    translations_dict = {}
+    for term in data_dict:
+        if term in desired_translations:
+            translations_dict[term] = desired_translations[term]
+        elif term in fallback_translations:
+            translations_dict[term] = fallback_translations[term]
+        else:
+            translations_dict[term] = term    
+    
+    return translations_dict
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)

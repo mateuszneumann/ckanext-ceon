@@ -78,3 +78,15 @@ Example
   {% if is_upload_enabled %}</div>{% endif %}
 
 {% endmacro %}
+
+{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false) %}
+  {%- set extra_html = caller() if caller -%}
+      {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
+      
+      <label class="checkbox" for="{{ id or name }}">
+        <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ form.attributes(attrs) }} />
+        {{ label or name }}
+      </label>
+      {% endcall %}
+  </div>
+{% endmacro %}

@@ -506,7 +506,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def _package_after_create(self, context, pkg_dict):
         log.debug(u"Creating package {}".format(pkg_dict))
-        create_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
+        if 'authors' not in pkg_dict:
+            raise toolkit.ValidationError({'authors': [_('Lastname not set for one of the authors')]})
+        else:
+            create_authors(context['session'], pkg_dict['id'], pkg_dict['authors'])
         if 'oa_funder' in pkg_dict:
             update_oa_tag(context, pkg_dict, 'oa_funders', pkg_dict['oa_funder'])
         if 'oa_funding_program' in pkg_dict:

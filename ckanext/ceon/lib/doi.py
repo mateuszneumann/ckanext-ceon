@@ -298,6 +298,7 @@ class MetadataDataCiteAPI(DataCiteAPI):
             xml = self.resource_to_xml(identifier, pkg_dict, res_dict)
         else:
             xml = self.package_to_xml(identifier, pkg_dict)
+	log.debug(u'Upserting XML: {}'.format(xml))
         r = self._call(method='post', data=xml, headers={'Content-Type': 'application/xml'})
         assert r.status_code == 201, 'Operation failed ERROR CODE: %s' % r.status_code
         return r

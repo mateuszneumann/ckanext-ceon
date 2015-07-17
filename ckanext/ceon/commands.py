@@ -38,14 +38,12 @@ class PiwikTrackingUpdate(CkanCommand):
             return
 
         cmd = self.args[0]
-        log.warn(u'Dos')
-        log.warn(u'Piwik command: {}'.format(cmd))
         self._load_config()
-
 
         #update command
         if cmd == 'update':
             url_id = config.get('ckanext.ceon.piwik_url').split('/piwik.php')
+            print(u'Piwik url_id: {}'.format(url_id))
             piwik_url = url_id[0]
             use_https = toolkit.asbool(config.get('ckanext.ceon.piwik_https', False))
 
@@ -69,7 +67,6 @@ class PiwikTrackingUpdate(CkanCommand):
                 'pageUrl': None,
                 'date': None
             }
-            log.info(u'Piwik params: {}'.format(piwik_params))
 
             if len(self.args) > 1:
                 #update a single package
@@ -90,6 +87,7 @@ class PiwikTrackingUpdate(CkanCommand):
 
     def update_package_stats(self, package_name, piwik_params, piwik_date_opts, piwik_url):
         log.info(u'Updating package statistics based on Piwik Analytics')
+        print(u'Updating package statistics based on Piwik Analytics')
 
         param = piwik_params.copy()
         param['pageUrl'] = '/dataset/' + package_name
@@ -120,6 +118,7 @@ class PiwikTrackingUpdate(CkanCommand):
                     recent = r_json[0]['nb_visits']
 
         log.info(u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent))
+        print(u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent))
         #print u'Updating package {} stats: total {}, recent {}'.format(package_name, total, recent)
         model.update_package_stats(package_name, total, recent)
 
@@ -151,6 +150,7 @@ class PiwikTrackingUpdate(CkanCommand):
                     if r_downloads.json():
                         downloads = r_downloads.json()[0]['nb_hits']
             log.info(u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads))
+            print(u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads))
             #print u'Updating resource {} stats: visits {}, downloads {}'.format(res['id'], visits, downloads)
             model.update_resource_stats(res['id'], visits, downloads)
 

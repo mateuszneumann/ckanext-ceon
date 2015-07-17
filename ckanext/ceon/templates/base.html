@@ -11,8 +11,12 @@
 {% endblock %}
 
 {% block scripts %}
-	{{ super() }}
-	{% resource 'ceon-resources/language-selector.js' %}
+    {{ super() }}
+    {% resource 'ceon-resources/language-selector.js' %}
     {% resource 'ceon-resources/home-page.js' %}
     {% resource 'ceon-resources/common.js' %}
+    {% resource 'ceon-resources/piwik.js' %}
+    <noscript><p><img src="{{ h.ckanext_piwik_piwik_url() }}" style="border:0;" alt="" /></p></noscript>
 {% endblock -%}
+
+

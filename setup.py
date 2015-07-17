@@ -15,6 +15,9 @@ entry_points = {
     'babel.extractors': [
         'ckan = ckan.lib.extract:extract_ckan',
     ],
+    'paste.paster_command': [
+        'piwik = ckanext.ceon.commands:PiwikTrackingUpdate',
+    ],
 }
 
 setup(

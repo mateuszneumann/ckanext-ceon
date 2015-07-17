@@ -4,6 +4,7 @@
 from logging import getLogger
 from datetime import datetime
 
+import ckan.lib.base as base
 import ckan.model as _model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -21,6 +22,9 @@ from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_packa
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses, update_resource_url, remove_locales_from_url
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
+from ckanext.ceon.model import get_stats_for_package, get_stats_for_resource
+
+import pylons.config as config
 
 log = getLogger(__name__)
 
@@ -252,6 +256,36 @@ def ceon_organization_list_for_user(context, data_dict):
     data_dict['include_datasets'] = True
     return ckan_organization_list_for_user(context, data_dict)
 
+
+### Piwik part ###
+
+def piwik_url_config():
+    return config.get('ckanext.ceon.piwik_url')
+
+def stats_for_package(package_name):
+    stats = get_stats_for_package(package_name)
+
+    #if no stats from db, give '0' counts
+    if not stats:
+        stats = {'total': 0, 'recent': 0}
+    return base.render_snippet('piwik_snippets/piwik_stats.html',
+                               total=stats['total'],
+                               recent=stats['recent'],
+                               recent_days=recent_days())
+
+def stats_for_resource(resource_id):
+    stats = get_stats_for_resource(resource_id)
+    #if no stats from db, give '0' counts
+    if not stats:
+        stats = {'visits': 0, 'downloads': 0}
+    return base.render_snippet('piwik_snippets/resource_stats.html',
+                               visits=stats['visits'],
+                               downloads=stats['downloads'])
+
+def recent_days():
+    return config.get('ckanext.ceon.piwik_recent_days')
+
+
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -343,7 +377,11 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 'ckanext_ceon_get_user_role': userRole,
                 'ckanext_ceon_not_group_member': not_group_member,
                 'ckanext_ceon_user_folders': ceon_user_folders,
-                'now': datetime.now
+                'now': datetime.now,
+                'ckanext_piwik_piwik_url': piwik_url_config,
+                'ckanext_piwik_stats_for_package': stats_for_package,
+                'ckanext_piwik_stats_for_resource': stats_for_resource,
+                'ckanext_piwik_recent_days': recent_days
                 }
 
     # IDatasetForm

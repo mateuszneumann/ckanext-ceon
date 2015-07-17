@@ -4,6 +4,7 @@ ckanext-ceon
 
 Extension implementing various CeON changes to default CKAN installation.
 The part handling DOI is based upon https://github.com/NaturalHistoryMuseum/ckanext-doi
+The part handling Piwik is based upon https://github.com/george-sattler/ckanext-piwik
 
 
 ------------

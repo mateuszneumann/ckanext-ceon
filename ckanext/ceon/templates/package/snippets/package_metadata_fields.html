@@ -90,6 +90,19 @@
       <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off" {% if not ancestral_license %}checked="checked"{% endif %}>{{ _("I will grant different licenses for different resources ") }}<br>
     </div>
   </div>
+{% if not data.id %}
 
+<div class="control-group">
+    <label class="control-label"><span title="{{ _("This field is required") }}" class="control-required">*</span>{{ _("Terms Agreement") }}</label>
+    <div class="controls">
+      <input id="field-terms_agreement" type="checkbox" name="terms_agreement" value="">
+      <a href="{{ h.url_for(controller='ckanext.ceon.controllers:CeonController', action='terms') }}" target="_blank">
+            {% trans %}
+              I have read the terms and conditions and agree
+            {% endtrans %}
+          </a> 
+	</div>
+  </div>
+  {% endif %}
 {% endblock %}
 

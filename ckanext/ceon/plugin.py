@@ -619,3 +619,10 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             license_ids = get_resources_licenses(_model.Session, pkg_dict)
             pkg_dict['license_id'] = license_ids
         return pkg_dict
+
+    def validate(self, context, data_dict, schema, action):
+        if data_dict.get('terms_agreement', None) == None:
+            errors = {} 
+            errors['terms_agreement'] = [_('You must accept terms and agreements.')]
+            return data_dict, errors
+        return None

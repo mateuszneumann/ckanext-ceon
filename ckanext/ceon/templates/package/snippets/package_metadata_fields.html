@@ -90,6 +90,7 @@
       <input id="field-ancestral_license_off" type="radio" name="ancestral_license_switch" value="off" {% if not ancestral_license %}checked="checked"{% endif %}>{{ _("I will grant different licenses for different resources ") }}<br>
     </div>
   </div>
+
 {% if not data.id %}
 
 <div class="control-group">
@@ -104,5 +105,6 @@
 	</div>
   </div>
   {% endif %}
+
 {% endblock %}
 

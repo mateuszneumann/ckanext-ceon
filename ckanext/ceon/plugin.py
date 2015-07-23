@@ -622,6 +622,7 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def validate(self, context, data_dict, schema, action):
         if action == 'package_create' and data_dict.get('terms_agreement', None) == None:
+
             errors = {} 
             errors['terms_agreement'] = [_('You must accept terms and agreements.')]
             return data_dict, errors

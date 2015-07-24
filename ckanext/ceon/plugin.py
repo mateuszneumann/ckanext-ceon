@@ -345,8 +345,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   '/contact',
                     controller='ckanext.ceon.controllers:CeonController',
                     action='contact')
+        m.connect('user_delete',
+                  '/user/delete/{id}',
+                  controller='ckanext.ceon.controllers:CeonController',
+                  action='delete_user')
         return m
-    
+
     # IActions
     def get_actions(self):
         actions = {'user_create': ceon_user_create, 

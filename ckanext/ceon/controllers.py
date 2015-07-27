@@ -98,7 +98,7 @@ class CitationController(base.BaseController):
             f = StringIO.StringIO()
             return [self._prepare_bibtex(result).encode('utf-8')]
         elif 'ris' == citation_format:
-            pylons.response.headers['Content-Type'] = 'text/plain'
+            pylons.response.headers['Content-Type'] = 'application/x-research-info-systems'
             pylons.response.headers['Content-disposition'] = \
                     'attachment; filename="{name}.ris"'.format(name=package_name)
             f = StringIO.StringIO()
@@ -128,25 +128,29 @@ class CitationController(base.BaseController):
     def _prepare_ris(self, pkg_dict):
         orig_authors = get_authors(model.Session, pkg_dict['id'])
         pkg_doi = get_package_doi(pkg_dict['id'])
-        export = u"TY  - DATA\n" \
-                  "TI  - {title}\n" \
-                  "{authors}\n" \
-                  "PB  - {publisher}\n" \
-                  "PY  - {year}\n" \
-                  "{tags}\n" \
+        header = u"Provider: {publisher}\r\n" \
+                  "Content: text/plain; charset=\"utf-8\"".format(
+                    publisher = pkg_dict['publisher'],
+                )
+        export = u"TY  - DATA\r\n" \
+                  "TI  - {title}\r\n" \
+                  "{authors}\r\n" \
+                  "PB  - {publisher}\r\n" \
+                  "PY  - {year}\r\n" \
+                  "{tags}\r\n" \
                   "UR  - {url}".format(
                     name = pkg_dict['name'],
                     title = pkg_dict['title'],
-                    authors = "\n".join(" ".join(["AU  -", a.lastname, a.firstname[0]]) for a in orig_authors),
+                    authors = "\r\n".join(", ".join(["AU  -", a.lastname, a.firstname]) for a in orig_authors),
                     year = pkg_dict['publication_year'],
                     publisher = pkg_dict['publisher'],
-                    tags = "\n".join(" ".join(["KW  -", t['name']]) for t in (pkg_dict['tags'] if 'tags' in pkg_dict else [])),
+                    tags = "\r\n".join(" ".join(["KW  -", t['name']]) for t in (pkg_dict['tags'] if 'tags' in pkg_dict else [])),
                     url = get_package_link(pkg_dict['name']),
                     )
         if (pkg_doi):
-            export = u"{e}\n" \
-                      "DO  - {doi}".format(e=export, doi=pkg_doi.identifier)
-        export = u"{e}\nER  -".format(e=export)
+            export = u"{e}\r\n" \
+                      "DO  - DOI:{doi}".format(e=export, doi=pkg_doi.identifier)
+        export = u"{h}\r\n{e}\r\nER  -".format(h=header, e=export)
         return export
 
     def _prepare_datacite(self, pkg_dict):

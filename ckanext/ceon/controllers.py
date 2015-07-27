@@ -126,10 +126,11 @@ class CitationController(base.BaseController):
                     publisher = pkg_dict['publisher'])
 
     def _prepare_ris(self, pkg_dict):
+        from unidecode import unidecode
         orig_authors = get_authors(model.Session, pkg_dict['id'])
         pkg_doi = get_package_doi(pkg_dict['id'])
         header = u"Provider: {publisher}\r\n" \
-                  "Content: text/plain; charset=\"utf-8\"".format(
+                  "Content: text/plain; charset=\"us-ascii\"".format(
                     publisher = pkg_dict['publisher'],
                 )
         export = u"TY  - DATA\r\n" \
@@ -141,7 +142,7 @@ class CitationController(base.BaseController):
                   "UR  - {url}".format(
                     name = pkg_dict['name'],
                     title = pkg_dict['title'],
-                    authors = "\r\n".join(", ".join(["AU  -", a.lastname, a.firstname]) for a in orig_authors),
+                    authors = "\r\n".join(" ".join(["AU  -", a.lastname+",", a.firstname]) for a in orig_authors),
                     year = pkg_dict['publication_year'],
                     publisher = pkg_dict['publisher'],
                     tags = "\r\n".join(" ".join(["KW  -", t['name']]) for t in (pkg_dict['tags'] if 'tags' in pkg_dict else [])),
@@ -149,9 +150,9 @@ class CitationController(base.BaseController):
                     )
         if (pkg_doi):
             export = u"{e}\r\n" \
-                      "DO  - DOI:{doi}".format(e=export, doi=pkg_doi.identifier)
+                      "DO  - DOI: {doi}".format(e=export, doi=pkg_doi.identifier)
         export = u"{h}\r\n{e}\r\nER  -".format(h=header, e=export)
-        return export
+        return unidecode(export)
 
     def _prepare_datacite(self, pkg_dict):
         pkg_doi = get_package_doi(pkg_dict['id'])

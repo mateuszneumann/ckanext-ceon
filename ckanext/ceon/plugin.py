@@ -378,8 +378,12 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                   '/contact',
                     controller='ckanext.ceon.controllers:CeonController',
                     action='contact')
+        m.connect('user_delete',
+                  '/user/delete/{id}',
+                  controller='ckanext.ceon.controllers:CeonController',
+                  action='delete_user')
         return m
-    
+
     # IActions
     def get_actions(self):
         actions = {'user_create': ceon_user_create, 
@@ -655,4 +659,25 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         if pkg_dict['license_id'] == PKG_LICENSE_ID:
             license_ids = get_resources_licenses(_model.Session, pkg_dict)
             pkg_dict['license_id'] = license_ids
+        
+        authors = get_authors(_model.Session, pkg_dict['id'])
+        authors_dict = []
+        emails = []
+        for author in authors:
+            if author.firstname:
+                authors_dict.append(author.firstname)
+            authors_dict.append(author.lastname)
+            if author.email:
+                emails.append(author.email)
+        pkg_dict['author'] = authors_dict
+        pkg_dict['author_email'] = emails
+        
         return pkg_dict
+
+    def validate(self, context, data_dict, schema, action):
+        if action == 'package_create' and data_dict.get('terms_agreement', None) == None:
+
+            errors = {} 
+            errors['terms_agreement'] = [_('You must accept terms and agreements.')]
+            return data_dict, errors
+        return None

@@ -61,8 +61,22 @@ class CeonController(base.BaseController):
 
     def contact(self):
         return base.render('home/contact.html')
+    
+    def delete_user(self, id):
+        '''Delete user with id passed as parameter'''
+        context = {'model': model,
+                   'session': model.Session,
+                   'user': c.user,
+                   'auth_user_obj': c.userobj}
+        data_dict = {'id': id}
 
-
+        try:
+            get_action('user_delete')(context, data_dict)
+            h.redirect_to('/user')
+        except NotAuthorized:
+            msg = _('Unauthorized to delete user with id "{user_id}".')
+            abort(401, msg.format(user_id=id))
+            
 class CitationController(base.BaseController):
     def export_citation(self, package_name, citation_format):
         context = {

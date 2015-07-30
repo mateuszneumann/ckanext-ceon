@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-07-30 10:12+0000\n"
+"POT-Creation-Date: 2015-07-30 15:58+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: pl <repod@pon.edu.pl>\n"
@@ -30,7 +30,7 @@ msgstr "Nieznana grupa"
 
 #: ckanext/ceon/controllers.py:77
 msgid "Unauthorized to delete user with id \"{user_id}\"."
-msgstr "TODO"
+msgstr "Brak uprawnień do usunięcia użytkownika z id \"{user_id}\"."
 
 #: ckanext/ceon/controllers.py:92
 msgid "Dataset not found"
@@ -48,7 +48,7 @@ msgstr "Nieistniejący słownik \"%s\""
 
 #: ckanext/ceon/converters.py:85
 msgid "Missing value"
-msgstr ""
+msgstr "Puste wartość"
 
 #: ckanext/ceon/plugin.py:344 ckanext/ceon/templates/package/read.html:104
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
@@ -63,7 +63,7 @@ msgstr "Obszar badań"
 #: ckanext/ceon/plugin.py:551 ckanext/ceon/lib/metadata.py:62
 #: ckanext/ceon/lib/metadata.py:249
 msgid "Lastname not set for one of the authors"
-msgstr "TODO"
+msgstr "Nie wszyscy autorzy zostali opisani nazwiskiem"
 
 #: ckanext/ceon/plugin.py:605 ckanext/ceon/plugin.py:652
 msgid "DataCite DOI metadata updated"
@@ -75,7 +75,7 @@ msgstr "Utworzono metadane w DataCite DOI"
 
 #: ckanext/ceon/plugin.py:681
 msgid "You must accept terms and agreements."
-msgstr ""
+msgstr "Musisz zaakceptować regulamin."
 
 #: ckanext/ceon/fanstatic/ceon-image-upload.js:15
 msgid "Upload"
@@ -388,7 +388,6 @@ msgid "Who can deposit data in RepOD?"
 msgstr "Kto może deponować dane w repozytorium?"
 
 #: ckanext/ceon/templates/home/layout1.html:38
-#, fuzzy, python-format
 msgid ""
 "<p>Data can be deposited by <strong>every registered user</strong> who "
 "conducts research and wants to share data pertaining to their research "
@@ -443,7 +442,6 @@ msgstr ""
 "wyłącznie we własnym folderze."
 
 #: ckanext/ceon/templates/home/layout1.html:54
-#, fuzzy, python-format
 msgid ""
 "To start depositing data, select the “Create dataset” option from the "
 "menu. Then enter the <strong>metadata</strong> (the information that "
@@ -460,8 +458,8 @@ msgstr ""
 " Następnie wprowadzamy <strong>metadane</strong> (informacje opisujące "
 "nasz zbiór danych), zgodnie z instrukcjami przy kolejnych polach, po czym"
 " po kolei <strong>dodajemy przygotowane pliki</strong> (<a "
-"href=\"%(legal_url)\">Jak przygotować dane do udostępnienia?</a>). Na tym "
-"etapie wypełniamy dodatkowo pola metadanych dla pojedynczych plików. W "
+"href=\"%(legal_url)\">Jak przygotować dane do udostępnienia?</a>). Na tym"
+" etapie wypełniamy dodatkowo pola metadanych dla pojedynczych plików. W "
 "każdej chwili możemy przerwać, zapisać wprowadzone już informacje "
 "klikając w „Zapisz kopię roboczą”, i dokończyć kiedy indziej. Kiedy nasz "
 "zbiór danych jest już gotowy, klikamy <strong>„Zakończ”</strong>."
@@ -713,7 +711,6 @@ msgstr ""
 "udostępnionych danych."
 
 #: ckanext/ceon/templates/home/layout1.html:95
-#, fuzzy, python-format
 msgid ""
 "Research data can be shared in many ways. We encourage you to use one of "
 "the open licences (CC0, CC-BY, CC-BY-SA), but it is also possible to "
@@ -736,7 +733,6 @@ msgstr ""
 "RepOD</a>."
 
 #: ckanext/ceon/templates/home/layout1.html:101
-#, fuzzy, python-format
 msgid ""
 "<p>Using our services <strong>does not require registration</strong>. Any"
 " interested party can view, download and use the shared files. Any "
@@ -790,7 +786,6 @@ msgstr ""
 
 #: ckanext/ceon/templates/home/terms_of_use.html:3
 #: ckanext/ceon/templates/home/terms_of_use.html:6
-#, fuzzy
 msgid "RepOD Terms of use"
 msgstr "Regulamin RepOD"
 
@@ -868,38 +863,32 @@ msgstr ""
 "Warszawa<br> (wejście od ul. Towarowej)</p> "
 
 #: ckanext/ceon/templates/home/snippets/stats.html:4
-#, fuzzy
 msgid "Statistics"
-msgstr "{0} statystyki"
+msgstr "statystyki"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
-#, fuzzy
 msgid "dataset"
 msgstr "zbiór danych"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
-#, fuzzy
 msgid "datasets"
 msgstr "zbiory danych"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
-#, fuzzy
 msgid "group"
 msgstr "grupę"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
-#, fuzzy
 msgid "groups"
 msgstr "grupy"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
-#, fuzzy
 msgid "user"
-msgstr "Wydawca"
+msgstr "użytkownik"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 msgid "users"
-msgstr "TODO"
+msgstr "użytkowników"
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 #: ckanext/ceon/templates/package/read.html:46
@@ -949,7 +938,6 @@ msgstr "Zobacz {organization_name}"
 
 #: ckanext/ceon/templates/organization/snippets/organization_item.html:19
 #: ckanext/ceon/templates/organization/snippets/organization_item.html:21
-#, fuzzy
 msgid "{num} Dataset"
 msgid_plural "{num} Datasets"
 msgstr[0] "zbiór danych"
@@ -957,7 +945,6 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: ckanext/ceon/templates/organization/snippets/organization_item.html:23
-#, fuzzy
 msgid "0 Datasets"
 msgstr "zbiory danych"
 
@@ -1065,7 +1052,6 @@ msgid "URL"
 msgstr "URL"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:20
-#, fuzzy
 msgid "eg. my-dataset"
 msgstr "zbiór danych"
 
@@ -1077,24 +1063,7 @@ msgstr ""
 "Po wpisaniu danych pierwszego autora, pole do wpisania kolejnego autora "
 "pojawi się automatycznie. "
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
-msgid ""
-"Please enter the name of the institution or organization that holds, "
-"archives, publishes, prints, distributes, releases, issues, or produces "
-"the data you are depositing. For research data this will typically be the"
-" scientific unit where the main author of the dataset is affiliated, e.g."
-" University of Something or Institute for Some Kind of Research. When "
-"deciding upon the publisher you should consider that this name will be "
-"used for citation of your dataset."
-msgstr ""
-"Tu podajemy nazwę instytucji lub organizacji, która posiada, przechowuje, "
-"publikuje, drukuje, dystrybuuje lub odpowiada za wytworzenie deponowanych "
-"danych. W przypadku danych naukowych podajemy zazwyczaj jednostkę naukową, "
-"w której afiliowany jest główny autor zbioru danych, np. Uniwersytet w Pewnym "
-"Mieście albo Instytut Badań nad Różnościami. Przy określaniu wydawcy należy "
-"wziąć pod uwagę, że nazwa wydawcy będzie wykorzystywana do cytowania zbioru danych."
-
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
 msgid ""
 "Year when the data was made or is being made publicly available. For "
 "research data this may also be the year when the data was first made "
@@ -1237,7 +1206,6 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:83
 #: ckanext/ceon/templates/package/snippets/resource_form.html:62
-#, fuzzy
 msgid " Legal notice "
 msgstr " Poradnik prawny RepOD "
 
@@ -1247,11 +1215,11 @@ msgstr "Osobno wybiorę licencje dla poszczególnych plików tego zbioru."
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:97
 msgid "Terms Agreement"
-msgstr "TODO"
+msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:101
 msgid " I have read the terms and conditions and agree "
-msgstr "TODO"
+msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:29
 msgid "File"
@@ -1333,79 +1301,120 @@ msgstr "Dodaj"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:29
 msgid "Explore"
-msgstr "TODO"
+msgstr "Eksploruj"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:38
 msgid "Preview"
-msgstr "TODO"
+msgstr "Podgląd"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:41
 msgid "More information"
-msgstr "TODO"
+msgstr "Więcej informacji"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:50
 msgid "Download"
-msgstr "TODO"
+msgstr "Pobierz"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:53
-#, fuzzy
 msgid "Go to resource"
-msgstr "Typ zasobu"
+msgstr "Przejdź do zasobu"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:62
 msgid "Edit"
-msgstr "TODO"
+msgstr "Edytuj"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:14
 msgid "Embed"
-msgstr "TODO"
+msgstr "Wbuduj"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:27
 msgid "This resource view is not available at the moment."
-msgstr "TODO"
+msgstr "Widok tego zasobu nie jest obecnie dostępny."
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:29
 msgid "Click here for more information."
-msgstr "TODO"
+msgstr "Kliknij, by uzyskać więcej informacji."
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:36
-#, fuzzy
 msgid "Download resource"
 msgstr "Typ zasobu"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:59
 msgid "Your browser does not support iframes."
-msgstr "TODO"
+msgstr "Twoja przeglądarka nie wspiera iframes."
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:66
 msgid "Embed resource view"
-msgstr "TODO"
+msgstr "Wbuduj widok zasobu"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:69
 msgid ""
 "You can copy and paste the embed code into a CMS or blog software that "
 "supports raw HTML"
 msgstr ""
-"TODO"
+"Możesz skopiować, wkleić i wbudować kod w CMS albo oprogramowanie bloga "
+"wspierające surowy HTML"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:72
 msgid "Width"
-msgstr "TODO"
+msgstr "Szerokość"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:75
 msgid "Height"
-msgstr "TODO"
+msgstr "Wysokość"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:78
 msgid "Code"
-msgstr "TODO"
+msgstr "Kod"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:2
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:2
+msgid "visits3"
+msgstr "odwiedzin"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:4
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:4
+msgid "visits1"
+msgstr "odwiedziny"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:6
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:6
+msgid "visits2"
+msgstr "odwiedziny"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:8
+msgid "Total views of this dataset"
+msgstr "Ilość odwiedzin zbioru danych"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:9
+msgid "downloads3"
+msgstr "pobrań"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:11
+msgid "downloads1"
+msgstr "pobranie"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:13
+msgid "downloads2"
+msgstr "pobrania"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:16
+msgid "Total views of this resource"
+msgstr "Ilość odwiedzin zasobu"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:17
+msgid "Total downloads of this resource"
+msgstr "Ilość pobrań zasobu"
 
 #: ckanext/ceon/templates/snippets/IE_info.html:3
 msgid ""
 "This web service does not fully support Internet Explorer versions below "
 "IE9. If you are using an earlier version, some features may be displayed "
 "incorrectly."
-msgstr "TODO"
+msgstr ""
+"RepOD nie wspiera przeglądarek Internet Explorer w wersji poniżej IE9. "
+"Jeśli używasz wcześniejszej wersji tego programu, niektóre elementy mogą "
+"być wyświetlane niepoprawnie."
 
 #: ckanext/ceon/templates/snippets/license.html:24
 msgid "No License Provided"
@@ -1417,20 +1426,18 @@ msgid "This dataset satisfies the Open Definition."
 msgstr "Ten zbiór danych jest zgodny z Definicją Otwartości (Open Definition)."
 
 #: ckanext/ceon/templates/snippets/package_item.html:31
-#, fuzzy
 msgid "Private"
 msgstr "Prywatny DOI"
 
 #: ckanext/ceon/templates/snippets/package_item.html:40
 msgid "Draft"
-msgstr "TODO"
+msgstr "Szkic"
 
 #: ckanext/ceon/templates/snippets/package_item.html:50
 msgid "Popular"
-msgstr "TODO"
+msgstr "Popularne"
 
 #: ckanext/ceon/templates/snippets/package_item.html:57
-#, fuzzy
 msgid "This dataset has no description"
 msgstr "Ten zbiór danych został usunięty."
 

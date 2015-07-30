@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-07-30 10:12+0000\n"
+"POT-Creation-Date: 2015-07-30 15:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1089,6 +1089,45 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:78
 msgid "Code"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:2
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:2
+msgid "visits3"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:4
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:4
+msgid "visits1"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:6
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:6
+msgid "visits2"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:8
+msgid "Total views of this dataset"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:9
+msgid "downloads3"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:11
+msgid "downloads1"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:13
+msgid "downloads2"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:16
+msgid "Total views of this resource"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:17
+msgid "Total downloads of this resource"
 msgstr ""
 
 #: ckanext/ceon/templates/snippets/IE_info.html:3

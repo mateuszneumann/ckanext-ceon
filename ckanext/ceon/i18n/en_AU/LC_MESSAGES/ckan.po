@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: M.Hoffman-Sommer@icm.edu.pl\n"
-"POT-Creation-Date: 2015-07-30 10:12+0000\n"
+"POT-Creation-Date: 2015-07-30 15:58+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: en_AU <LL@li.org>\n"
@@ -571,7 +571,6 @@ msgid ""
 msgstr ""
 
 #: ckanext/ceon/templates/home/layout1.html:101
-#, fuzzy, python-format
 msgid ""
 "<p>Using our services <strong>does not require registration</strong>. Any"
 " interested party can view, download and use the shared files. Any "
@@ -670,22 +669,18 @@ msgid "Statistics"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
-#, fuzzy
 msgid "dataset"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
-#, fuzzy
 msgid "datasets"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
-#, fuzzy
 msgid "group"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:16
-#, fuzzy
 msgid "groups"
 msgstr ""
 
@@ -751,7 +746,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ckanext/ceon/templates/organization/snippets/organization_item.html:23
-#, fuzzy
 msgid "0 Datasets"
 msgstr "Browse datasets"
 
@@ -1150,6 +1144,45 @@ msgstr ""
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:78
 msgid "Code"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:2
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:2
+msgid "visits3"
+msgstr "views"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:4
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:4
+msgid "visits1"
+msgstr "view"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:6
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:6
+msgid "visits2"
+msgstr "views"
+
+#: ckanext/ceon/templates/piwik_snippets/piwik_stats.html:8
+msgid "Total views of this dataset"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:9
+msgid "downloads3"
+msgstr "downloads"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:11
+msgid "downloads1"
+msgstr "download"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:13
+msgid "downloads2"
+msgstr "downloads"
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:16
+msgid "Total views of this resource"
+msgstr ""
+
+#: ckanext/ceon/templates/piwik_snippets/resource_stats.html:17
+msgid "Total downloads of this resource"
 msgstr ""
 
 #: ckanext/ceon/templates/snippets/IE_info.html:3

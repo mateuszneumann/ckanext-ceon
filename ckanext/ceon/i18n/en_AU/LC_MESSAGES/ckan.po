@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: M.Hoffman-Sommer@icm.edu.pl\n"
-"POT-Creation-Date: 2015-07-02 14:41+0000\n"
+"POT-Creation-Date: 2015-07-20 14:41+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: en_AU <LL@li.org>\n"
@@ -121,6 +121,11 @@ msgid ""
 "\n"
 "   {package_link}\n"
 msgstr ""
+"A new package is waiting for moderation.\n"
+"\n"
+"Please click the following link to moderate this request:\n"
+"\n"
+"   {package_link}\n"
 
 #: ckanext/ceon/lib/moderation.py:46
 msgid ""
@@ -256,6 +261,10 @@ msgstr ""
 
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
+msgstr ""
+
+#: ckanext/ceon/templates/home/contact.html:6
+msgid "Contact"
 msgstr ""
 
 #: ckanext/ceon/templates/home/help.html:3
@@ -489,6 +498,9 @@ msgid ""
 "If you have a lot of files to deposit and the files can be grouped in a "
 "sensible manner, you can consider packaging them into .zip archives."
 msgstr ""
+"If you have a lot of files to deposit and the files can be grouped in a "
+"sensible manner, you can consider packaging them into .zip archives. You "
+"should however note that no preview will be available for packaged files."
 
 #: ckanext/ceon/templates/home/layout1.html:90
 msgid ""
@@ -529,6 +541,9 @@ msgid ""
 "encourage you to write in English, as it will make the shared data "
 "available to more people."
 msgstr ""
+"The description of the data (metadata) can be written in Polish or English. "
+"We encourage you to write in English, as it will make the shared data "
+"available to more people."
 
 #: ckanext/ceon/templates/home/layout1.html:95
 msgid ""
@@ -597,6 +612,10 @@ msgstr ""
 msgid "RepOD Terms of use"
 msgstr ""
 
+#: ckanext/ceon/templates/home/terms_of_use.html:12
+msgid "Regulamin korzystania z Repozytorium Otwartych Danych RepOD"
+msgstr ""
+
 #: ckanext/ceon/templates/home/snippets/about_text.html:1
 msgid ""
 " <p>RepOD – Repository for Open Data – is an online platform designed for"
@@ -638,7 +657,7 @@ msgid ""
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:4
-msgid "Statistics"
+msgid "{0} statistics"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
@@ -662,11 +681,12 @@ msgid "groups"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
-msgid "user"
+#, fuzzy
+msgid "related item"
 msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
-msgid "users"
+msgid "related items"
 msgstr ""
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
@@ -709,8 +729,13 @@ msgstr ""
 msgid "Clear Upload"
 msgstr ""
 
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:12
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:13
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:4
+#: ckanext/ceon/templates/snippets/organization.html:4
+msgid "Folder of user {organization_name}"
+msgstr ""
+
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:8
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:9
 msgid "View {organization_name}"
 msgstr ""
 
@@ -726,7 +751,14 @@ msgstr ""
 msgid "There are no groups associated with this dataset"
 msgstr ""
 
+#: ckanext/ceon/templates/package/read.html:46
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:38
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:62
+msgid "Author"
+msgstr ""
+
 #: ckanext/ceon/templates/package/read.html:86
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
 msgstr ""
 
@@ -818,7 +850,18 @@ msgid ""
 "the next author."
 msgstr ""
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:89
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
+msgid ""
+"Please enter the name of the institution or organization that holds, "
+"archives, publishes, prints, distributes, releases, issues, or produces "
+"the data you are depositing. For research data this will typically be the"
+" scientific unit where the main author of the dataset is affiliated, e.g."
+" University of Something or Institute for Some Kind of Research. When "
+"deciding upon the publisher you should consider that this name will be "
+"used for citation of your dataset."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid ""
 "Year when the data was made or is being made publicly available. For "
 "research data this may also be the year when the data was first made "
@@ -1050,48 +1093,3 @@ msgstr ""
 #: ckanext/ceon/templates/snippets/tag_list.html:7
 msgid "Keywords"
 msgstr ""
-
-#~ msgid "Contact"
-#~ msgstr ""
-
-#~ msgid "{0} statistics"
-#~ msgstr ""
-
-#~ msgid "related item"
-#~ msgstr ""
-
-#~ msgid "related items"
-#~ msgstr ""
-
-#~ msgid "Folder of user {organization_name}"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Please enter the name of the "
-#~ "institution or organization that holds, "
-#~ "archives, publishes, prints, distributes, "
-#~ "releases, issues, or produces the data"
-#~ " you are depositing. For research "
-#~ "data this will typically be the "
-#~ "scientific unit where the main author"
-#~ " of the dataset is affiliated, e.g."
-#~ " University of Something or Institute "
-#~ "for Some Kind of Research. When "
-#~ "deciding upon the publisher you should"
-#~ " consider that this name will be "
-#~ "used for citation of your dataset."
-#~ msgstr ""
-
-#~ msgid "This will be guessed automatically. Leave blank if you wish"
-#~ msgstr ""
-
-#~ msgid ""
-#~ " License definitions and additional "
-#~ "information can be found at <a "
-#~ "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
-#~ " "
-#~ msgstr ""
-
-#~ msgid " Legal notice</a> "
-#~ msgstr " RepOD Legal guide</a> "
-

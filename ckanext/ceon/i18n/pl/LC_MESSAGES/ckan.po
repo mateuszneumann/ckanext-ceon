@@ -1,5 +1,6 @@
-# Polish translations for ckanext-ceon.
-# Copyright (C) 2015 ICM UW
+
+# English (Australia) translations for ckanext-ceon.
+# Copyright (C) 2015 ORGANIZATION
 # This file is distributed under the same license as the ckanext-ceon
 # project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
@@ -8,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-07-02 14:41+0000\n"
+"POT-Creation-Date: 2015-07-20 14:41+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: pl <repod@pon.edu.pl>\n"
@@ -194,12 +195,12 @@ msgstr "Utwórz zbiór danych"
 
 #: ckanext/ceon/templates/header.html:50
 msgid "Datasets"
-msgstr "Przeglądaj zbiory danych"
+msgstr "Zbiory danych"
 
 #: ckanext/ceon/templates/header.html:51
 #: ckanext/ceon/templates/package/group_list.html:4
 msgid "Groups"
-msgstr "Przeglądaj grupy"
+msgstr "Grupy"
 
 #: ckanext/ceon/templates/header.html:70
 msgid "Sysadmin settings"
@@ -263,8 +264,8 @@ msgid ""
 "It is available for use in manuscripts, and will be published when the "
 "Dataset is made public."
 msgstr ""
-"Już teraz można go podawać w tekstach publikacji, natomiast aktywowany "
-"będzie z chwilą upublicznienia samego zbioru danych."
+"Prywatny numer DOI można podawać w tekstach publikacji, ale nie jest on jeszcze aktywny. "
+"Zostanie aktywowany z chwilą upublicznienia samego zbioru danych."
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:40
 msgid "Retrieved"
@@ -277,6 +278,10 @@ msgstr "GMT"
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
 msgstr "Dodaj mnie jako członka"
+
+#: ckanext/ceon/templates/home/contact.html:6
+msgid "Contact"
+msgstr "Kontakt"
 
 #: ckanext/ceon/templates/home/help.html:3
 #: ckanext/ceon/templates/home/help.html:6
@@ -338,9 +343,9 @@ msgstr ""
 " otwartych danych mogą korzystać zarówno inni naukowcy, jak i "
 "<strong>osoby spoza środowiska akademickiego</strong>,</li> "
 "<li>udostępnienie danych ułatwia sprawdzenie, czy opublikowane już "
-"pracenaukowe opierają się na <strong>powtarzalnych "
+"prace naukowe opierają się na <strong>powtarzalnych "
 "wynikach</strong>,</li> <li>dane zdeponowane w repozytorium są "
-"<strong>bezpiecznie, długoterminowoprzechowywane</strong>,</li> "
+"<strong>bezpiecznie, długoterminowo przechowywane</strong>,</li> "
 "<li>przygotowanie danych do udostępnienia wymaga ich "
 "<strong>odpowiedniego opracowania i opisania</strong>, dzięki czemu "
 "łatwiej z nich skorzystać w przyszłości,</li> <li>dane zdeponowane w "
@@ -632,7 +637,8 @@ msgid ""
 msgstr ""
 "Jeżeli mamy bardzo wiele plików do zdeponowania i dają się one sensownie "
 "pogrupować, to można ułatwić sobie proces opisywania i deponowania przez "
-"spakowanie plików, np. do postaci .zip."
+"spakowanie plików, np. do postaci .zip. Powinniśmy jednak pamiętać o tym, "
+"że dla spakowanych plików niedostępna będzie funkcja podglądu."
 
 #: ckanext/ceon/templates/home/layout1.html:90
 msgid ""
@@ -690,7 +696,7 @@ msgid ""
 "encourage you to write in English, as it will make the shared data "
 "available to more people."
 msgstr ""
-"Opisy danych mogą być w języku polskim lub angielskim. Zachęcamy do "
+"Opisy danych (metadane) mogą być w języku polskim lub angielskim. Zachęcamy do "
 "korzystania w tym przypadku z języka angielskiego, gdyż dzięki temu "
 "więcej osób będzie miało możliwość skorzystania z udostępnionych danych."
 
@@ -754,8 +760,8 @@ msgstr ""
 "znajdujący się w repozytorium <strong>zbiór danych</strong>, jak i "
 "powiązaną z nim <strong>publikację naukową</strong>, jeżeli taka "
 "istnieje.</p> <p>Poprawny <strong>format cytowania</strong> pobranego z "
-"RepODu zbioru danych wygląda tak:</p> <p>Kowalska, A., Wiśniewska, B. "
-"(2015) Wyniki pomiarów z lat 2002-2004. RepOD. <a "
+"RepODu zbioru danych wygląda tak:</p> <p>Kowalska, A., Wiśniewska, B. (2015) "
+"Wyniki pomiarów z lat 2002-2004. RepOD. <a "
 "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a>.</p>"
 
 #: ckanext/ceon/templates/home/terms.html:3
@@ -771,8 +777,13 @@ msgstr ""
 #: ckanext/ceon/templates/home/terms_of_use.html:3
 #: ckanext/ceon/templates/home/terms_of_use.html:6
 #, fuzzy
+#| msgid "RepOD Terms of Use"
 msgid "RepOD Terms of use"
 msgstr "Regulamin RepOD"
+
+#: ckanext/ceon/templates/home/terms_of_use.html:12
+msgid "Regulamin korzystania z Repozytorium Otwartych Danych RepOD"
+msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/about_text.html:1
 msgid ""
@@ -848,9 +859,8 @@ msgstr ""
 "Warszawa<br> (wejście od ul. Towarowej)</p> "
 
 #: ckanext/ceon/templates/home/snippets/stats.html:4
-#, fuzzy
-msgid "Statistics"
-msgstr "Statystyki"
+msgid "{0} statistics"
+msgstr "{0} statystyki"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
 #, fuzzy
@@ -874,12 +884,12 @@ msgstr "grupy"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 #, fuzzy
-msgid "user"
-msgstr "Wydawca"
+msgid "related item"
+msgstr "powiązany obiekt"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
-msgid "users"
-msgstr ""
+msgid "related items"
+msgstr "powiązane obiekty"
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 #: ckanext/ceon/templates/package/read.html:46
@@ -894,7 +904,7 @@ msgstr "Imię"
 
 #: ckanext/ceon/templates/macros/ceonform.html:25
 msgid "This field is required"
-msgstr ""
+msgstr "Pole obowiązkowe"
 
 #: ckanext/ceon/templates/macros/ceonform.html:26
 msgid "Lastname"
@@ -921,8 +931,13 @@ msgstr "URL grafiki"
 msgid "Clear Upload"
 msgstr "Wyczyść ładowanie"
 
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:12
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:13
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:4
+#: ckanext/ceon/templates/snippets/organization.html:4
+msgid "Folder of user {organization_name}"
+msgstr "Folder użytkownika {organization_name}"
+
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:8
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:9
 msgid "View {organization_name}"
 msgstr "Zobacz {organization_name}"
 
@@ -938,7 +953,14 @@ msgstr "Dodaj do grupy"
 msgid "There are no groups associated with this dataset"
 msgstr "Z tym zbiorem danych nie jest powiązana żadna grupa"
 
+#: ckanext/ceon/templates/package/read.html:46
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:38
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:62
+msgid "Author"
+msgstr "Autor"
+
 #: ckanext/ceon/templates/package/read.html:86
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
 msgstr "Wydawca"
 
@@ -1032,7 +1054,24 @@ msgstr ""
 "Po wpisaniu danych pierwszego autora, pole do wpisania kolejnego autora "
 "pojawi się automatycznie. "
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:89
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
+msgid ""
+"Please enter the name of the institution or organization that holds, "
+"archives, publishes, prints, distributes, releases, issues, or produces "
+"the data you are depositing. For research data this will typically be the"
+" scientific unit where the main author of the dataset is affiliated, e.g."
+" University of Something or Institute for Some Kind of Research. When "
+"deciding upon the publisher you should consider that this name will be "
+"used for citation of your dataset."
+msgstr ""
+"Tu podajemy nazwę instytucji lub organizacji, która posiada, przechowuje, "
+"publikuje, drukuje, dystrybuuje lub odpowiada za wytworzenie deponowanych "
+"danych. W przypadku danych naukowych podajemy zazwyczaj jednostkę naukową, "
+"w której afiliowany jest główny autor zbioru danych, np. Uniwersytet w Pewnym "
+"Mieście albo Instytut Badań nad Różnościami. Przy określaniu wydawcy należy "
+"wziąć pod uwagę, że nazwa wydawcy będzie wykorzystywana do cytowania zbioru danych."
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid ""
 "Year when the data was made or is being made publicly available. For "
 "research data this may also be the year when the data was first made "
@@ -1056,7 +1095,7 @@ msgstr "Rok wydania"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:90
 msgid "2012"
-msgstr "2012"
+msgstr "2015"
 
 #: ckanext/ceon/templates/package/snippets/package_basic_fields.html:92
 msgid ""
@@ -1291,67 +1330,4 @@ msgstr "Ustawienia"
 #: ckan/templates/user/edit_user_form.html:27
 msgid "Old Password"
 msgstr "Stare hasło"
-
-
-
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
-
-#~ msgid "related item"
-#~ msgstr "powiązany obiekt"
-
-#~ msgid "related items"
-#~ msgstr "powiązane obiekty"
-
-#~ msgid "Folder of user {organization_name}"
-#~ msgstr "Folder użytkownika {organization_name}"
-
-#~ msgid ""
-#~ "Please enter the name of the "
-#~ "institution or organization that holds, "
-#~ "archives, publishes, prints, distributes, "
-#~ "releases, issues, or produces the data"
-#~ " you are depositing. For research "
-#~ "data this will typically be the "
-#~ "scientific unit where the main author"
-#~ " of the dataset is affiliated, e.g."
-#~ " University of Something or Institute "
-#~ "for Some Kind of Research. When "
-#~ "deciding upon the publisher you should"
-#~ " consider that this name will be "
-#~ "used for citation of your dataset."
-#~ msgstr ""
-#~ "Tu podajemy nazwę instytucji lub "
-#~ "organizacji, która posiada, przechowuje, "
-#~ "publikuje, drukuje, dystrybuuje lub odpowiada"
-#~ " za wytworzenie deponowanych danych. W "
-#~ "przypadku danych naukowych podajemy zazwyczaj"
-#~ " jednostkę naukową, w której afiliowany "
-#~ "jest główny autor zbioru danych, np. "
-#~ "Uniwersytet w Pewnym Mieście albo "
-#~ "Instytut Badań nad Różnościami. Przy "
-#~ "określaniu wydawcy należy wziąć pod "
-#~ "uwagę, że nazwa wydawcy będzie "
-#~ "wykorzystywana do cytowania zbioru danych."
-
-#~ msgid "This will be guessed automatically. Leave blank if you wish"
-#~ msgstr "To pole zostanie uzupełnione automatycznie. Możesz zostawić je puste"
-
-#~ msgid ""
-#~ " License definitions and additional "
-#~ "information can be found at <a "
-#~ "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
-#~ " "
-#~ msgstr ""
-#~ "\n"
-#~ "                Definicje licencji i dodatkowe"
-#~ " informacje znajdują się w serwisie\n"
-#~ "                <a "
-#~ "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
-#~ "\n"
-#~ "              "
-
-#~ msgid " Legal notice</a> "
-#~ msgstr " Poradnik prawny RepOD</a> "
 

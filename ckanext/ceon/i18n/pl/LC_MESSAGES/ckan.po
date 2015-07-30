@@ -1,4 +1,3 @@
-
 # English (Australia) translations for ckanext-ceon.
 # Copyright (C) 2015 ORGANIZATION
 # This file is distributed under the same license as the ckanext-ceon
@@ -9,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-ceon 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-07-20 14:41+0000\n"
+"POT-Creation-Date: 2015-07-30 10:12+0000\n"
 "PO-Revision-Date: 2015-05-28 13:37+0100\n"
 "Last-Translator: Mateusz Neumann <M.Neumann@icm.edu.pl>\n"
 "Language-Team: pl <repod@pon.edu.pl>\n"
@@ -29,11 +28,15 @@ msgstr "Brak uprawnień do dodania członka do grupy %s"
 msgid "Group not found"
 msgstr "Nieznana grupa"
 
-#: ckanext/ceon/controllers.py:78
+#: ckanext/ceon/controllers.py:77
+msgid "Unauthorized to delete user with id \"{user_id}\"."
+msgstr ""
+
+#: ckanext/ceon/controllers.py:92
 msgid "Dataset not found"
 msgstr "Nieznany zbiór danych"
 
-#: ckanext/ceon/controllers.py:99
+#: ckanext/ceon/controllers.py:113
 #, python-format
 msgid "Unknown citation format (%s)"
 msgstr "Nieznany format cytowania (%s)"
@@ -47,23 +50,32 @@ msgstr "Nieistniejący słownik \"%s\""
 msgid "Missing value"
 msgstr ""
 
-#: ckanext/ceon/plugin.py:227 ckanext/ceon/templates/package/read.html:104
+#: ckanext/ceon/plugin.py:344 ckanext/ceon/templates/package/read.html:104
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
 msgid "Type of resource"
 msgstr "Typ zasobu"
 
-#: ckanext/ceon/plugin.py:228 ckanext/ceon/templates/package/read.html:110
+#: ckanext/ceon/plugin.py:345 ckanext/ceon/templates/package/read.html:110
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:22
 msgid "Area of study"
 msgstr "Obszar badań"
 
-#: ckanext/ceon/plugin.py:470 ckanext/ceon/plugin.py:510
+#: ckanext/ceon/plugin.py:551 ckanext/ceon/lib/metadata.py:62
+#: ckanext/ceon/lib/metadata.py:249
+msgid "Lastname not set for one of the authors"
+msgstr ""
+
+#: ckanext/ceon/plugin.py:605 ckanext/ceon/plugin.py:652
 msgid "DataCite DOI metadata updated"
 msgstr "Zaktualizowano metadane w DataCite DOI"
 
-#: ckanext/ceon/plugin.py:473 ckanext/ceon/plugin.py:513
+#: ckanext/ceon/plugin.py:610 ckanext/ceon/plugin.py:655
 msgid "DataCite DOI has been created"
 msgstr "Utworzono metadane w DataCite DOI"
+
+#: ckanext/ceon/plugin.py:681
+msgid "You must accept terms and agreements."
+msgstr ""
 
 #: ckanext/ceon/fanstatic/ceon-image-upload.js:15
 msgid "Upload"
@@ -264,8 +276,9 @@ msgid ""
 "It is available for use in manuscripts, and will be published when the "
 "Dataset is made public."
 msgstr ""
-"Prywatny numer DOI można podawać w tekstach publikacji, ale nie jest on jeszcze aktywny. "
-"Zostanie aktywowany z chwilą upublicznienia samego zbioru danych."
+"Prywatny numer DOI można podawać w tekstach publikacji, ale nie jest on "
+"jeszcze aktywny. Zostanie aktywowany z chwilą upublicznienia samego "
+"zbioru danych."
 
 #: ckanext/ceon/templates/doi/snippets/package_citation.html:40
 msgid "Retrieved"
@@ -278,10 +291,6 @@ msgstr "GMT"
 #: ckanext/ceon/templates/group/snippets/info.html:11
 msgid "Add me as member"
 msgstr "Dodaj mnie jako członka"
-
-#: ckanext/ceon/templates/home/contact.html:6
-msgid "Contact"
-msgstr "Kontakt"
 
 #: ckanext/ceon/templates/home/help.html:3
 #: ckanext/ceon/templates/home/help.html:6
@@ -342,20 +351,20 @@ msgstr ""
 " łączyć je ze sobą, tworząc <strong>nowe zestawienia</strong>,</li> <li>z"
 " otwartych danych mogą korzystać zarówno inni naukowcy, jak i "
 "<strong>osoby spoza środowiska akademickiego</strong>,</li> "
-"<li>udostępnienie danych ułatwia sprawdzenie, czy opublikowane już "
-"prace naukowe opierają się na <strong>powtarzalnych "
-"wynikach</strong>,</li> <li>dane zdeponowane w repozytorium są "
-"<strong>bezpiecznie, długoterminowo przechowywane</strong>,</li> "
-"<li>przygotowanie danych do udostępnienia wymaga ich "
-"<strong>odpowiedniego opracowania i opisania</strong>, dzięki czemu "
-"łatwiej z nich skorzystać w przyszłości,</li> <li>dane zdeponowane w "
-"repozytorium posiadają stały URL i uzyskują numer DOI (<em>digital object"
-" identifier</em>), co ułatwia ich <strong>prawidłowe cytowanie</strong> "
-"oraz umożliwia umieszczenie listy opublikowanych zbiorów danych w "
-"CV,</li> <li>dane w repozytorium są opatrzone zestandaryzowanym zestawem "
-"metadanych, dzięki czemu są <strong>łatwe do wyszukania</strong>,</li> "
-"<li>repozytorium zapewnia badaczom informacje o tym, jak często ich dane "
-"były <strong>oglądane i pobierane</strong>.</li>"
+"<li>udostępnienie danych ułatwia sprawdzenie, czy opublikowane już prace "
+"naukowe opierają się na <strong>powtarzalnych wynikach</strong>,</li> "
+"<li>dane zdeponowane w repozytorium są <strong>bezpiecznie, "
+"długoterminowo przechowywane</strong>,</li> <li>przygotowanie danych do "
+"udostępnienia wymaga ich <strong>odpowiedniego opracowania i "
+"opisania</strong>, dzięki czemu łatwiej z nich skorzystać w "
+"przyszłości,</li> <li>dane zdeponowane w repozytorium posiadają stały URL"
+" i uzyskują numer DOI (<em>digital object identifier</em>), co ułatwia "
+"ich <strong>prawidłowe cytowanie</strong> oraz umożliwia umieszczenie "
+"listy opublikowanych zbiorów danych w CV,</li> <li>dane w repozytorium są"
+" opatrzone zestandaryzowanym zestawem metadanych, dzięki czemu są "
+"<strong>łatwe do wyszukania</strong>,</li> <li>repozytorium zapewnia "
+"badaczom informacje o tym, jak często ich dane były <strong>oglądane i "
+"pobierane</strong>.</li>"
 
 #: ckanext/ceon/templates/home/layout1.html:30
 msgid ""
@@ -379,13 +388,14 @@ msgid "Who can deposit data in RepOD?"
 msgstr "Kto może deponować dane w repozytorium?"
 
 #: ckanext/ceon/templates/home/layout1.html:38
+#, fuzzy, python-format
 msgid ""
 "<p>Data can be deposited by <strong>every registered user</strong> who "
 "conducts research and wants to share data pertaining to their research "
 "project. You only need to remember that the person depositing data must "
 "have all intellectual property and related <strong>rights</strong> "
 "necessary for open sharing of the materials (<a "
-"href=\"{legal_url}\">RepOD Legal Guide</a>).</p>"
+"href=\"%(legal_url)s\">RepOD Legal Guide</a>).</p>"
 msgstr ""
 "<p>Dane może deponować <strong>każdy zarejestrowany użytkownik</strong>, "
 "który prowadzi działalność badawczą i chce udostępnić związane ze swoimi "
@@ -433,12 +443,13 @@ msgstr ""
 "wyłącznie we własnym folderze."
 
 #: ckanext/ceon/templates/home/layout1.html:54
+#, fuzzy, python-format
 msgid ""
 "To start depositing data, select the “Create dataset” option from the "
 "menu. Then enter the <strong>metadata</strong> (the information that "
 "describes your dataset) into the provided fields, according to the "
 "instructions next to the fields. Then <strong>add the prepared "
-"files</strong> (<a href=\"{legal_url}\">How to prepare data for "
+"files</strong> (<a href=\"%(legal_url)s\">How to prepare data for "
 "sharing?</a>). At this stage you should also fill in the metadata for "
 "individual files. You can interrupt these actions at any time, save the "
 "entered data by clicking <strong>“Save as draft”</strong>, and come back "
@@ -637,8 +648,8 @@ msgid ""
 msgstr ""
 "Jeżeli mamy bardzo wiele plików do zdeponowania i dają się one sensownie "
 "pogrupować, to można ułatwić sobie proces opisywania i deponowania przez "
-"spakowanie plików, np. do postaci .zip. Powinniśmy jednak pamiętać o tym, "
-"że dla spakowanych plików niedostępna będzie funkcja podglądu."
+"spakowanie plików, np. do postaci .zip. Powinniśmy jednak pamiętać o tym,"
+" że dla spakowanych plików niedostępna będzie funkcja podglądu."
 
 #: ckanext/ceon/templates/home/layout1.html:90
 msgid ""
@@ -696,11 +707,13 @@ msgid ""
 "encourage you to write in English, as it will make the shared data "
 "available to more people."
 msgstr ""
-"Opisy danych (metadane) mogą być w języku polskim lub angielskim. Zachęcamy do "
-"korzystania w tym przypadku z języka angielskiego, gdyż dzięki temu "
-"więcej osób będzie miało możliwość skorzystania z udostępnionych danych."
+"Opisy danych (metadane) mogą być w języku polskim lub angielskim. "
+"Zachęcamy do korzystania w tym przypadku z języka angielskiego, gdyż "
+"dzięki temu więcej osób będzie miało możliwość skorzystania z "
+"udostępnionych danych."
 
 #: ckanext/ceon/templates/home/layout1.html:95
+#, fuzzy, python-format
 msgid ""
 "Research data can be shared in many ways. We encourage you to use one of "
 "the open licences (CC0, CC-BY, CC-BY-SA), but it is also possible to "
@@ -709,7 +722,7 @@ msgid ""
 "the necessary legal rights (including verbal consent of all co-authors). "
 "Please also note that it is the depositer who is responsible for proper "
 "anonymization of all personal and sensitive data. More information on "
-"legal issues can be found in the <a href=\"{legal_url}\">RepOD Legal "
+"legal issues can be found in the <a href=\"%(legal_url)s\">RepOD Legal "
 "Guide</a>."
 msgstr ""
 "Dane badawcze możemy udostępniać na różnych zasadach. Zachęcamy do "
@@ -723,13 +736,14 @@ msgstr ""
 "RepOD</a>."
 
 #: ckanext/ceon/templates/home/layout1.html:101
+#, fuzzy, python-format
 msgid ""
 "<p>Using our services <strong>does not require registration</strong>. Any"
 " interested party can view, download and use the shared files. Any "
 "restrictions in using the data result only from the legal status of the "
 "files: the open licence granted by the depositer or the provisions of "
-"fair use (<a href=\"{legal_url}\">RepOD Legal Guide</a>).</p> <p>Please "
-"note that <strong>regardless</strong> of the legal status of the data, "
+"fair use (<a href=\"%(legal_url)s\">RepOD Legal Guide</a>).</p> <p>Please"
+" note that <strong>regardless</strong> of the legal status of the data, "
 "<strong>good scientific practice</strong> requires that you state the "
 "name of the author(s) and the source whenever you use the data – even if "
 "it is shared under a CC0 licence. The only exception to this rule is when"
@@ -760,8 +774,8 @@ msgstr ""
 "znajdujący się w repozytorium <strong>zbiór danych</strong>, jak i "
 "powiązaną z nim <strong>publikację naukową</strong>, jeżeli taka "
 "istnieje.</p> <p>Poprawny <strong>format cytowania</strong> pobranego z "
-"RepODu zbioru danych wygląda tak:</p> <p>Kowalska, A., Wiśniewska, B. (2015) "
-"Wyniki pomiarów z lat 2002-2004. RepOD. <a "
+"RepODu zbioru danych wygląda tak:</p> <p>Kowalska, A., Wiśniewska, B. "
+"(2015) Wyniki pomiarów z lat 2002-2004. RepOD. <a "
 "href=\"http://dx.doi.org/10.5072/0069791\">http://dx.doi.org/10.5072/0069791</a>.</p>"
 
 #: ckanext/ceon/templates/home/terms.html:3
@@ -777,13 +791,8 @@ msgstr ""
 #: ckanext/ceon/templates/home/terms_of_use.html:3
 #: ckanext/ceon/templates/home/terms_of_use.html:6
 #, fuzzy
-#| msgid "RepOD Terms of Use"
 msgid "RepOD Terms of use"
 msgstr "Regulamin RepOD"
-
-#: ckanext/ceon/templates/home/terms_of_use.html:12
-msgid "Regulamin korzystania z Repozytorium Otwartych Danych RepOD"
-msgstr ""
 
 #: ckanext/ceon/templates/home/snippets/about_text.html:1
 msgid ""
@@ -821,22 +830,22 @@ msgstr ""
 "które zostały wytworzone, zebrane lub opracowane na potrzeby prowadzenia "
 "badań naukowych. RepOD jest przeznaczony dla tzw. małych danych, "
 "powstających w pracach badawczych prowadzonych przez pojedynczych "
-"naukowców lub niewielkie zespoły naukowe. Celem naszego repozytorium jest "
-"stworzenie miejsca, gdzie takie dane naukowe będzie można udostępniać i "
+"naukowców lub niewielkie zespoły naukowe. Celem naszego repozytorium jest"
+" stworzenie miejsca, gdzie takie dane naukowe będzie można udostępniać i "
 "dzielić się nimi.</p> <p>RepOD jest prowadzony w <a "
 "href=\"http://www.icm.edu.pl\" target=\"_blank\">Interdyscyplinarnym "
 "Centrum Modelowania Matematycznego i Komputerowego Uniwersytetu "
-"Warszawskiego (ICM UW)</a> w ramach działań <a href=\"http://pon.edu.pl\" "
-"target=\"_blank\">Platformy Otwartej Nauki (PON)</a> – ośrodka rozwoju "
+"Warszawskiego (ICM UW)</a> w ramach działań <a href=\"http://pon.edu.pl\""
+" target=\"_blank\">Platformy Otwartej Nauki (PON)</a> – ośrodka rozwoju "
 "polskich otwartych zasobów naukowych. Wśród serwisów prowadzonych przez "
 "PON znajdują się również <a href=\"https://depot.ceon.pl\" "
 "target=\"_blank\">Repozytorium CeON</a> – otwarte repozytorium tekstów "
-"naukowych (artykułów, książek i rozdziałów, rozpraw doktorskich, itp.) "
-"– oraz serwis <a href=\"http://otworzksiazke.pl\" "
-"target=\"_blank\">Otwórz Książkę</a>, w którym udostępniane są cyfrowe "
-"wersje książek naukowych polskich uczonych. PON prowadzi także <a "
-"href=\"http://bibliotekanauki.ceon.pl/\" target=\"_blank\">"
-"Bibliotekę Nauki</a> – platformę polskich otwartych czasopism naukowych.</p> "
+"naukowych (artykułów, książek i rozdziałów, rozpraw doktorskich, itp.) – "
+"oraz serwis <a href=\"http://otworzksiazke.pl\" target=\"_blank\">Otwórz "
+"Książkę</a>, w którym udostępniane są cyfrowe wersje książek naukowych "
+"polskich uczonych. PON prowadzi także <a "
+"href=\"http://bibliotekanauki.ceon.pl/\" target=\"_blank\">Bibliotekę "
+"Nauki</a> – platformę polskich otwartych czasopism naukowych.</p> "
 
 #: ckanext/ceon/templates/home/snippets/contact_text.html:1
 msgid ""
@@ -854,12 +863,13 @@ msgstr ""
 "prowadzony przez Platformę Otwartej Nauki:</h2> <p><a "
 "href=\"http://pon.edu.pl\">http://pon.edu.pl</a><br> E-mail: <a "
 "href=\"mailto:pon@icm.edu.pl\">pon@icm.edu.pl</a></p> <h2>Adres "
-"pocztowy:</h2> <p>Interdyscyplinarne Centrum Modelowania Matematycznego "
-"i Komputerowego<br> Uniwersytet Warszawski<br> ul. Prosta 69, 00-838 "
+"pocztowy:</h2> <p>Interdyscyplinarne Centrum Modelowania Matematycznego i"
+" Komputerowego<br> Uniwersytet Warszawski<br> ul. Prosta 69, 00-838 "
 "Warszawa<br> (wejście od ul. Towarowej)</p> "
 
 #: ckanext/ceon/templates/home/snippets/stats.html:4
-msgid "{0} statistics"
+#, fuzzy
+msgid "Statistics"
 msgstr "{0} statystyki"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:10
@@ -884,17 +894,17 @@ msgstr "grupy"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 #, fuzzy
-msgid "related item"
-msgstr "powiązany obiekt"
+msgid "user"
+msgstr "Wydawca"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
-msgid "related items"
-msgstr "powiązane obiekty"
+msgid "users"
+msgstr ""
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 #: ckanext/ceon/templates/package/read.html:46
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:43
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:70
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:55
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:82
 msgid "Author"
 msgstr "Autor"
 
@@ -903,6 +913,7 @@ msgid "Firstname"
 msgstr "Imię"
 
 #: ckanext/ceon/templates/macros/ceonform.html:25
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:97
 msgid "This field is required"
 msgstr "Pole obowiązkowe"
 
@@ -931,15 +942,24 @@ msgstr "URL grafiki"
 msgid "Clear Upload"
 msgstr "Wyczyść ładowanie"
 
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:4
-#: ckanext/ceon/templates/snippets/organization.html:4
-msgid "Folder of user {organization_name}"
-msgstr "Folder użytkownika {organization_name}"
-
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:8
-#: ckanext/ceon/templates/organization/snippets/organization_item.html:9
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:12
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:13
 msgid "View {organization_name}"
 msgstr "Zobacz {organization_name}"
+
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:19
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:21
+#, fuzzy
+msgid "{num} Dataset"
+msgid_plural "{num} Datasets"
+msgstr[0] "zbiór danych"
+msgstr[1] ""
+msgstr[2] ""
+
+#: ckanext/ceon/templates/organization/snippets/organization_item.html:23
+#, fuzzy
+msgid "0 Datasets"
+msgstr "zbiory danych"
 
 #: ckanext/ceon/templates/package/group_list.html:13
 msgid "Associate this group with this dataset"
@@ -953,14 +973,7 @@ msgstr "Dodaj do grupy"
 msgid "There are no groups associated with this dataset"
 msgstr "Z tym zbiorem danych nie jest powiązana żadna grupa"
 
-#: ckanext/ceon/templates/package/read.html:46
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:38
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:62
-msgid "Author"
-msgstr "Autor"
-
 #: ckanext/ceon/templates/package/read.html:86
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:76
 msgid "Publisher"
 msgstr "Wydawca"
 
@@ -969,7 +982,7 @@ msgid "Publication year"
 msgstr "Rok wydania"
 
 #: ckanext/ceon/templates/package/read.html:98
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:105
 msgid "Related publication"
 msgstr "Powiązana publikacja"
 
@@ -1046,7 +1059,17 @@ msgstr "Tytuł"
 msgid "eg. A descriptive title"
 msgstr "Opisowy tytuł zbioru danych"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:25
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:20
+#: ckanext/ceon/templates/package/snippets/resource_form.html:29
+msgid "URL"
+msgstr "URL"
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:20
+#, fuzzy
+msgid "eg. my-dataset"
+msgstr "zbiór danych"
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:37
 msgid ""
 "After you fill in the data for one author, a new field will appear for "
 "the next author."
@@ -1054,24 +1077,7 @@ msgstr ""
 "Po wpisaniu danych pierwszego autora, pole do wpisania kolejnego autora "
 "pojawi się automatycznie. "
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
-msgid ""
-"Please enter the name of the institution or organization that holds, "
-"archives, publishes, prints, distributes, releases, issues, or produces "
-"the data you are depositing. For research data this will typically be the"
-" scientific unit where the main author of the dataset is affiliated, e.g."
-" University of Something or Institute for Some Kind of Research. When "
-"deciding upon the publisher you should consider that this name will be "
-"used for citation of your dataset."
-msgstr ""
-"Tu podajemy nazwę instytucji lub organizacji, która posiada, przechowuje, "
-"publikuje, drukuje, dystrybuuje lub odpowiada za wytworzenie deponowanych "
-"danych. W przypadku danych naukowych podajemy zazwyczaj jednostkę naukową, "
-"w której afiliowany jest główny autor zbioru danych, np. Uniwersytet w Pewnym "
-"Mieście albo Instytut Badań nad Różnościami. Przy określaniu wydawcy należy "
-"wziąć pod uwagę, że nazwa wydawcy będzie wykorzystywana do cytowania zbioru danych."
-
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
 msgid ""
 "Year when the data was made or is being made publicly available. For "
 "research data this may also be the year when the data was first made "
@@ -1089,15 +1095,15 @@ msgstr ""
 "pewności, jaką datę podać, powinniśmy rozważyć, jaka data będzie "
 "najsensowniejsza z punktu widzenia przyszłego cytowania zbioru danych."
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:90
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:102
 msgid "Publication Year"
 msgstr "Rok wydania"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:90
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:102
 msgid "2012"
 msgstr "2015"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:92
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:104
 msgid ""
 "Please provide a link – including a DOI number if possible – to a "
 "research publication based on the data being deposited. Please choose "
@@ -1111,44 +1117,45 @@ msgstr ""
 "publikacje bazujące na tych samych danych, to możemy później umieścić je "
 "w sekcji “Obiekty powiązane” na stronie naszego zbioru danych."
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:93
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:105
 msgid "http://example.com/article-123"
 msgstr "http://example.com/artykul-123"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:115
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:127
 msgid "Visibility"
 msgstr "Widoczność"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:131
 msgid "Waiting for approval"
 msgstr "Oczekuje na akceptację"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:131
 msgid "Rejected"
 msgstr "Odrzucony"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:119
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:131
 msgid "Public"
 msgstr "Publiczny"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:130
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:142
 msgid "Moderation notes"
 msgstr "Uwagi moderatora"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:130
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:142
 msgid "eg. Some useful notes about moderation"
 msgstr "Przydatne notatki o moderacji"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:135
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:147
 msgid "State"
 msgstr "Stan"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:138
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:150
 msgid "Active"
 msgstr "Aktywny"
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:139
-#: ckanext/ceon/templates/snippets/organization.html:5
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:151
+#: ckanext/ceon/templates/snippets/organization.html:13
+#: ckanext/ceon/templates/snippets/package_item.html:42
 msgid "Deleted"
 msgstr "Usunięty"
 
@@ -1221,13 +1228,17 @@ msgstr " Poradnik prawny RepOD "
 msgid "I will grant different licenses for different resources "
 msgstr "Osobno wybiorę licencje dla poszczególnych plików tego zbioru."
 
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:97
+msgid "Terms Agreement"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:101
+msgid " I have read the terms and conditions and agree "
+msgstr ""
+
 #: ckanext/ceon/templates/package/snippets/resource_form.html:29
 msgid "File"
 msgstr "Plik"
-
-#: ckanext/ceon/templates/package/snippets/resource_form.html:29
-msgid "URL"
-msgstr "URL"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:33
 msgid "Name"
@@ -1303,6 +1314,74 @@ msgstr "Zakończ"
 msgid "Add"
 msgstr "Dodaj"
 
+#: ckanext/ceon/templates/package/snippets/resource_item.html:29
+msgid "Explore"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_item.html:38
+msgid "Preview"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_item.html:41
+msgid "More information"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_item.html:50
+msgid "Download"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_item.html:53
+#, fuzzy
+msgid "Go to resource"
+msgstr "Typ zasobu"
+
+#: ckanext/ceon/templates/package/snippets/resource_item.html:62
+msgid "Edit"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:14
+msgid "Embed"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:27
+msgid "This resource view is not available at the moment."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:29
+msgid "Click here for more information."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:36
+#, fuzzy
+msgid "Download resource"
+msgstr "Typ zasobu"
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:59
+msgid "Your browser does not support iframes."
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:66
+msgid "Embed resource view"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:69
+msgid ""
+"You can copy and paste the embed code into a CMS or blog software that "
+"supports raw HTML"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:72
+msgid "Width"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:75
+msgid "Height"
+msgstr ""
+
+#: ckanext/ceon/templates/package/snippets/resource_view.html:78
+msgid "Code"
+msgstr ""
+
 #: ckanext/ceon/templates/snippets/IE_info.html:3
 msgid ""
 "This web service does not fully support Internet Explorer versions below "
@@ -1319,15 +1398,25 @@ msgstr "Nie określono licencji"
 msgid "This dataset satisfies the Open Definition."
 msgstr "Ten zbiór danych jest zgodny z Definicją Otwartości (Open Definition)."
 
+#: ckanext/ceon/templates/snippets/package_item.html:31
+#, fuzzy
+msgid "Private"
+msgstr "Prywatny DOI"
+
+#: ckanext/ceon/templates/snippets/package_item.html:40
+msgid "Draft"
+msgstr ""
+
+#: ckanext/ceon/templates/snippets/package_item.html:50
+msgid "Popular"
+msgstr ""
+
+#: ckanext/ceon/templates/snippets/package_item.html:57
+#, fuzzy
+msgid "This dataset has no description"
+msgstr "Ten zbiór danych został usunięty."
+
 #: ckanext/ceon/templates/snippets/tag_list.html:7
 msgid "Keywords"
 msgstr "Słowa kluczowe"
-
-#: ckan/templates/header.html:37
-msgid "Settings"
-msgstr "Ustawienia"
-
-#: ckan/templates/user/edit_user_form.html:27
-msgid "Old Password"
-msgstr "Stare hasło"
 

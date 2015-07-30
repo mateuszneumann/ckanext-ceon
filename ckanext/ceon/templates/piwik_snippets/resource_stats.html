@@ -1,2 +1,18 @@
-<span class="label total" title="Total views of this resource">{{ visits }} view{% if visits != 1 %}{{ 's' }}{% endif %}</span>
-<span class="label total" title="Total downloads of this resource">{{ downloads }} download{% if downloads != 1 %}{{ 's' }}{% endif %}</span>
+{% if visits == 1 %}
+  {% set visits_txt = _('visits1') %}
+{% elif visits % 10 >= 2 and visits % 10 <= 4 and (visits % 100 < 10 or visits % 100 >= 20) %}
+  {% set visits_txt = _('visits2') %}
+{% else %}
+  {% set visits_txt = _('visits3') %}
+{% end %}
+
+{% if downloads == 1 %}
+  {% set downloads_txt = _('downloads1') %}
+{% elif downloads % 10 >= 2 and downloads % 10 <= 4 and (downloads % 100 < 10 or downloads % 100 >= 20) %}
+  {% set downloads_txt = _('downloads2') %}
+{% else %}
+  {% set downloads_txt = _('downloads3') %}
+{% end %}
+
+<span class="label total" title="{{ _('Total views of this resource') }}">{{ visits }} {{ visits_txt }}{% endif %}</span>
+<span class="label total" title="{{ _('Total downloads of this resource') }}">{{ downloads }} {{ downloads_txt }}</span>

@@ -30,7 +30,7 @@ msgstr "Nieznana grupa"
 
 #: ckanext/ceon/controllers.py:77
 msgid "Unauthorized to delete user with id \"{user_id}\"."
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/controllers.py:92
 msgid "Dataset not found"
@@ -63,7 +63,7 @@ msgstr "Obszar badań"
 #: ckanext/ceon/plugin.py:551 ckanext/ceon/lib/metadata.py:62
 #: ckanext/ceon/lib/metadata.py:249
 msgid "Lastname not set for one of the authors"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/plugin.py:605 ckanext/ceon/plugin.py:652
 msgid "DataCite DOI metadata updated"
@@ -402,7 +402,7 @@ msgstr ""
 "badaniami dane naukowe. Trzeba jedynie pamiętać o tym, że osoba "
 "deponująca dane musi być w posiadaniu praw własności intelektualnej i "
 "pokrewnych potrzebnych do ich udostępnienia (<a "
-"href=\"{legal_url}\">Poradnik prawny RepOD</a>).</p>"
+"href=\"%(legal_url)\">Poradnik prawny RepOD</a>).</p>"
 
 #: ckanext/ceon/templates/home/layout1.html:42
 msgid "What sort of data can be deposited?"
@@ -460,7 +460,7 @@ msgstr ""
 " Następnie wprowadzamy <strong>metadane</strong> (informacje opisujące "
 "nasz zbiór danych), zgodnie z instrukcjami przy kolejnych polach, po czym"
 " po kolei <strong>dodajemy przygotowane pliki</strong> (<a "
-"href=\"legal_url\">Jak przygotować dane do udostępnienia?</a>). Na tym "
+"href=\"%(legal_url)\">Jak przygotować dane do udostępnienia?</a>). Na tym "
 "etapie wypełniamy dodatkowo pola metadanych dla pojedynczych plików. W "
 "każdej chwili możemy przerwać, zapisać wprowadzone już informacje "
 "klikając w „Zapisz kopię roboczą”, i dokończyć kiedy indziej. Kiedy nasz "
@@ -732,7 +732,7 @@ msgstr ""
 "udostępnić dane, musimy mieć do nich odpowiednie prawa (w tym także ustną"
 " zgodę wszystkich współautorów), oraz że to my odpowiadamy za "
 "anonimizację danych osobowych i wrażliwych. Więcej informacji na ten "
-"temat można znaleźć w rozdziale <a href=\"{legal_url}\">Poradnik prawny "
+"temat można znaleźć w rozdziale <a href=\"%(legal_url)\">Poradnik prawny "
 "RepOD</a>."
 
 #: ckanext/ceon/templates/home/layout1.html:101
@@ -762,7 +762,7 @@ msgstr ""
 "każdy zainteresowany. Ewentualne ograniczenia w wykorzystywaniu danych są"
 " uzależnione jedynie od <strong>prawnego statusu</strong> danego pliku: "
 "udzielonej przez deponującego wolnej licencji lub udostępnienia na "
-"zasadach dozwolonego użytku (<a href=\"{legal_url}\">Poradnik prawny "
+"zasadach dozwolonego użytku (<a href=\"%(legal_url)\">Poradnik prawny "
 "RepOD</a>).</p> <p>Zwracamy uwagę, że <strong>niezależnie</strong> od "
 "statusu prawnego wykorzystywanych danych, <strong>dobry obyczaj "
 "naukowy</strong> nakazuje podanie autora(ów) i źródła danych "
@@ -899,7 +899,7 @@ msgstr "Wydawca"
 
 #: ckanext/ceon/templates/home/snippets/stats.html:22
 msgid "users"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/macros/ceonform.html:19
 #: ckanext/ceon/templates/package/read.html:46
@@ -1077,7 +1077,24 @@ msgstr ""
 "Po wpisaniu danych pierwszego autora, pole do wpisania kolejnego autora "
 "pojawi się automatycznie. "
 
-#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:101
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:75
+msgid ""
+"Please enter the name of the institution or organization that holds, "
+"archives, publishes, prints, distributes, releases, issues, or produces "
+"the data you are depositing. For research data this will typically be the"
+" scientific unit where the main author of the dataset is affiliated, e.g."
+" University of Something or Institute for Some Kind of Research. When "
+"deciding upon the publisher you should consider that this name will be "
+"used for citation of your dataset."
+msgstr ""
+"Tu podajemy nazwę instytucji lub organizacji, która posiada, przechowuje, "
+"publikuje, drukuje, dystrybuuje lub odpowiada za wytworzenie deponowanych "
+"danych. W przypadku danych naukowych podajemy zazwyczaj jednostkę naukową, "
+"w której afiliowany jest główny autor zbioru danych, np. Uniwersytet w Pewnym "
+"Mieście albo Instytut Badań nad Różnościami. Przy określaniu wydawcy należy "
+"wziąć pod uwagę, że nazwa wydawcy będzie wykorzystywana do cytowania zbioru danych."
+
+#: ckanext/ceon/templates/package/snippets/package_basic_fields.html:78
 msgid ""
 "Year when the data was made or is being made publicly available. For "
 "research data this may also be the year when the data was first made "
@@ -1230,11 +1247,11 @@ msgstr "Osobno wybiorę licencje dla poszczególnych plików tego zbioru."
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:97
 msgid "Terms Agreement"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:101
 msgid " I have read the terms and conditions and agree "
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_form.html:29
 msgid "File"
@@ -1316,19 +1333,19 @@ msgstr "Dodaj"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:29
 msgid "Explore"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:38
 msgid "Preview"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:41
 msgid "More information"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:50
 msgid "Download"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:53
 #, fuzzy
@@ -1337,19 +1354,19 @@ msgstr "Typ zasobu"
 
 #: ckanext/ceon/templates/package/snippets/resource_item.html:62
 msgid "Edit"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:14
 msgid "Embed"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:27
 msgid "This resource view is not available at the moment."
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:29
 msgid "Click here for more information."
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:36
 #, fuzzy
@@ -1358,36 +1375,37 @@ msgstr "Typ zasobu"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:59
 msgid "Your browser does not support iframes."
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:66
 msgid "Embed resource view"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:69
 msgid ""
 "You can copy and paste the embed code into a CMS or blog software that "
 "supports raw HTML"
 msgstr ""
+"TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:72
 msgid "Width"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:75
 msgid "Height"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/package/snippets/resource_view.html:78
 msgid "Code"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/snippets/IE_info.html:3
 msgid ""
 "This web service does not fully support Internet Explorer versions below "
 "IE9. If you are using an earlier version, some features may be displayed "
 "incorrectly."
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/snippets/license.html:24
 msgid "No License Provided"
@@ -1405,11 +1423,11 @@ msgstr "Prywatny DOI"
 
 #: ckanext/ceon/templates/snippets/package_item.html:40
 msgid "Draft"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/snippets/package_item.html:50
 msgid "Popular"
-msgstr ""
+msgstr "TODO"
 
 #: ckanext/ceon/templates/snippets/package_item.html:57
 #, fuzzy

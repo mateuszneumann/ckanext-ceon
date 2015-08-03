@@ -1,1 +1,9 @@
-<span class="label total" title="Total views of this dataset">{{ total }} view{% if total != 1 %}{{ 's' }}{% endif %}</span>
+{% block dataset_stats %}
+  {% set visits_txt = _('visits3') %}
+  {% if total == 1 %}
+    {% set visits_txt = _('visits1') %}
+  {% elif total % 10 >= 2 and total % 10 <= 4 and (total % 100 < 10 or total % 100 >= 20) %}
+    {% set visits_txt = _('visits2') %}
+  {% endif %}
+  <span class="label total" title="{{ _('Total views of this dataset') }}">{{ total }} {{ visits_txt }}</span>
+{% endblock %}

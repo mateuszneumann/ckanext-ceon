@@ -48,7 +48,7 @@ msgstr "Nieistniejący słownik \"%s\""
 
 #: ckanext/ceon/converters.py:85
 msgid "Missing value"
-msgstr "Puste wartość"
+msgstr "Brakujące dane"
 
 #: ckanext/ceon/plugin.py:344 ckanext/ceon/templates/package/read.html:104
 #: ckanext/ceon/templates/package/snippets/package_metadata_fields.html:9
@@ -206,7 +206,15 @@ msgid "Create Dataset"
 msgstr "Utwórz zbiór danych"
 
 #: ckanext/ceon/templates/header.html:50
-msgid "Datasets"
+msgid "Datasets"Cześć
+
+Poproszę o utworzenie 2 nowych repozytorió w git.ceon.pl na potrzeby serwisu repod.pon.edu.pl.  Dostęp do zapisu w tej chwili powinni mieć: Monika Maksymiuk, Tomek Błażejczyk i ja.  Serwis, który ICM uruchomił (z Waszą pomocą) nazywa się RepOD, natomiast oprogramowanie to:
+
+1. klon CKAN-a (czy możecie od razu wrzucić tam zawartość https://github.com/mateuszneumann/ckan?)
+
+2. nasze rozszerzenie do CKAN-a (https://github.com/mateuszneumann/ckanext-ceon?)
+
+Może więc w nazwach repozytoriów użyć ścieżek (odpowiednio): repod/ckan i repod/ckanext-ceon ?
 msgstr "Zbiory danych"
 
 #: ckanext/ceon/templates/header.html:51
@@ -394,14 +402,14 @@ msgid ""
 "project. You only need to remember that the person depositing data must "
 "have all intellectual property and related <strong>rights</strong> "
 "necessary for open sharing of the materials (<a "
-"href=\"%(legal_url)s\">RepOD Legal Guide</a>).</p>"
+"href=\"{legal_url}\">RepOD Legal Guide</a>).</p>"
 msgstr ""
 "<p>Dane może deponować <strong>każdy zarejestrowany użytkownik</strong>, "
 "który prowadzi działalność badawczą i chce udostępnić związane ze swoimi "
 "badaniami dane naukowe. Trzeba jedynie pamiętać o tym, że osoba "
 "deponująca dane musi być w posiadaniu praw własności intelektualnej i "
 "pokrewnych potrzebnych do ich udostępnienia (<a "
-"href=\"%(legal_url)\">Poradnik prawny RepOD</a>).</p>"
+"href=\"{legal_url}\">Poradnik prawny RepOD</a>).</p>"
 
 #: ckanext/ceon/templates/home/layout1.html:42
 msgid "What sort of data can be deposited?"
@@ -447,7 +455,7 @@ msgid ""
 "menu. Then enter the <strong>metadata</strong> (the information that "
 "describes your dataset) into the provided fields, according to the "
 "instructions next to the fields. Then <strong>add the prepared "
-"files</strong> (<a href=\"%(legal_url)s\">How to prepare data for "
+"files</strong> (<a href=\"{legal_url}\">How to prepare data for "
 "sharing?</a>). At this stage you should also fill in the metadata for "
 "individual files. You can interrupt these actions at any time, save the "
 "entered data by clicking <strong>“Save as draft”</strong>, and come back "
@@ -458,7 +466,7 @@ msgstr ""
 " Następnie wprowadzamy <strong>metadane</strong> (informacje opisujące "
 "nasz zbiór danych), zgodnie z instrukcjami przy kolejnych polach, po czym"
 " po kolei <strong>dodajemy przygotowane pliki</strong> (<a "
-"href=\"%(legal_url)\">Jak przygotować dane do udostępnienia?</a>). Na tym"
+"href=\"{legal_url}\">Jak przygotować dane do udostępnienia?</a>). Na tym"
 " etapie wypełniamy dodatkowo pola metadanych dla pojedynczych plików. W "
 "każdej chwili możemy przerwać, zapisać wprowadzone już informacje "
 "klikając w „Zapisz kopię roboczą”, i dokończyć kiedy indziej. Kiedy nasz "
@@ -719,7 +727,7 @@ msgid ""
 "the necessary legal rights (including verbal consent of all co-authors). "
 "Please also note that it is the depositer who is responsible for proper "
 "anonymization of all personal and sensitive data. More information on "
-"legal issues can be found in the <a href=\"%(legal_url)s\">RepOD Legal "
+"legal issues can be found in the <a href=\"{legal_url}\">RepOD Legal "
 "Guide</a>."
 msgstr ""
 "Dane badawcze możemy udostępniać na różnych zasadach. Zachęcamy do "
@@ -729,7 +737,7 @@ msgstr ""
 "udostępnić dane, musimy mieć do nich odpowiednie prawa (w tym także ustną"
 " zgodę wszystkich współautorów), oraz że to my odpowiadamy za "
 "anonimizację danych osobowych i wrażliwych. Więcej informacji na ten "
-"temat można znaleźć w rozdziale <a href=\"%(legal_url)\">Poradnik prawny "
+"temat można znaleźć w rozdziale <a href=\"{legal_url}\">Poradnik prawny "
 "RepOD</a>."
 
 #: ckanext/ceon/templates/home/layout1.html:101
@@ -738,7 +746,7 @@ msgid ""
 " interested party can view, download and use the shared files. Any "
 "restrictions in using the data result only from the legal status of the "
 "files: the open licence granted by the depositer or the provisions of "
-"fair use (<a href=\"%(legal_url)s\">RepOD Legal Guide</a>).</p> <p>Please"
+"fair use (<a href=\"{legal_url}\">RepOD Legal Guide</a>).</p> <p>Please"
 " note that <strong>regardless</strong> of the legal status of the data, "
 "<strong>good scientific practice</strong> requires that you state the "
 "name of the author(s) and the source whenever you use the data – even if "
@@ -758,7 +766,7 @@ msgstr ""
 "każdy zainteresowany. Ewentualne ograniczenia w wykorzystywaniu danych są"
 " uzależnione jedynie od <strong>prawnego statusu</strong> danego pliku: "
 "udzielonej przez deponującego wolnej licencji lub udostępnienia na "
-"zasadach dozwolonego użytku (<a href=\"%(legal_url)\">Poradnik prawny "
+"zasadach dozwolonego użytku (<a href=\"{legal_url}\">Poradnik prawny "
 "RepOD</a>).</p> <p>Zwracamy uwagę, że <strong>niezależnie</strong> od "
 "statusu prawnego wykorzystywanych danych, <strong>dobry obyczaj "
 "naukowy</strong> nakazuje podanie autora(ów) i źródła danych "

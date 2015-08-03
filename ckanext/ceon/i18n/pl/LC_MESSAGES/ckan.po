@@ -206,15 +206,7 @@ msgid "Create Dataset"
 msgstr "Utwórz zbiór danych"
 
 #: ckanext/ceon/templates/header.html:50
-msgid "Datasets"Cześć
-
-Poproszę o utworzenie 2 nowych repozytorió w git.ceon.pl na potrzeby serwisu repod.pon.edu.pl.  Dostęp do zapisu w tej chwili powinni mieć: Monika Maksymiuk, Tomek Błażejczyk i ja.  Serwis, który ICM uruchomił (z Waszą pomocą) nazywa się RepOD, natomiast oprogramowanie to:
-
-1. klon CKAN-a (czy możecie od razu wrzucić tam zawartość https://github.com/mateuszneumann/ckan?)
-
-2. nasze rozszerzenie do CKAN-a (https://github.com/mateuszneumann/ckanext-ceon?)
-
-Może więc w nazwach repozytoriów użyć ścieżek (odpowiednio): repod/ckan i repod/ckanext-ceon ?
+msgid "Datasets"
 msgstr "Zbiory danych"
 
 #: ckanext/ceon/templates/header.html:51

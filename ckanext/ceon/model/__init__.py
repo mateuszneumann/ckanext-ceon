@@ -23,6 +23,7 @@ def create_tables():
     ceon_resource_doi_table.create(checkfirst=True)
     piwik_package_table.create(checkfirst=True)
     piwik_resource_table.create(checkfirst=True)
+    ceon_tag_extra_table.create(checkfirst=True)
     log.info(u'CeON tables created')
 
 

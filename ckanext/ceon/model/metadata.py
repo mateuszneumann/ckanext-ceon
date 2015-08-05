@@ -5,11 +5,11 @@ from datetime import datetime
 from logging import getLogger
 from sqlalchemy import types, Table, ForeignKey, Column, DateTime
 from sqlalchemy.orm import relation, backref
-
-from ckan.model import meta, User, Package, Session, Resource, Group, Tag
+from sqlalchemy.sql.schema import PrimaryKeyConstraint
+from ckan.model import meta, User, Package, Session, Resource, Group, Tag, vocabulary, PackageTag
 from ckan.model.types import make_uuid
 from ckan.model.domain_object import DomainObject
-
+import ckan.logic as logic
 log = getLogger(__name__)
 
 
@@ -31,6 +31,11 @@ ceon_resource_license_table = Table('ceon_resource_license', meta.metadata,
         Column('created', types.DateTime, default=datetime.utcnow, nullable=False),
         )
 
+ceon_tag_extra_table = Table('ceon_tag_extra', meta.metadata,
+        Column('tag_id', types.UnicodeText, ForeignKey('tag.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False, unique=True),
+        Column('position', types.Integer),
+        PrimaryKeyConstraint('tag_id')
+        )
 
 class CeonPackageAuthor(DomainObject):
     """
@@ -78,7 +83,12 @@ class CeonResourceLicense(DomainObject):
         rec = query.first()
         return rec
 
-
+class CeonTagExtra(DomainObject):
+    """
+    CeON tags extra fields.
+    """
+    pass
+ 
 meta.mapper(CeonPackageAuthor, ceon_package_author_table, properties={
     'dataset': relation(Package,
         backref=backref('ceon_package_author', cascade='all, delete-orphan'),
@@ -91,5 +101,24 @@ meta.mapper(CeonResourceLicense, ceon_resource_license_table, properties={
         primaryjoin=ceon_resource_license_table.c.resource_id.__eq__(Resource.id))
     })
 
+meta.mapper(CeonTagExtra, ceon_tag_extra_table, properties={
+    'tag': relation(Tag,
+        backref=backref('ceon_tag_extra', cascade='all, delete-orphan'),
+        primaryjoin=ceon_tag_extra_table.c.tag_id.__eq__(Tag.id))
+    })
 
+def all_tags(vocab_id_or_name=None):
+        if vocab_id_or_name:
+            vocab = vocabulary.Vocabulary.get(vocab_id_or_name)
+            if vocab is None:
+                # The user specified an invalid vocab.
+                raise logic.NotFound("could not find vocabulary '%s'"
+                        % vocab_id_or_name)
+            query = meta.Session.query(Tag).join(CeonTagExtra).filter(Tag.vocabulary_id==vocab.id).order_by(CeonTagExtra.position)
+        else:
+            query = meta.Session.query(Tag).join(CeonTagExtra).filter(Tag.vocabulary_id == None)
+            query = query.distinct().join(PackageTag)
+            query = query.filter_by(state='active')
+            query = query.order_by(CeonTagExtra.position)
+        return query
 

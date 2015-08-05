@@ -69,7 +69,7 @@ this.ckan.module('funding-fields', function (jQuery, _) {
               return query.matcher(query.term, item);
             }
           });
-          items = items.sort();
+
           if (query.term) {
             items.push(query.term);
           }

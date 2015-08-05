@@ -3,18 +3,22 @@
 
 from logging import getLogger
 from datetime import datetime
+from collections import OrderedDict
 
 import ckan.lib.base as base
 import ckan.model as _model
+import ckanext.ceon.model as ceon_model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.logic as logic
+import ckan.lib.dictization.model_dictize as model_dictize
 
 from ckan.common import _
 from ckan.logic.action.create import user_create as ckan_user_create
 from ckan.logic.action.get import package_show as ckan_package_show
 from ckan.logic.action.get import organization_show as ckan_organization_show
 from ckan.logic.action.get import organization_list_for_user as ckan_organization_list_for_user
+from ckan.logic.action.get import _get_or_bust
 from ckan.lib import helpers as h
 from ckanext.ceon.config import get_site_url
 from ckanext.ceon.converters import convert_to_oa_tags, validate_lastname
@@ -22,13 +26,14 @@ from ckanext.ceon.lib.doi import get_package_doi, get_resource_doi, create_packa
 from ckanext.ceon.lib.metadata import create_authors, get_authors, update_authors, update_oa_tag, get_ancestral_license, get_license_id, get_licenses, update_ancestral_license, update_res_license, PKG_LICENSE_ID, get_resources_licenses, update_resource_url, remove_locales_from_url
 from ckanext.ceon.model import create_tables
 from ckanext.ceon.model import create_moderation_status, get_moderation_status, get_role, update_moderation_status, get_moderation_notes
-from ckanext.ceon.model import get_stats_for_package, get_stats_for_resource
+from ckanext.ceon.model import get_stats_for_package, get_stats_for_resource, all_tags
 
 import pylons.config as config
 
 import pylons
 from ckan.logic import get_action
 from pylons import config
+from collections import OrderedDict
 
 
 log = getLogger(__name__)
@@ -135,7 +140,7 @@ def create_oa_funding_programs():
 def res_types():
     create_res_types()
     try:
-        tag_list = toolkit.get_action('tag_list')
+        tag_list = toolkit.get_action('tag_list_ordered')
         res_types = tag_list(data_dict={'vocabulary_id': 'res_types'})
         res_types_translated = translate_data_dict(res_types)
         return res_types_translated
@@ -145,7 +150,7 @@ def res_types():
 def sci_disciplines():
     create_sci_disciplines()
     try:
-        tag_list = toolkit.get_action('tag_list')
+        tag_list = toolkit.get_action('tag_list_ordered')
         sci_disciplines = tag_list(data_dict={'vocabulary_id': 'sci_disciplines'})
         sci_disciplines_translated = translate_data_dict(sci_disciplines)
         return sci_disciplines_translated
@@ -155,7 +160,7 @@ def sci_disciplines():
 def oa_funders():
     create_oa_funders()
     try:
-        tag_list = toolkit.get_action('tag_list')
+        tag_list = toolkit.get_action('tag_list_ordered')
         oa_funders = tag_list(data_dict={'vocabulary_id': 'oa_funders'})
         oa_funders_translated = translate_data_dict(oa_funders)
         return oa_funders_translated
@@ -165,7 +170,7 @@ def oa_funders():
 def oa_funding_programs():
     create_oa_funding_programs()
     try:
-        tag_list = toolkit.get_action('tag_list')
+        tag_list = toolkit.get_action('tag_list_ordered')
         oa_funding_programs = tag_list(data_dict={'vocabulary_id': 'oa_funding_programs'})
         oa_funding_programs_translated = translate_data_dict(oa_funding_programs)
         return oa_funding_programs_translated
@@ -316,7 +321,7 @@ def translate_data_dict(data_dict):
             assert translation['lang_code'] == fallback_lang_code
             fallback_translations[translation['term']] = (
                     translation['term_translation'])
-    translations_dict = {}
+    translations_dict = OrderedDict()
     for term in data_dict:
         if term in desired_translations:
             translations_dict[term] = desired_translations[term]
@@ -326,6 +331,79 @@ def translate_data_dict(data_dict):
             translations_dict[term] = term    
     log.debug(u"Translations = {}".format(translations_dict))
     return translations_dict
+
+def ceon_tag_list(context, data_dict):
+    model = context['model']
+
+    vocab_id_or_name = data_dict.get('vocabulary_id')
+    query = data_dict.get('query') or data_dict.get('q')
+    if query:
+        query = query.strip()
+    all_fields = data_dict.get('all_fields', None)
+
+    if query:
+        tags, count = ceon_tag_search(context, data_dict)
+    else:
+        tags = all_tags(vocab_id_or_name)
+
+    if tags:
+        if all_fields:
+            tag_list = model_dictize.tag_list_dictize(tags, context)
+        else:
+            tag_list = [tag.name for tag in tags]
+    else:
+        tag_list = []
+
+    return tag_list
+
+def ceon_tag_search(context, data_dict):
+    model = context['model']
+
+    terms = data_dict.get('query') or data_dict.get('q') or []
+    if isinstance(terms, basestring):
+        terms = [terms]
+    terms = [t.strip() for t in terms if t.strip()]
+
+    if 'fields' in data_dict:
+        log.warning('"fields" parameter is deprecated.  '
+                    'Use the "query" parameter instead')
+
+    fields = data_dict.get('fields', {})
+    offset = data_dict.get('offset')
+    limit = data_dict.get('limit')
+
+    # TODO: should we check for user authentication first?
+    q = model.Session.query(model.Tag).join(ceon_model.metadata.CeonTagExtra)
+
+    if 'vocabulary_id' in data_dict:
+        # Filter by vocabulary.
+        vocab = model.Vocabulary.get(_get_or_bust(data_dict, 'vocabulary_id'))
+        if not vocab:
+            raise logic.NotFound
+        q = q.filter(model.Tag.vocabulary_id == vocab.id)
+    else:
+        # If no vocabulary_name in data dict then show free tags only.
+        q = q.filter(model.Tag.vocabulary_id == None)
+        # If we're searching free tags, limit results to tags that are
+        # currently applied to a package.
+        q = q.distinct().join(model.Tag.package_tags)
+
+    for field, value in fields.items():
+        if field in ('tag', 'tags'):
+            terms.append(value)
+
+    if not len(terms):
+        return [], 0
+
+    for term in terms:
+        escaped_term = _model.misc.escape_sql_like_special_characters(
+            term, escape='\\')
+        q = q.filter(model.Tag.name.ilike('%' + escaped_term + '%'))
+
+    count = q.count()
+    q = q.offset(offset)
+    q = q.limit(limit)
+    return q.all().order_by(ceon_model.metadata.CeonTagExtra.position), count
 
 class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
@@ -389,7 +467,8 @@ class CeonPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         actions = {'user_create': ceon_user_create, 
                    'package_show': ceon_package_show,
                    'organization_show': ceon_organization_show,
-                   'organization_list_for_user': ceon_organization_list_for_user}
+                   'organization_list_for_user': ceon_organization_list_for_user,
+                   'tag_list_ordered': ceon_tag_list}
         return actions
     
     # IConfigurable

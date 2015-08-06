@@ -67,7 +67,7 @@
       <input id="field-ancestral_license_on" type="radio" name="ancestral_license_switch" value="on" {% if ancestral_license %}checked="checked"{% endif %}>{{ _("Hereby I grant this license for all resources ") }}<br><br>
       <div>
         <select id="field-ancestral_license" name="ancestral_license" data-module="autocomplete" {% if not ancestral_license %}disabled="disabled"{% endif %}>
-          {% for license_desc, license_id in licenses|sort if license_desc  %}
+          {% for license_desc, license_id in licenses if license_desc  %}
             <option value="{{ license_id }}" {% if ancestral_license|default('notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
           {% endfor %}
           {% for license_desc, license_id in licenses|sort if license_desc  %}
